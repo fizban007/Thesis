@@ -1,5 +1,6 @@
 %% -*- mode:latex -*-
 \documentclass[letterpaper,12pt]{report}
+\usepackage{natbib}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{mathrsfs}
@@ -32,6 +33,7 @@
 
 % \DeclareGraphicsRule{.1}{eps}{.1}{}
 % \DeclareGraphicsExtensions{.pdf}
+\newcommand{\zotelo}[1]{}
 
 \linespread{1.6}
 
@@ -57,9 +59,10 @@
 \pagenumbering{arabic}
 \markright{}
 \include{chapters/intro}
+\include{chapters/chap1}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% Reference %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\bibliographystyle{apsrev}
+\bibliographystyle{apj}
 \pagestyle{myheadings}
 \markright{}
 \bibliography{thesis.bib}
