@@ -1,0 +1,72 @@
+%% -*- mode:latex -*-
+\documentclass[letterpaper,12pt]{report}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{slashed}
+\usepackage{dsfont}
+\usepackage[section]{placeins}
+\usepackage{braket}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{import}
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage[pdftex]{graphicx}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{*}{mps}{*}{}
+
+\usepackage{cancel}
+\usepackage{footmisc}
+% \usepackage[pdftex]{feynmp}
+\usepackage[titletoc]{appendix}
+\usepackage[nottoc]{tocbibind}
+\usepackage{etoolbox}
+\usepackage{bbold}
+\usepackage{hyperref}
+\usepackage[top=1.25in,bottom=1.25in,left=1in,right=1in]{geometry}
+% \usepackage{simplewick}
+\usepackage{morefloats}
+\usepackage{ulem}
+
+% \DeclareGraphicsRule{.1}{eps}{.1}{}
+% \DeclareGraphicsExtensions{.pdf}
+
+\linespread{1.6}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Cover & Abstract %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{empty}
+\include{cover/cover}
+\include{abstract/abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Content %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{plain}
+\setcounter{page}{1}
+\pagenumbering{roman}
+\tableofcontents
+\listoftables
+\listoffigures
+\include{acknowledgments/acknowledgments}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Chapter %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{myheadings}
+\setcounter{page}{1}
+\pagenumbering{arabic}
+\markright{}
+\include{chapters/intro}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Reference %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{apsrev}
+\pagestyle{myheadings}
+\markright{}
+\bibliography{thesis.bib}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Appendix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{appendices}
+% \input{appendix/PhysicalParameters.tex}
+\end{appendices}
+
+\end{document}
