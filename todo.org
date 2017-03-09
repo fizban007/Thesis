@@ -1,0 +1,25 @@
+* The Structure of the whole thesis
+** Introduction
+*** Pulsars
+*** Magnetars
+*** Numerical Methods
+*** Outline of the dissertation
+** Numerical Part
+*** Particle-in-Cell techniques
+**** General idea
+**** Strengths and problems
+**** Survey of current codes and applications
+*** Aperture
+**** Code Infrastructure
+**** Novel Features
+*** Test problems
+** Physics Part (Compilation of papers)
+*** Polar cap discharge - 1D
+*** Polar cap discharge - 2D
+*** Pulsar global magnetosphere
+*** Twisted Magnetar magnetosphere
+* List for To-Do's
+** TODO Go through all parts of the existing papers and make the formatting consistent
+   At least make the whole document able to compile using LaTeX
+** TODO Go through all existing chapters and change the text to reflect logical flow
+** TODO Incorporate the existing code notes into the first part of the paper

@@ -1,8 +1,15 @@
 %% -*- mode:latex -*-
 \documentclass[letterpaper,12pt]{report}
+\usepackage{aas_macros}
 \usepackage{natbib}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{amsfonts}
+
+\usepackage[pdftex]{graphicx}
+\usepackage{epstopdf}
+
+\DeclareGraphicsRule{*}{mps}{*}{}
 \usepackage{mathrsfs}
 \usepackage{mathtools}
 \usepackage{slashed}
@@ -14,9 +21,6 @@
 \usepackage{import}
 \usepackage{setspace}
 \usepackage{xcolor}
-\usepackage[pdftex]{graphicx}
-\usepackage{epstopdf}
-\DeclareGraphicsRule{*}{mps}{*}{}
 
 \usepackage{cancel}
 \usepackage{footmisc}
@@ -34,6 +38,7 @@
 % \DeclareGraphicsRule{.1}{eps}{.1}{}
 % \DeclareGraphicsExtensions{.pdf}
 \newcommand{\zotelo}[1]{}
+
 
 \linespread{1.6}
 
@@ -60,12 +65,14 @@
 \markright{}
 \include{chapters/intro}
 \include{chapters/chap1}
+\include{chapters/chap2}
+\include{chapters/chap3}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% Reference %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{apj}
 \pagestyle{myheadings}
 \markright{}
-\bibliography{thesis.bib}
+\bibliography{thesis}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% Appendix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{appendices}
@@ -73,3 +80,9 @@
 \end{appendices}
 
 \end{document}
+
+
+
+%%% Local Variables:
+%%% zotero-collection: #("16" 0 2 (name "Thesis"))
+%%% End:
