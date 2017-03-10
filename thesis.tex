@@ -6,15 +6,42 @@
 \usepackage{amssymb}
 \usepackage{amsfonts}
 
-\usepackage[pdftex]{graphicx}
-\usepackage{epstopdf}
+% \usepackage[xetex]{graphicx}
+% \usepackage[pdftex]{graphicx}
+\usepackage{graphicx}
+% \usepackage{epstopdf}
+% \DeclareGraphicsRule{*}{mps}{*}{}
 
-\DeclareGraphicsRule{*}{mps}{*}{}
-\usepackage{mathrsfs}
-\usepackage{mathtools}
-\usepackage{slashed}
-\usepackage{dsfont}
+% \usepackage{mathrsfs}
+% \usepackage{mathtools}
+% \usepackage{slashed}
+% \usepackage{dsfont}
+\usepackage[T1]{fontenc}
+% \usepackage{charter}
+\usepackage{fontspec}
+% \usepackage[expert]{mathdesign}
+\usepackage{unicode-math}
+% \setmathfont{Latin Modern Math}
+% \setsansfont{Arial}
+% Set serifed font to Times New Roman
+% \setmainfont{Times New Roman}
+% \setmainfont{Minion Pro}
+% \setmathfont[range=\mathrm]  {MinionPro-Regular}
+% \setmathfont[range=\mathit]  {MinionPro-It}
+\setmainfont[SmallCapsFeatures={Renderer=Basic}]{Minion Pro}
+% \setmathfont{MnSymbol10}
+% \setmathfont{Asana Math} % for math symbols, can be any other OpenType math
+% font
+% \setmathfont{XITSMath}
+% \setmathfont[range=\mathup/{num,latin,Latin,greek,Greek}]{Minion Pro}
+% \setmathfont[range=\mathbfup/{num,latin,Latin,greek,Greek}]{MinionPro-Bold}
+% \setmathfont[range=\mathit/{num,latin,Latin,greek,Greek}]{MinionPro-It}
+% \setmathfont[range=\mathbfit/{num,latin,Latin,greek,Greek}]{MinionPro-BoldIt}
+% \setmathfont[range=\mathscr,StylisticSet={1}]{MinionPro-It}
+\usepackage[tracking=true]{microtype}
+
 \usepackage[section]{placeins}
+
 \usepackage{braket}
 \usepackage{bm}
 \usepackage{tikz}
@@ -38,7 +65,7 @@
 % \DeclareGraphicsRule{.1}{eps}{.1}{}
 % \DeclareGraphicsExtensions{.pdf}
 \newcommand{\zotelo}[1]{}
-
+\DeclareTextCommandDefault{\nobreakspace}{\leavevmode\nobreak\ }
 
 \linespread{1.6}
 
@@ -67,6 +94,7 @@
 \include{chapters/chap1}
 \include{chapters/chap2}
 \include{chapters/chap3}
+\include{chapters/chap4}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% Reference %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{apj}

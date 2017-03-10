@@ -1,4 +1,32 @@
 \zotelo{../thesis.bib}
+\def\bE{{\mathbf E}}
+\def\bB{{\mathbf B}}
+\def\bj{{\mathbf j}}
+\def\bv{{\mathbf v}}
+\def\br{{\mathbf r}}
+\def\bOm{{\mathbf \Omega}}
+\def\rhoGJ{\rho_{\rm GJ}}
+\def\beq{\begin{equation}}
+\def\eeq{\end{equation}}
+\def\Eq{Equation}
+\def\gthr{\gamma_{\rm thr}}
+% \def\tev{t_{\rm ev}}
+  \def\tev{t_{\rm ohm}}
+\def\tA{t_{\rm A}}
+\def\gDL{\gamma_{\rm DL}}
+\def\fmax{f_{\max}}
+\def\tA{t_{\rm A}}
+\def\Etw{E_{\rm twist}}
+\def\rout{r_{\rm out}}
+\def\ttw{t_{\rm shear}}
+\def\Rs{R_\star}
+\def\Bs{B_\star}
+\def\tsim{t_{\rm sim}}
+\def\lgap{\ell_{\rm gap}}
+\def\Egap{E_{\rm gap}}
+\def\Phigap{\Phi_{\rm gap}}
+\def\Phithr{\Phi_{\rm thr}}
+\def\M{{\cal M}}
 
 \chapter{Twisted Magnetar Magnetosphere}
 
@@ -7,14 +35,14 @@
 Magnetars are neutron stars with ultrastrong magnetic fields ($B \gtrsim
 10^{14}\,\mathrm{G}$) that display  strong activity fed by dissipation of magnetic energy
 % (see e.g. Mereghetti 2008; Turolla et al. 2015 for reviews).
-\citetext{see e.g. \citealp{mereghetti_2008}; \citealp{2015RPPh...78k6901T} for reviews}.
+\citetext{see e.g. \citealp{mereghetti_strongest_2008}; \citealp{turolla_magnetars:_2015} for reviews}.
 They produce strong outbursts and flares as well as bright persistent emission
 with a prominent hard X-ray component extending above 100~keV.
 These activities are associated with strong
 deformations of the external magnetosphere of the neutron star, resembling the activity
 of the solar corona
 % (e.g. Thompson \& Duncan 1995).
-\citep[e.g.][]{1995MNRAS.275..255T}.
+\citep[e.g.][]{thompson_soft_1995}.
 The magnetosphere is anchored in the solid crust of the star and its deformation
 is caused by crustal shear motions driven by ultrastrong internal magnetic
 stresses.
@@ -23,10 +51,10 @@ The speed of the surface motions is poorly known. Recent work suggests that
 the crust yields to internal stresses through an instability launching a
 thermoplastic wave
 % (Beloborodov \& Levin 2014)
-\citep{2014ApJ...794L..24B}
+\citep{beloborodov_thermoplastic_2014}
 or a Hall-mediated avalanche
 % (Li et al. 2016).
-\citep{2016arXiv160604895L}
+\citep{li_magnetar_2016}
 In both cases the motion is plastic and should occur on a timescale much longer
 than the Alfv\'en crossing timescale ($10-100\,\mathrm{ms}$).
 It is expected to be fast enough to efficiently twist the external magnetosphere.
@@ -34,7 +62,7 @@ It is expected to be fast enough to efficiently twist the external magnetosphere
 The surface shear motion launches Alfv\'en waves along the magnetic field lines and
 generates magnetospheric twist $\nabla\times \mathbf{B} \neq 0$
 % (Thompson et al. 2002; Parfrey et al. 2013).
-\citetext{\citealp{2002ApJ...574..332T}; \citealp{2013ApJ...774...92P},
+\citetext{\citealp{thompson_electrodynamics_2002}; \citealp{parfrey_dynamics_2013},
   hereafter PBH13}.
 Plasma is required to supply the current $\mathbf{j} = (c/4\pi)\nabla\times \mathbf{B}$.
 % Beloborodov \& Thompson (2007)
@@ -74,7 +102,7 @@ voltage $\Phi_e$) and can be tested against observations.
 An axisymmetric electrodynamic model of a resistively untwisting magnetosphere
 was developed by
 % Beloborodov (2009),
-\citet[hereafter B09]{2009ApJ...703.1044B}.
+\citet[hereafter B09]{beloborodov_untwisting_2009}.
 This model assumed
 that a given fixed voltage $\Phi_e$ is sustained on current-carrying field lines,
 without calculating the discharge that regulates $\Phi_e$.
@@ -88,7 +116,7 @@ shrinking j-bundle, where the stellar surface is heated by bombardment of
   accelerated particles. Shrinking hot spots have been observed in seven
 objects by now
 % (see data compilation in Beloborodov \& Li 2016).
-\citetext{see data compilation in \citealp{2016arXiv160509077B}}.
+\citetext{see data compilation in \citealp{beloborodov_magnetar_2016}}.
 All of these objects
 belong to the class of ``transient magnetars'' that show a sudden outburst and then
 gradually decay back to the quiescent state of low luminosity.
@@ -121,7 +149,7 @@ A suitable technique for such direct numerical experiments is the particle-in-ce
 successfully applied to the old problem of rotation-powered pulsars
 % (Chen \& Beloborodov 2014; Philippov et al. 2015; Belyaev 2015; Cerutti et al.
 % 2016).
-\citetext{\citealp{chen_pulsar_2014}, hereafter CB14; \citealp{2015ApJ...801L..19P}; \citealp{2015MNRAS.449.2759B}; \citealp{2016MNRAS.457.2401C}}
+\citetext{\citealp{chen_electrodynamics_2014}, hereafter CB14; \citealp{philippov_ab_2015}; \citealp{belyaev_dissipation_2014}; \citealp{cerutti_particle_2015}}
 The magnetar problem is different in important ways and in some ways
 easier to study using a global PIC simulation, as will be described below.
 
@@ -210,7 +238,7 @@ Then the
 electric circuit is expected to relax to a static configuration
 similar to the relativistic double layer derived by
 % Carlqvist (1982)
-\citet{1982Ap&SS..87...21C}
+\citet{carlqvist_physics_1982}
 and observed in the 1D plasma simulations of BT07.
 It sustains the opposite surface charges at the two footpoints of the magnetic loop
 where the lifted particles still move slowly, $v\ll c$, and create a large charge density
@@ -353,7 +381,7 @@ condition,
   E_\gamma\sin\theta_\gamma > 2m_{e}c^2.
 \end{equation}
 In the region near the star where $B>10^{13}$~G the conversion occurs practically
-immediately following resonance scattering \citep{2013ApJ...762...13B}.
+immediately following resonance scattering \citep{beloborodov_mechanism_2013}.
 
 The efficiency of pair creation implies a quick development of electric discharge
 until the number of created particles becomes sufficient to screen the accelerating
@@ -394,7 +422,7 @@ The voltage $\Phi_e$ controls the timescale of this evolution,
 \begin{equation}
   \tev\sim \frac{\Etw}{I\Phi_{e}}.
 \end{equation}
-Using the characteristic $I\simlt \psi (c/4\pi)B\Rs$ and $\gthr\sim 10^3$ one
+Using the characteristic $I\lesssim \psi (c/4\pi)B\Rs$ and $\gthr\sim 10^3$ one
 can estimate that $\tev$ is comparable to one year. This theoretical timescale for
 untwisting is comparable to the observed decay timescale in transient
 magnetars following an outburst of activity.
@@ -425,7 +453,7 @@ leads to a simple equation describing
 resistive evolution of the
 axisymmetric twist
 % (Beloborodov 2011),
-\citep{2011ASSP...21..299B},
+\citep{beloborodov_activated_2011},
 \begin{equation}
   \label{eq:twist-ev}
   \dot{\psi} = 2\pi c \frac{\partial\Phi_{e}}{\partial f}.
@@ -496,11 +524,11 @@ increasing amplitude $\psi$ in some regions before being completely dissipated.
 Our simulation starts with a pure dipole magnetosphere, with a magnetic moment
 ${\mathbf \mu}$ and no magnetic twist, $B_\phi=0$. The twist is gradually
 implanted by shearing the stellar surface with a latitude-dependent angular
-velocity $\boldsymbol{\omega}(\theta)\parallel\boldsymbol{\mu}$. The profile of
+velocity $\symbf{\omega}(\theta)\parallel\symbf{\mu}$. The profile of
 $\omega(\theta)$ determines the profile of the implanted twist; we choose a
 profile similar to previous magnetohydrodynamic (MHD) and force-free
 electrodynamic (FFE) simulations of twisted magnetospheres
-(\citealt{1994ApJ...430..898M}; PBH13),
+(\citealt{mikic_disruption_1994}; PBH13),
 \begin{equation}
   \label{eq:3}
   \omega(\theta,t) = \omega_0(t)\frac{\Theta}{\sin\theta}\exp \left[ (1 - \Theta^4)/4 \right],
@@ -529,7 +557,7 @@ simulations presented below.
 After the twist implantation is finished, $\omega$ is kept at zero and the
 boundary condition at the stellar surface becomes simply a perfect static
 conductor. Magnetars are slow rotators, and their light cylinders $R_{\rm
-  LC}\simgt 10^4\Rs$ are well beyond the twisted, dissipative region. The slow
+  LC}\gtrsim 10^4\Rs$ are well beyond the twisted, dissipative region. The slow
 spinning of the star is neglected in the present paper, which corresponds to
 $R_{\rm LC}=\infty$.
 
@@ -538,8 +566,8 @@ in moderate inflation of the poloidal magnetic field lines. The main effect of s
 shearing is creating a strong $B_\phi$ in the magnetosphere.
 Analytical arguments
 % (e.g. Uzdensky 2002)
-\citep[e.g.][]{2002ApJ...574.1011U} and FFE simulations (PBH13) show that a
-stronger $\psi \simgt 3$ will result in a global instability of the
+\citep[e.g.][]{uzdensky_shear-driven_2002} and FFE simulations (PBH13) show that a
+stronger $\psi \gtrsim 3$ will result in a global instability of the
 magnetosphere, which we do not intend to study in this paper and defer to future
 work.
 
@@ -559,7 +587,7 @@ $g_0 = 0.5\Rs c^2$. This gives the hydrostatic scale-height
   h\approx\frac{v_0^2}{2g_0}\approx 0.01\Rs.
 \end{equation}
 This is a much thicker atmospheric layer than the magnetar would have at a
-surface temperature $kT\simlt 1$~keV. However, it is sufficiently thin and still
+surface temperature $kT\lesssim 1$~keV. However, it is sufficiently thin and still
 resolved by our numerical grid (see below).
 The characteristic time it takes to form the atmosphere is short,
 $t_{\rm atm}\sim h/v_0= 0.1 \Rs/c$. Throughout the simulation particles are continually
@@ -593,7 +621,7 @@ simplest implementation of this process: we choose a fixed value for $\gthr$ and
 let a new $e^\pm$ pair be instantaneously created every time an electron (or
 positron) reaches $\gthr$. This may be a reasonable approximation for the
 $e^\pm$ discharge near the star where $B\gg 10^{13}\,\mathrm{G}$
-\citep{2013ApJ...762...13B}. However, it becomes poor at larger distances where
+\citep{beloborodov_mechanism_2013}. However, it becomes poor at larger distances where
 the magnetic field is weak and resonantly scattered photons have lower energies.
 
 An additional simplification in our implementation is the
@@ -616,7 +644,7 @@ resonant scattering process
 the resonantly scattered photon, which may convert to $e^\pm$ with a delay. Both
 $\gthr$ and $\Delta E$ will vary with the local magnetic field, see
 % Beloborodov (2013)
-\citet{2013ApJ...762...13B}
+\citet{beloborodov_mechanism_2013}
 for a detailed discussion.
 
 
@@ -750,7 +778,7 @@ ideal conductor. This gives the following boundary condition at $r=\Rs$,
 \begin{equation}
   \label{eq:4}
   \mathbf{E}(t,\theta) =
-  -\frac{( \boldsymbol{\omega}(t,\theta)\times \mathbf{r})\times \mathbf{B}}{c}.
+  -\frac{( \symbf{\omega}(t,\theta)\times \mathbf{r})\times \mathbf{B}}{c}.
 \end{equation}
 The initial state is a dipole field and the normal component of the magnetic field
 at the surface remains unchanged during the simulation.
@@ -821,7 +849,7 @@ lines.\footnote{Alfv\'en waves
     neglects the fact that the crustal material has a finite strength, which can lead to
     plastic damping of Alfv\'en waves in the crust
     % (Li \& Beloborodov 2015).
-    \citep{2015ApJ...815...25L}.
+    \citep{li_plastic_2015}.
   }
 Similar waves were observed in FFE simulations (PBH13).
 The waves are damped in the magnetosphere at later times, and the initial relaxation
@@ -854,7 +882,7 @@ creation events happen around this region.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.5\textwidth]{EdotB.png}
+  \includegraphics[width=0.5\textwidth]{pics/chap4/EdotB.png}
   \caption{Electric gap in the twisted magnetosphere. Magnetic field lines
    are shown by the green curves (poloidal cross section), and color shows the
     parallel electric field, defined as $E_\parallel=\mathbf{E}\cdot \mathbf{B}/B$,
@@ -890,7 +918,7 @@ controls the gap thickness $\lgap\sim\gthr\lambda_p$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.5\textwidth]{Rho.png}
+  \includegraphics[width=0.5\textwidth]{pics/chap4/Rho.png}
   \caption{Charge density in the magnetosphere, averaged in the same way as
       in Figure \ref{fig:EdotB}. Note the thin charged
   layers bounding the equatorial gap
@@ -913,7 +941,7 @@ the opposite boundary of the gap, where they create new pairs, etc.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.5\textwidth]{multiplicity.png}
+  \includegraphics[width=0.5\textwidth]{pics/chap4/multiplicity.png}
   \caption{Pair multiplicity $\mathcal{M} = (\rho_+ - \rho_{-})/j$.}
   \label{fig:multiplicity}
 \end{figure}
@@ -952,7 +980,7 @@ Most of the accelerated particles escape the gap and get absorbed by the star.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.9\textwidth]{momentum.png}
+  \includegraphics[width=0.9\textwidth]{pics/chap4/momentum.png}
   \caption{Average hydrodynamic momentum of electrons (left) and positrons (right).}
   \label{fig:momenta}
 \end{figure*}
@@ -1023,7 +1051,7 @@ $\gthr$ is increased from 10 to 20 (see \Eq~\ref{eq:tev}).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.5\textwidth]{B-energy-eps-converted-to.pdf}
+  \includegraphics[width=0.5\textwidth]{pics/chap4/B-energy.eps}
   \caption{Evolution of the twist magnetic energy $\Etw$.
      Four simulations are shown with discharge thresholds
     $\gthr=10$, 20, 100, $\infty$. We use the exact expression for
@@ -1064,7 +1092,7 @@ from $u\approx 0.75$ to $u\lesssim 0.55$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.8\textwidth]{j-p-color.png}
+  \includegraphics[width=0.8\textwidth]{pics/chap4/j-p-color.png}
   \caption{Color plot showing the evolution of the poloidal current density $j_p$
   in the simulation with $\gthr=10$. Four snapshots are shown: (a) $\tilde{t}=30$,
   (b) $\tilde{t}=120$,  (b) $\tilde{t}=230$, and (d) $\tilde{t}=350$.
@@ -1077,7 +1105,7 @@ from $u\approx 0.75$ to $u\lesssim 0.55$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.5\textwidth]{j-p-eps-converted-to.pdf}
+  \includegraphics[width=0.5\textwidth]{pics/chap4/j-p.eps}
   \caption{Evolution of the poloidal current distribution in the magnetosphere
   in the simulation with $\gthr=10$.
   The ratio $j_p/B_p$ (constant along the magnetic field lines) is shown versus
@@ -1097,7 +1125,7 @@ parts, as expected from the untwisting Equation~\eqref{eq:twist-ev}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.5\textwidth]{twist-evolution-eps-converted-to.pdf}
+  \includegraphics[width=0.5\textwidth]{pics/chap4/twist-evolution.eps}
   \caption{Evolution of the twist angle $\psi$
   in the simulation with $\gamma_\mathrm{thr} = 10$.
 }
@@ -1184,10 +1212,10 @@ An important caveat in the simulation setup is the simplified ``on the spot''
 prescription for pair creation, with the created $e^\pm$ pair taking a
 significant energy fraction from the primary particle. As briefly discussed in
 Section~\ref{sec:pairs}, this prescription is reasonable if the twist is
-confined to the region of ultrastrong magnetic field near the star, $B\simgt
+confined to the region of ultrastrong magnetic field near the star, $B\gtrsim
 B_Q$. Pair creation in weaker fields tends to occur with high multiplicities,
 which can launch a dense $e^\pm$ outflow and efficiently screen $E_\parallel$ in
-the equatorial region \citep{2013ApJ...762...13B}. Then the gap may have to
+the equatorial region \citep{beloborodov_mechanism_2013}. Then the gap may have to
 split into two gaps and move away from the equator, closer to the star.
 
 How the discharge will self-organize in this case can only be explored using a
@@ -1199,13 +1227,13 @@ on magnetic field lines extending far from the star. This part of the magnetosph
 interesting for two reasons: (1) the j-bundle activity tends to
 concentrate on the extended field lines, and (2) the nonthermal emission
 is able to escape the outer magnetosphere while almost all resonantly scattered
-photons in the region $B\gg10^{13}$~G convert to pairs \citep{2013ApJ...762...13B}.
+photons in the region $B\gg10^{13}$~G convert to pairs \citep{beloborodov_mechanism_2013}.
 Gap location on the extended field lines influences the hard X-ray spectrum
 emitted by the twisted magnetosphere, and thus can be tested against observations.
 Phase-resolved hard X-ray spectra have been measured for several magnetars
 and fitted by the $e^\pm$ outflow model
 % (e.g. Hasco\"et et al. 2014; An et al. 2015),
-\citetext{e.g. \citealp{2014ApJ...786L...1H}; \citealp{2015ApJ...807...93A}},
+\citetext{e.g. \citealp{hascoet_phase-resolved_2014}; \citealp{an_deep_2015}},
 which assumes an electric gap near the star. Direct PIC simulations of the $e^\pm$
 discharge
 of high
@@ -1218,10 +1246,10 @@ observed giant flares of magnetars, an extreme analogy of solar flares. The
 over-twisted magnetosphere inflates and creates a thin current sheet separating
 magnetic fluxes of opposite polarities. The current sheet becomes
 unstable to the tearing mode, which leads to magnetic reconnection and ejection
-of plasmoids from the magnetosphere (\citealp{2003MNRAS.346..540L}; PBH13), resembling the
+of plasmoids from the magnetosphere (\citealp{lyutikov_explosive_2003}; PBH13), resembling the
 mechanism of coronal mass ejections from the sun
 % (e.g. Mikic \& Linker 1994).
-\cite[e.g.][]{1994ApJ...430..898M}.
+\cite[e.g.][]{mikic_disruption_1994}.
 Our preliminary studies using Aperture show similar behavior.
 One difficulty encountered by such simulations is the huge pair creation rate
 in the dissipative current sheet, which must result in quick thermalization
