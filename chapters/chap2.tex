@@ -19,6 +19,7 @@
 \def\Sect{Section}
 
 \chapter{Polar-Cap Discharge}
+\label{chap:polar-cap}
 
 \section{Introduction}
 
@@ -242,13 +243,13 @@ the neutron star.
   % \epsscale{1.0}
 \begin{center}
   % \plotone{f1.eps}
-  \includegraphics[width=0.6\textwidth]{pics/chap2/f1.eps}
-\caption{Steady-state solution for the charge-separated polar-cap flow with
-$\alpha=0.8$. Two cases are shown: cold polar cap $T=0$ (solid curve)
-and warm polar cap $kT/mc^2=0.03$ (dashed curve), which corresponds
-to average injection momentum $0.22mc$.
-Dotted curve shows the solution for a cold flow where all particles are injected with the same $p_0=0.22$.
-}
+  \includegraphics[width=0.7\textwidth]{pics/chap2/f1.eps}
+  \caption[Steady-state solution for $\alpha < 0$]{Steady-state solution for the
+    charge-separated polar-cap flow with $\alpha=0.8$. Two cases are shown: cold
+    polar cap $T=0$ (solid curve) and warm polar cap $kT/mc^2=0.03$ (dashed
+    curve), which corresponds to average injection momentum $0.22mc$. Dotted
+    curve shows the solution for a cold flow where all particles are injected
+    with the same $p_0=0.22$. }
 \label{fig:steady}
 \end{center}
 \end{figure}
@@ -515,12 +516,11 @@ to $\rho_\mathrm{GJ}$ at $z\gg\lambda_p$, as expected.
    % \plotone{f2b.eps}
   \includegraphics[width=0.6\textwidth]{pics/chap2/f2a.eps} \\
   \includegraphics[width=0.6\textwidth]{pics/chap2/f2b.eps}
-\caption{Test run for a cold-flow model with $\alpha=1$ and $v_0=c/6$.
-The flow relaxed to a steady state in the entire box $H=10^2\lambda_p$
-on the light-crossing timescale, $H/c$; the state of the system is
-shown at $t = 10H/c$.
-(a) Flow momentum per particle $p(z)$ in units of $mc$.
-(b) Charge density $\rho(z)$.}
+  \caption[Test run for a cold flow with $\alpha = 1$]{Test run for a cold-flow
+    model with $\alpha=1$ and $v_0=c/6$. The flow relaxed to a steady state in
+    the entire box $H=10^2\lambda_p$ on the light-crossing timescale, $H/c$; the
+    state of the system is shown at $t = 10H/c$. (a) Flow momentum per particle
+    $p(z)$ in units of $mc$. (b) Charge density $\rho(z)$.}
 \label{fig:alpha1}
 \end{center}
 \end{figure}
@@ -535,7 +535,7 @@ shown at $t = 10H/c$.
 \includegraphics[width=0.6\textwidth]{pics/chap2/f3a.eps}\\
 \includegraphics[width=0.6\textwidth]{pics/chap2/f3b.eps}\\
 \includegraphics[width=0.6\textwidth]{pics/chap2/f3c.eps}
-\caption{Cold flow with $\alpha=0.8$ and $\beta_0=0.2$ at time $t=1.45H/c$
+\caption[Snapshot of a cold flow with $\alpha < 0$]{Cold flow with $\alpha=0.8$ and $\beta_0=0.2$ at time $t=1.45H/c$
 %  light-crossing time of the computational box.
 % The box is divided into 500 bins and each plotted quantity
 % is averaged over the bin.
@@ -673,15 +673,17 @@ these oscillations have a relatively small amplitude $\delta v\ll \bar{v}$.
 \begin{center}
 %\epsscale{0.2}
    % \epsscale{1.0}
-\includegraphics[width=0.6\textwidth]{pics/chap2/f4.eps}\\
+\includegraphics[width=0.8\textwidth]{pics/chap2/f4.eps}\\
 %\plotone{f3b.eps}
     %\caption{(a) Evolution of the mean velocity of particles in the box, with $\alpha = 0.83$. The horizontal line plotted in red is $v=0.83$.
     % $x$-axis is in units of the plasma oscillation time $\tau = c/\omega_p$.
     %(b) The evolution of average momentum of particles in time, with $x$-axis in units of plasma oscillation time $\tau = c/\omega_p$.}
-    \caption{Evolution of the hydrodynamical velocity $\bar{v}$ of the flow measured in the middle of the computational box. Three models are shown:
+\caption[Evolution of $\bar{v}$ over time in the center of the domain]{Evolution
+  of the hydrodynamical velocity $\bar{v}$ of the flow measured in the middle of
+  the computational box. Three models are shown:
  % in a bin of size $4\lambda_p$ at , with
- $\alpha = 0.95$ (purple), $0.8$ (blue) and $0.6$ (dark green). In all three cases, the time-average value of $\bar{v}$ equals $\alpha$.
-}
+      $\alpha = 0.95$ (purple), $0.8$ (blue) and $0.6$ (dark green). In all
+      three cases, the time-average value of $\bar{v}$ equals $\alpha$. }
     \label{fig:meanvelocity}
     \end{center}
 \end{figure}
@@ -695,7 +697,7 @@ these oscillations have a relatively small amplitude $\delta v\ll \bar{v}$.
 % \plottwo{f5a.eps}{f5b.eps}
   \includegraphics[width=0.6\textwidth]{pics/chap2/f5a.eps}\\
   \includegraphics[width=0.6\textwidth]{pics/chap2/f5b.eps}
-\caption{Snapshot of 1000 randomly chosen particles in phase space for the flow
+\caption[Snapshot of particle distribution]{Snapshot of 1000 randomly chosen particles in phase space for the flow
 with $\alpha=0.8$ and $\bar{\beta}_0=0.2$.
 %Purple curve shows the local mean (hydrodynamical) momentum $\bar{p}(z)$.
 % inside a bin of size $\lambda_p/5$, and the r
@@ -705,7 +707,7 @@ with the same $\alpha=0.8$ and $\beta_0=0.2$ (Section~3.1).
 (b) Another random snapshot of a similar simulation with a larger computational box
 $H = 200\lambda_p$.
 % Momentum is in units of $mc$.
- }
+}
 \label{fig:phasetraj}
 \end{center}
 \end{figure}
@@ -803,12 +805,14 @@ box remained unchanged at $\sim$10\%.
 \begin{center}
 %\epsscale{0.25}
    % \epsscale{1.0}
-\includegraphics[width=0.6\textwidth]{pics/chap2/f6.eps}
-\caption{Mean expectation and standard deviation for the fluctuating hydrodynamical
-momentum of the flow measured at the center of the computational box. Four
-simulations are shown, with box sizes $H/\lambda_p=50$, 100, 150, and 200;
-all four simulations have the same parameter $\alpha=0.8$. Red line shows the
-maximum momentum predicted by the steady state model with $\alpha=0.8$.}
+\includegraphics[width=0.7\textwidth]{pics/chap2/f6.eps}
+\caption[Mean and standard deviation of particle momentum at the center of the
+simulation box]{Mean expectation and standard
+  deviation for the fluctuating hydrodynamical momentum of the flow measured at
+  the center of the computational box. Four simulations are shown, with box
+  sizes $H/\lambda_p=50$, 100, 150, and 200; all four simulations have the same
+  parameter $\alpha=0.8$. Red line shows the maximum momentum predicted by the
+  steady state model with $\alpha=0.8$.}
 % Comparison of the mean momentum in a bin of size $2\lambda_p$ at the center of the box over one light-crossing time of $H_1=100\lambda_p$, plotted for different numerical parameter $H/\lambda_p$, with the same $\alpha = 0.8$. Error bar indicates the standard deviation of the mean momentum.}
 \label{fig:zetacompare}
 \end{center}
@@ -887,13 +891,11 @@ The characteristic plasma frequency is defined by $\omega_p=c/\lambda_p$.
 %\epsscale{0.25}
   % \epsscale{1.0}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{pics/chap2/f7.eps}
-\caption{Snapshot of the mixed ion flow with $\alpha=0.4$ at time
-$t = 10^3\omega^{-1}_p$.
-Top panel shows the phase space distribution, where red
-dots represent protons and blue dots represent helium ions.
-Bottom panel  shows the electric field.
-}
+\includegraphics[width=0.8\textwidth]{pics/chap2/f7.eps}
+\caption[Snapshot of mixed ion flow]{Snapshot of the mixed ion flow with
+  $\alpha=0.4$ at time $t = 10^3\omega^{-1}_p$. Top panel shows the phase space
+  distribution, where red dots represent protons and blue dots represent helium
+  ions. Bottom panel shows the electric field. }
 \label{fig:2stream}
 \end{center}
 \end{figure}

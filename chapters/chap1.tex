@@ -1,6 +1,179 @@
 \zotelo{../thesis.bib}
 
 \chapter{Particle-in-Cell Simulation}
+\label{chap:pic}
 
-This chapter describes the basics of PIC simulations. See
-\citep{yee_numerical_1966}.
+\section{Introduction}
+\label{sec:introduction}
+
+Particle-in-Cell(PIC) codes are a powerful tool to study the kinetic properties
+of plasma from first principles. The strength of a PIC code is that it can
+resolve the plasma skin depth, and reproduce the interaction between particles
+and fields, making them invaluable in the study of particle acceleration
+processes in plasmas. It was very successfully applied to collisionless shocks
+and reconnection processes
+%TODO: references
+. However, because a PIC code has to resolve the
+plasma skin depth which is usually many orders of magnitude smaller than the
+scale of a realistic astrophysical problem, this kind of simulation is extremely
+expensive and very often only applied to local problems to study the
+microphysics in a relatively large system.
+
+This chapter introduces the PIC technique in detail, and then introduces
+Aperture, a versatile PIC code designed and developed from scratch as part of my
+PhD thesis. The name is a recursive acronym which stands for Aperture is a code
+for Particles, Electrodynamics and Radiative Transfer at Ultra-Relativistic
+Energies. The original and main purpose of the code was to simulate the global
+structure of the Pulsar magnetosphere from first principles. However, we
+designed the code to be general enough to be applied to many different problems
+in Astrophysics, especially in problems where particles are accelerated in
+strong magnetic fields and capable of producing pair cascade.
+
+In Section \ref{sec:particle-cell-method} of the paper we will present
+the numerical algorithms and techniques employed in the Aperture code,
+from coordinate systems to boundary conditions. In Section
+\ref{sec:test-problems} we will present some simple test cases to show
+the validity of the code. Finally in Section
+\ref{sec:example-applications} we will present some of the problems
+that we can address using this new PIC code.
+
+\section{The Particle-in-Cell Method}
+\label{sec:particle-cell-method}
+% This section is the meat of this paper. There will probably be many
+% subsections.
+The PIC method is essentially a way to solve the Maxwell-Vlasov
+equations by approximating the plasma distribution function using the
+sum of a large number of discrete macro-particle distributions. The
+system of equations under question is simply the Maxwell equations
+combined with the Vlasov equation:
+\begin{align}
+    \frac{\partial f^{s}}{\partial t} + \mathbf{u}\cdot\frac{\partial f^s}{\partial \mathbf{x}} &+ \frac{q^s}{m^s}(\mathbf{E} + \mathbf{u}\times \mathbf{B})\cdot\frac{\partial f^s}{\partial (\gamma \mathbf{u})} = 0 \label{eq:vlasov}\\
+    \nabla\cdot \mathbf{E} &= 4\pi\rho \\
+    \nabla\cdot \mathbf{B} &= 0 \\
+    \nabla\times \mathbf{E} &= -\frac{1}{c}\partial_t \mathbf{B} \\
+    \nabla\times \mathbf{B} &= \frac{1}{c}\partial_t \mathbf{E} + \frac{4\pi}{c} \mathbf{j}
+\end{align}
+where $s$ denotes the particle species (electrons, positrons, ions,
+\dots). We assume a collisionless plasma by setting the right hand
+side of equation \eqref{eq:vlasov} to zero.
+
+The charge and current densities are found by taking the moments of
+the distribution function $f^s$ over the momentum space
+\begin{align}
+  \rho &= \int d \mathbf{u} \sum_s q^s f^s(\mathbf{x}, \mathbf{u}) \label{eqn:rho} \\
+  \mathbf{j} &= \int d \mathbf{u} \sum_s q^s \mathbf{u} f^s(\mathbf{x}, \mathbf{u}) \label{eqn:j}
+\end{align}
+Macro particles are introduced to sample the distribution function
+$f^s$ in both position and momentum space. A macro particle can be
+viewed as a collection of particles smeared out in space, with
+identical physical momentum $\mathbf{p}_{p}$. Therefore, each
+particle represents a distribution function of the type
+\begin{equation}
+    \label{eq:single-particle}
+    f^s_{p}(\mathbf{x}, \mathbf{u}) = \delta(\gamma \mathbf{u} - \mathbf{p}_{p}) S(\mathbf{x} - \mathbf{x}_{p})
+\end{equation}
+where $S$ is a function that describes the shape of the macro
+particle, with the property that $S$ has finite support, and that the
+integral of $S$ over all space is normalized to 1. The idea is that,
+if each individual macro particle satisfies the Vlasov equation, then
+the linear superposition of a large number of them still satisfy the
+Vlasov equation, and should provide a good approximation for the
+dynamics of the plasma.
+
+The dynamic equations for the macro particles can be derived by taking
+the moments of the Vlasov equation with the single particle
+distribution function \eqref{eq:single-particle}. It turns out that
+these dynamic equations are identical to the equations of motion of a
+single particle in electromagnetic field:
+\begin{align}
+  \label{eq:particle-equations}
+  \frac{d\mathbf{x}_p}{dt} = \mathbf{u}_p = \frac{\mathbf{p}_p}{\gamma_p} \\
+  \frac{d\mathbf{p}_p}{dt} = \frac{q_p}{m_p}(\mathbf{E} + \mathbf{u}_p\times \mathbf{B})
+\end{align}
+Therefore it is justified to treat macro particles as their name
+suggests: simply as physical particles. The code simply trace their
+motion in the electromagnetic field as described by the above dynamic
+equations.
+
+\subsection{Discretization}
+\label{sec:discretization}
+
+To solve the Maxwell equations and particle dynamic equations
+numerically, one needs to discretize to a finite grid, hence the name
+Particle-in-Cell. The discretization is done on space and time, so
+that fields $\mathbf{E}$ and $\mathbf{B}$ are sampled on a
+finite grid, as well as the current and charge densities
+$\mathbf{J}$ and $\rho$. One evolves the equations using a given
+time evolution scheme step by step starting from the initial
+condition. At each step, one updates the positions and momenta of all
+particles according to the fields on the grid, computes the current
+density due to particle motion, and uses this current density to
+evolve the fields themselves.
+
+Aperture is a 2.5D PIC code, meaning that the spatial grid is 2D,
+while we compute all 3 components of the field quantities on the
+grid. This is applicable when the problem has inherent symmetry, such
+as axisymmetry or translational invariance in one direction. We use
+the classical staggered Yee grid for electric and magnetic fields.
+% TODO: Insert a picture of the Yee grid
+
+Since particles stream freely in the cells, the electric and magnetic
+fields a particle sees will need to be interpolated from the grid
+points. This is done by integrating the shape function in equation
+\eqref{eq:single-particle}:
+\begin{equation}
+    \label{eq:field-interpolate}
+    \mathbf{E}_p = \int d\mathbf{x}\: S(\mathbf{x} - \mathbf{x}_p)\mathbf{E}(\mathbf{x}) = \sum_c W(\mathbf{x}_c - \mathbf{x}_p)E_c
+\end{equation}
+where the subscript $c$ runs over all grid points. The function $W$ is
+a weight function which has finite support centered around
+$\mathbf{x}_p$ and sums to 1 on grid points where it does not
+vanish. They are often chosen to be the so called \textit{B-spline}
+functions, which are functions of minimal support with a given
+polynomial degree. Higher order polynomial B-splines will in general
+produce a smoother interpolation, but will be more computationally
+expensive. In Aperture we support weight functions from 0-th order to
+3-rd order polynomials.
+
+Conversely, particle motion is interpolated onto the grid to produce a
+current and charge density. To avoid spurious self-force, one needs to
+use the same interpolation for both field to particle, and for
+particle to current. We will discuss current deposition in greater
+detail in section \ref{sec:charge-cons-curr}.
+
+\subsection{Coordinate Systems}
+\label{sec:coord-syst-sing}
+
+Aperture supports the use of orthogonal curvilinear coordinate
+systems. A coordinate system is given by three functions $h_1$, $h_2$,
+and $h_3$ which are the scale functions in the three coordinate
+directions.
+
+The main coordinate systems we support are Cartesian, cylindrical,
+spherical coordinates and some of their variants.
+
+\subsection{Current Deposition}
+\label{sec:charge-cons-curr}
+
+We use the Esirkepov current deposition algorithm.
+
+\subsection{Boundary Conditions}
+\label{sec:boundary-conditions}
+
+\subsection{Radiative Transfer}
+\label{sec:radiative-transfer}
+
+
+\section{Test Problems}
+\label{sec:test-problems}
+% This section we present some tests that show the validity of the
+% code, in several coordinate systems, and in several physical scenarios
+
+\section{Example Applications}
+\label{sec:example-applications}
+% This section we present some of toy physical models that we can
+% simulate using this code, including axisymmetric pulsar (briefly),
+% magnetar, twisted cylinder, Gruzinov problem, etc.
+
+\section{Discussions and Remarks}
+\label{sec:discussions}

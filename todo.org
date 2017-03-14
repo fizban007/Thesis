@@ -15,11 +15,12 @@
 *** Test problems
 ** Physics Part (Compilation of papers)
 *** Polar cap discharge - 1D
-*** Polar cap discharge - 2D
+*** Polar cap discharge - 2D - include this?
 *** Pulsar global magnetosphere
 *** Twisted Magnetar magnetosphere
 * List for To-Do's
-** TODO Go through all parts of the existing papers and make the formatting consistent
+** DONE Go through all parts of the existing papers and make the formatting consistent
+   CLOSED: [2017-03-13 Mon 15:46]
    At least make the whole document able to compile using LaTeX
 ** TODO Go through all existing chapters and change the text to reflect logical flow
-** TODO Incorporate the existing code notes into the first part of the paper
+** STARTED Incorporate the existing code notes into the first part of the paper

@@ -29,6 +29,7 @@
 \def\M{{\cal M}}
 
 \chapter{Twisted Magnetar Magnetosphere}
+\label{chap:magnetar}
 
 \section{Introduction}
 
@@ -882,14 +883,14 @@ creation events happen around this region.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.5\textwidth]{pics/chap4/EdotB.png}
-  \caption{Electric gap in the twisted magnetosphere. Magnetic field lines
-   are shown by the green curves (poloidal cross section), and color shows the
-    parallel electric field, defined as $E_\parallel=\mathbf{E}\cdot \mathbf{B}/B$,
-    in our standard units defined in Section~\ref{sec:units}.
-    The plot shows the average of a series of snapshots centered around
-    $\tilde{t} = 200$. The gap voltage is self-regulated to the discharge threshold
-    $\gthr$;  $\gthr=10$ in the simulation.}
+  \includegraphics[width=0.7\textwidth]{pics/chap4/EdotB.png}
+  \caption[Electric gap in magnetar magnetosphere]{Electric gap in the twisted
+    magnetosphere. Magnetic field lines are shown by the green curves (poloidal
+    cross section), and color shows the parallel electric field, defined as
+    $E_\parallel=\mathbf{E}\cdot \mathbf{B}/B$, in our standard units defined in
+    Section~\ref{sec:units}. The plot shows the average of a series of snapshots
+    centered around $\tilde{t} = 200$. The gap voltage is self-regulated to the
+    discharge threshold $\gthr$; $\gthr=10$ in the simulation.}
   \label{fig:EdotB}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -918,15 +919,14 @@ controls the gap thickness $\lgap\sim\gthr\lambda_p$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.5\textwidth]{pics/chap4/Rho.png}
-  \caption{Charge density in the magnetosphere, averaged in the same way as
-      in Figure \ref{fig:EdotB}. Note the thin charged
-  layers bounding the equatorial gap
-  across the magnetic field lines. The layers extend into the inner magnetosphere
-  along the inner boundary of the j-bundle. The charged structure observed on the field
-  lines extending to $\tilde{r}\sim 9$ approximately corresponds to the outer boundary of
-  the j-bundle (see Figure~\ref{fig:current}).}
-
+  \includegraphics[width=0.7\textwidth]{pics/chap4/Rho.png}
+  \caption[Charge density in magnetar magnetosphere]{Charge density in the magnetosphere, averaged in the
+    same way as in Figure \ref{fig:EdotB}. Note the thin charged layers bounding
+    the equatorial gap across the magnetic field lines. The layers extend into
+    the inner magnetosphere along the inner boundary of the j-bundle. The
+    charged structure observed on the field lines extending to $\tilde{r}\sim 9$
+    approximately corresponds to the outer boundary of the j-bundle (see
+    Figure~\ref{fig:current}).}
   \label{fig:rho}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -941,8 +941,9 @@ the opposite boundary of the gap, where they create new pairs, etc.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.5\textwidth]{pics/chap4/multiplicity.png}
-  \caption{Pair multiplicity $\mathcal{M} = (\rho_+ - \rho_{-})/j$.}
+  \includegraphics[width=0.7\textwidth]{pics/chap4/multiplicity.png}
+  \caption[Magnetar magnetospheric pair multiplicity]{Pair multiplicity
+    $\mathcal{M} = (\rho_+ - \rho_{-})/j$.}
   \label{fig:multiplicity}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -981,7 +982,7 @@ Most of the accelerated particles escape the gap and get absorbed by the star.
 \begin{figure*}[t]
   \centering
   \includegraphics[width=0.9\textwidth]{pics/chap4/momentum.png}
-  \caption{Average hydrodynamic momentum of electrons (left) and positrons (right).}
+  \caption[Average hydrodynamic momenta in magnetar magnetosphere]{Average hydrodynamic momentum of electrons (left) and positrons (right).}
   \label{fig:momenta}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1051,15 +1052,14 @@ $\gthr$ is increased from 10 to 20 (see \Eq~\ref{eq:tev}).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.5\textwidth]{pics/chap4/B-energy.eps}
-  \caption{Evolution of the twist magnetic energy $\Etw$.
-     Four simulations are shown with discharge thresholds
-    $\gthr=10$, 20, 100, $\infty$. We use the exact expression for
-    $\Etw = \int (B^2 - B_0^2)/8\pi\, dV$,
-    where $B_0$ is the initial dipole field. It takes into account that besides $B_\phi^2/8\pi$
-    part of the twist energy is stored in the inflated poloidal magnetic field, which
-    becomes important when the twist amplitude $\psi$ exceeds unity.
-  }
+  \includegraphics[width=0.8\textwidth]{pics/chap4/B-energy.eps}
+  \caption[Evolution of energy in the magnetar magnetosphere]{Evolution of the
+    twist magnetic energy $\Etw$. Four simulations are shown with discharge
+    thresholds $\gthr=10$, 20, 100, $\infty$. We use the exact expression for
+    $\Etw = \int (B^2 - B_0^2)/8\pi\, dV$, where $B_0$ is the initial dipole
+    field. It takes into account that besides $B_\phi^2/8\pi$ part of the twist
+    energy is stored in the inflated poloidal magnetic field, which becomes
+    important when the twist amplitude $\psi$ exceeds unity. }
   \label{fig:b-energy}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1092,11 +1092,12 @@ from $u\approx 0.75$ to $u\lesssim 0.55$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.8\textwidth]{pics/chap4/j-p-color.png}
-  \caption{Color plot showing the evolution of the poloidal current density $j_p$
-  in the simulation with $\gthr=10$. Four snapshots are shown: (a) $\tilde{t}=30$,
-  (b) $\tilde{t}=120$,  (b) $\tilde{t}=230$, and (d) $\tilde{t}=350$.
-  Note that when $j_p=0$ then also $j=0$.}
+  \includegraphics[width=0.9\textwidth]{pics/chap4/j-p-color.png}
+  \caption[Evolution of the poloidal current density in magnetar
+  magnetosphere]{Color plot showing the evolution of the poloidal current
+    density $j_p$ in the simulation with $\gthr=10$. Four snapshots are shown:
+    (a) $\tilde{t}=30$, (b) $\tilde{t}=120$, (b) $\tilde{t}=230$, and (d)
+    $\tilde{t}=350$. Note that when $j_p=0$ then also $j=0$.}
   \label{fig:current}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1105,13 +1106,14 @@ from $u\approx 0.75$ to $u\lesssim 0.55$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.5\textwidth]{pics/chap4/j-p.eps}
-  \caption{Evolution of the poloidal current distribution in the magnetosphere
-  in the simulation with $\gthr=10$.
-  The ratio $j_p/B_p$ (constant along the magnetic field lines) is shown versus
-  the poloidal flux function defined in \Eq~(\ref{eq:u}); $\theta_\star$ is the polar
-  angle of magnetic field line footprint on the star. The different curves show snapshots
-  at times $\tilde{t}=50$, 100, 150, 200, 250, 300, and 350.}
+  \includegraphics[width=0.75\textwidth]{pics/chap4/j-p.eps}
+  \caption[Time evolution of the integrated current in magnetar
+  magnetosphere]{Evolution of the poloidal current distribution in the
+    magnetosphere in the simulation with $\gthr=10$. The ratio $j_p/B_p$
+    (constant along the magnetic field lines) is shown versus the poloidal flux
+    function defined in \Eq~(\ref{eq:u}); $\theta_\star$ is the polar angle of
+    magnetic field line footprint on the star. The different curves show
+    snapshots at times $\tilde{t}=50$, 100, 150, 200, 250, 300, and 350.}
   \label{fig:jp}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1125,10 +1127,9 @@ parts, as expected from the untwisting Equation~\eqref{eq:twist-ev}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.5\textwidth]{pics/chap4/twist-evolution.eps}
-  \caption{Evolution of the twist angle $\psi$
-  in the simulation with $\gamma_\mathrm{thr} = 10$.
-}
+  \includegraphics[width=0.75\textwidth]{pics/chap4/twist-evolution.eps}
+  \caption[Evolution of the magnetar magnetospheric twist angle]{Evolution of
+    the twist angle $\psi$ in the simulation with $\gamma_\mathrm{thr} = 10$. }
   \label{fig:twist}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

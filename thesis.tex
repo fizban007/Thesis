@@ -1,5 +1,6 @@
 %% -*- mode:latex -*-
 \documentclass[letterpaper,12pt]{report}
+\usepackage{luatexbase}
 \usepackage{aas_macros}
 \usepackage{natbib}
 \usepackage{amsmath}
@@ -62,12 +63,15 @@
 \usepackage{morefloats}
 \usepackage{ulem}
 
-% \DeclareGraphicsRule{.1}{eps}{.1}{}
-% \DeclareGraphicsExtensions{.pdf}
+\DeclareGraphicsRule{.1}{eps}{.1}{}
+\DeclareGraphicsExtensions{.pdf}
 \newcommand{\zotelo}[1]{}
 \DeclareTextCommandDefault{\nobreakspace}{\leavevmode\nobreak\ }
 
+
 \linespread{1.6}
+
+% \endofdump
 
 \begin{document}
 

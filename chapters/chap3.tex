@@ -32,6 +32,7 @@
 \def\dNi{\dot{N}_i}
 
 \chapter{Global Pulsar Magnetosphere}
+\label{chap:pulsar}
 
 \section{Introduction}
 
@@ -62,7 +63,7 @@ electric field form the ``electrosphere''
 --- a corotating dome+torus structure,
 with a huge gap between them and no electric current
 % (Jackson 1976; Krause-Polstorf \& Michel 1985).
-\citep{jackson_1976, krause-polstorff_electrosphere_1985}.
+\citep{jackson_new_1976, krause-polstorff_electrosphere_1985}.
 Although the electrosphere
 is prone to diocotron instability
 % (Petri et al. 2001; Spitkovsky \& Arons 2002),
@@ -82,6 +83,7 @@ using various numerical techniques
 % (Contopoulos et al. 1999; Timokhin 2006; Spitkovsky 2006;
 % Kalapotharakos \& Contopoulos 2009; Parfrey et al. 2012).
 \citep{contopoulos_axisymmetric_1999,timokhin_force-free_2006,spitkovsky_time-dependent_2006,kalapotharakos_three-dimensional_2009,parfrey_introducing_2012}.
+
 Its characteristic feature is a thin current sheet supporting
 a discontinuity of $\mathbf{B}$ and the Y-point near the light cylinder.
 It was verified with particle-in-cell (PIC) simulations that
@@ -98,7 +100,7 @@ Three types of gaps were proposed: polar-cap gap
 % (Sturrock 1971; Ruderman \& Sutherland 1975)
 \citep{sturrock_model_1971,ruderman_theory_1975}, slot gap
 % (Arons 1983; Muslimov \& Harding 2004)
-\citep{arons_pair_1983,2004ApJ...606.1143M},
+\citep{arons_pair_1983, muslimov_high-altitude_2004},
 and outer gap
 % (Cheng \& Ruderman 1986).
 \citep{cheng_energetic_1986}.
@@ -114,7 +116,7 @@ The fields obey Maxwell equations, $\partial\mathbf{B}/\partial t=-c\nabla\times
 $\partial\mathbf{E}/\partial t=c\nabla\times\mathbf{B} - 4\pi\mathbf{J}$, and exert force on particles
 $e(\mathbf{E}+\mathbf{v}\times\mathbf{B}/c)$. We use
 % Esirkepov (2001)
-\citet{esirkepov_2001}
+\citet{esirkepov_exact_2001}
 charge-conserving scheme for calculating $\mathbf{J}$
 and a semi-implicit algorithm for the field evolution.
 A detailed description of the code and tests are given in the accompanying paper
@@ -233,7 +235,7 @@ charge density in $m_e c^2/4\pi e\Rs^2$.
  %   \centering
  \hspace*{-0.6cm}
     \includegraphics[width=1.07\textwidth]{pics/chap3/figure1.eps}
-    \caption{\small
+    \caption[Magnetosphere of type I aligned rotator]{\small
     Magnetosphere of type I aligned rotator (poloidal cross section) at $t = 100$.
     Vertical dashed line shows the light cylinder.
     Green curves show the magnetic flux surfaces.
@@ -270,7 +272,7 @@ to support the flip of $B_\phi$ and $B_r$ across the equatorial plane.
 %    \centering
 \hspace*{-0.6cm}
     \includegraphics[width=1.07\textwidth]{pics/chap3/figure2.eps}
-    \caption{\small
+    \caption[Charge densities of type I aligned rotator]{\small
 Charge densities of (a) positrons, (b) electrons, and (c) ions.
 }
     \label{fig:rho-pn-corotation}
@@ -296,7 +298,7 @@ A similar neutral
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.85\textwidth]{pics/chap3/figure3.eps}
-    \caption{\small
+    \caption[Energy densities of type I aligned rotator]{\small
     (a) Average ion energy in units of $m_ec^2$. (b) Ratio of total matter energy density
     $U_m$ to magnetic energy density $U_B=B^2/8\pi$.
 }
@@ -396,14 +398,12 @@ particles gyrating in the equatorial outflow.
    % \centering
     \hspace*{-0.6cm}
     \includegraphics[width=1.07\textwidth]{pics/chap3/figure4.eps}
-    \caption{\small
-        (a) Angular distribution of
-        Poynting flux $L_P$ and kinetic energy flux $L_m$ at radius
-        $2R_\mathrm{LC}$, normalized to  $L_0 = \mu^2\Omega^4/c^3$.
-        (b) Locations of gamma-ray emission
-        events. Color shows the angle of the photon
-        direction with respect to $\hat{\mathbf{z}}$.
-          }
+    \caption[Poynting flux and gamma ray emission events in the type I aligned
+    rotator simulation]{\small (a) Angular distribution of Poynting flux $L_P$
+      and kinetic energy flux $L_m$ at radius $2R_\mathrm{LC}$, normalized to
+      $L_0 = \mu^2\Omega^4/c^3$. (b) Locations of gamma-ray emission events.
+      Color shows the angle of the photon direction with respect to
+      $\hat{\mathbf{z}}$. }
     \label{fig:fluxes}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -448,7 +448,7 @@ and outside this zone the magnetosphere is close to the electrosphere solution
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.85\textwidth]{pics/chap3/figure5.eps}
-    \caption{\small
+    \caption[Magnetosphere of type II aligned rotator]{\small
     Type II magnetosphere at $t=280$.
     (a) Parallel electric field $E_{\parallel}$.
     (b) Charge density $\rho$.
