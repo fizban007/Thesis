@@ -1,2 +1,10 @@
 *.el
-*.el
+*.fls
+*.lof
+*.lot
+*.synctex.gz
+*.toc
+*.fmt
+sample
+*.fdb_latexmk
+thesisNotes.bib
