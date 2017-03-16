@@ -4,7 +4,7 @@
 \def\bj{{\mathbf j}}
 \def\bv{{\mathbf v}}
 \def\br{{\mathbf r}}
-\def\bOm{{\mathbf \Omega}}
+% \def\bOm{{\mathbf \Omega}}
 \def\rhoGJ{\rho_{\rm GJ}}
 \def\beq{\begin{equation}}
 \def\eeq{\end{equation}}
@@ -125,7 +125,7 @@ A key parameter governing the j-bundle evolution is its poorly known voltage $\P
 which depends on how the $e^\pm$ discharge is self-organized and
 may be different on different magnetospheric field lines.
 
-The goal of the present paper is to overcome the limitations of the 1D discharge
+The goal of the present chapter is to overcome the limitations of the 1D discharge
 model and perform a first self-consistent calculation of the $e^\pm$ discharge
 in an axisymmetric twisted magnetosphere. The process can be simulated from
 first-principles using a full kinetic description of the magnetospheric plasma
@@ -154,12 +154,12 @@ successfully applied to the old problem of rotation-powered pulsars
 The magnetar problem is different in important ways and in some ways
 easier to study using a global PIC simulation, as will be described below.
 
-The paper is organized as follows. In Section~\ref{sec:theory} we describe the theory of
+The chapter is organized as follows. In Section~\ref{sec:theory} we describe the theory of
 twisted magnetospheres in axisymmetric geometry, revisit the double-layer
 configuration (in the absence of pair creation), describe
 the mechanism of pair creation and basic electrodynamics of untwisting.
 This will be useful for understanding the simulation results and also introduces
-notation used in the paper.
+notation used in the chapter.
 Section~\ref{sec:setup} presents the setup of our numerical experiments.
 Section~\ref{sec:result} describes the results and their implications.
 Finally in Section~\ref{sec:discussion} we summarize our conclusions and provide an outlook for future studies.
@@ -523,9 +523,9 @@ increasing amplitude $\psi$ in some regions before being completely dissipated.
 \label{sec:implant}
 
 Our simulation starts with a pure dipole magnetosphere, with a magnetic moment
-${\mathbf \mu}$ and no magnetic twist, $B_\phi=0$. The twist is gradually
+$\bmu$ and no magnetic twist, $B_\phi=0$. The twist is gradually
 implanted by shearing the stellar surface with a latitude-dependent angular
-velocity $\symbf{\omega}(\theta)\parallel\symbf{\mu}$. The profile of
+velocity $\mathbf{\omega}(\theta)\parallel\bmu$. The profile of
 $\omega(\theta)$ determines the profile of the implanted twist; we choose a
 profile similar to previous magnetohydrodynamic (MHD) and force-free
 electrodynamic (FFE) simulations of twisted magnetospheres
@@ -559,7 +559,7 @@ After the twist implantation is finished, $\omega$ is kept at zero and the
 boundary condition at the stellar surface becomes simply a perfect static
 conductor. Magnetars are slow rotators, and their light cylinders $R_{\rm
   LC}\gtrsim 10^4\Rs$ are well beyond the twisted, dissipative region. The slow
-spinning of the star is neglected in the present paper, which corresponds to
+spinning of the star is neglected in the present chapter, which corresponds to
 $R_{\rm LC}=\infty$.
 
 The implanted twist $\psi\sim 1$ is moderate and expected to result
@@ -569,7 +569,7 @@ Analytical arguments
 % (e.g. Uzdensky 2002)
 \citep[e.g.][]{uzdensky_shear-driven_2002} and FFE simulations (PBH13) show that a
 stronger $\psi \gtrsim 3$ will result in a global instability of the
-magnetosphere, which we do not intend to study in this paper and defer to future
+magnetosphere, which we do not intend to study in this chapter and defer to future
 work.
 
 
@@ -617,7 +617,7 @@ to be implanted.
 \label{sec:pairs}
 
 If $E_\parallel$ accelerates the lifted electrons to high Lorentz factors
-$\gamma>\gthr$, pair creation will be ignited. In this paper, we use the
+$\gamma>\gthr$, pair creation will be ignited. In this chapter, we use the
 simplest implementation of this process: we choose a fixed value for $\gthr$ and
 let a new $e^\pm$ pair be instantaneously created every time an electron (or
 positron) reaches $\gthr$. This may be a reasonable approximation for the
@@ -760,7 +760,7 @@ The simulations presented below are done in 2.5D, which means that our grid is
 the full Maxwell equations assuming axisymmetry. Particles in the simulation may
 be thought of as rings with poloidal and toroidal velocity components. We use a
 spherical $r,\theta$ grid with logarithmic spacing in $r$ and uniform spacing in
-$\theta$. For all of the simulations shown in this paper, the grid size is
+$\theta$. For all of the simulations shown in this chapter, the grid size is
 $384\times 384$ and the timestep $\Delta t = 10^{-3}\Rs/c$.
 
 The outer boundary of the simulation box is set at $\rout = 30\Rs$ and employs
@@ -779,7 +779,7 @@ ideal conductor. This gives the following boundary condition at $r=\Rs$,
 \begin{equation}
   \label{eq:4}
   \mathbf{E}(t,\theta) =
-  -\frac{( \symbf{\omega}(t,\theta)\times \mathbf{r})\times \mathbf{B}}{c}.
+  -\frac{( \mathbf{\omega}(t,\theta)\times \mathbf{r})\times \mathbf{B}}{c}.
 \end{equation}
 The initial state is a dipole field and the normal component of the magnetic field
 at the surface remains unchanged during the simulation.
@@ -1241,7 +1241,7 @@ of high
 multiplicity can verify or disprove this assumption.
 
 
-We did not study in this paper what happens when the magnetosphere is
+We did not study in this chapter what happens when the magnetosphere is
 over-twisted and becomes unstable. This phenomenon is associated with the
 observed giant flares of magnetars, an extreme analogy of solar flares. The
 over-twisted magnetosphere inflates and creates a thin current sheet separating

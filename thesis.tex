@@ -1,12 +1,16 @@
 %% -*- mode:latex -*-
-\documentclass[letterpaper,12pt]{report}
-\usepackage{luatexbase}
+\documentclass[
+letterpaper,
+12pt
+]{report}
+% \usepackage{luatextra}
 \usepackage{aas_macros}
 \usepackage{natbib}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{amsfonts}
-
+\usepackage{mathtools}
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% \usepackage{amsfonts}
+\usepackage{bm}
 % \usepackage[xetex]{graphicx}
 % \usepackage[pdftex]{graphicx}
 \usepackage{graphicx}
@@ -14,37 +18,28 @@
 % \DeclareGraphicsRule{*}{mps}{*}{}
 
 % \usepackage{mathrsfs}
-% \usepackage{mathtools}
 % \usepackage{slashed}
 % \usepackage{dsfont}
-\usepackage[T1]{fontenc}
-% \usepackage{charter}
-\usepackage{fontspec}
-% \usepackage[expert]{mathdesign}
-\usepackage{unicode-math}
+% \usepackage{fontspec}
+% \usepackage{mathspec}
+% \setallmainfonts[Scale=1.05]{Minion Pro}
+% \usepackage{lualatex-math}
+% \usepackage{unicode-math}
 % \setmathfont{Latin Modern Math}
-% \setsansfont{Arial}
-% Set serifed font to Times New Roman
-% \setmainfont{Times New Roman}
-% \setmainfont{Minion Pro}
-% \setmathfont[range=\mathrm]  {MinionPro-Regular}
-% \setmathfont[range=\mathit]  {MinionPro-It}
-\setmainfont[SmallCapsFeatures={Renderer=Basic}]{Minion Pro}
-% \setmathfont{MnSymbol10}
-% \setmathfont{Asana Math} % for math symbols, can be any other OpenType math
-% font
-% \setmathfont{XITSMath}
-% \setmathfont[range=\mathup/{num,latin,Latin,greek,Greek}]{Minion Pro}
-% \setmathfont[range=\mathbfup/{num,latin,Latin,greek,Greek}]{MinionPro-Bold}
-% \setmathfont[range=\mathit/{num,latin,Latin,greek,Greek}]{MinionPro-It}
-% \setmathfont[range=\mathbfit/{num,latin,Latin,greek,Greek}]{MinionPro-BoldIt}
-% \setmathfont[range=\mathscr,StylisticSet={1}]{MinionPro-It}
-\usepackage[tracking=true]{microtype}
+% \setmainfont[SmallCapsFeatures={Renderer=Basic}]{Minion Pro}
+% \setmainfont{Linux Libertine}
+\usepackage{libertine-type1}
+% \usepackage[onlymath,minionint,lf,scale=1.05]{MinionPro}
+\usepackage[libertine]{newtxmath}
+
+% \usepackage{babel}
+\usepackage{esint}
+\usepackage{microtype}
+
 
 \usepackage[section]{placeins}
 
-\usepackage{braket}
-\usepackage{bm}
+% \usepackage{braket}
 \usepackage{tikz}
 \usepackage{import}
 \usepackage{setspace}
@@ -52,26 +47,29 @@
 
 \usepackage{cancel}
 \usepackage{footmisc}
-% \usepackage[pdftex]{feynmp}
 \usepackage[titletoc]{appendix}
 \usepackage[nottoc]{tocbibind}
 \usepackage{etoolbox}
 \usepackage{bbold}
 \usepackage{hyperref}
 \usepackage[top=1.25in,bottom=1.25in,left=1in,right=1in]{geometry}
-% \usepackage{simplewick}
 \usepackage{morefloats}
 \usepackage{ulem}
+\usepackage{indentfirst}
 
 \DeclareGraphicsRule{.1}{eps}{.1}{}
 \DeclareGraphicsExtensions{.pdf}
 \newcommand{\zotelo}[1]{}
 \DeclareTextCommandDefault{\nobreakspace}{\leavevmode\nobreak\ }
 
-
 \linespread{1.6}
 
 % \endofdump
+
+% \def\bOm{\mbox{\boldmath$\Omega$\unboldmath}}
+% \def\bmu{\mbox{\boldmath$\mu$\unboldmath}}
+\def\bOm{\bm{\Omega}}
+\def\bmu{\bm{\mu}}
 
 \begin{document}
 
@@ -85,12 +83,12 @@
 \setcounter{page}{1}
 \pagenumbering{roman}
 \tableofcontents
-\listoftables
 \listoffigures
+\listoftables
 \include{acknowledgments/acknowledgments}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% Chapter %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\pagestyle{myheadings}
+\pagestyle{headings}
 \setcounter{page}{1}
 \pagenumbering{arabic}
 \markright{}

@@ -18,9 +18,11 @@
 *** Polar cap discharge - 2D - include this?
 *** Pulsar global magnetosphere
 *** Twisted Magnetar magnetosphere
+*** Twisted Magnetar magnetosphere, part 2, extended field lines
 * List for To-Do's
 ** DONE Go through all parts of the existing papers and make the formatting consistent
    CLOSED: [2017-03-13 Mon 15:46]
    At least make the whole document able to compile using LaTeX
+** STARTED Go through all existing chapters and make citations correct
 ** TODO Go through all existing chapters and change the text to reflect logical flow
 ** STARTED Incorporate the existing code notes into the first part of the paper

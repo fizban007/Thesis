@@ -21,8 +21,6 @@
 \def\fLC{f_{\rm LC}}
 \def\gdrag{\gamma_{\rm drag}}
 \def\bvrot{\bv_{\rm rot}}
-\def\bOm{\symbf{\Omega}}
-\def\bmu{\symbf{\mu}}
 \def\Lsd{L_{\rm sd}}
 \def\lav{\bar{l}}
 \def\ldisp{\Delta l}
@@ -40,12 +38,12 @@ The standard picture of pulsar magnetosphere assumes that it is
 filled with plasma and  corotates with the neutron star with angular velocity $\Omega$
 % (Goldreich \& Julian 1969, hereafter GJ).
 \citep[hereafter GJ]{goldreich_pulsar_1969}.  GJ considered the
-aligned rotator (magnetic dipole moment $\symbf{\mu}$ parallel to $\symbf{\Omega}$);
+aligned rotator (magnetic dipole moment $\bmu$ parallel to $\bOm$);
 then it was generalized to inclined rotators.  The
 plasma sustains the ``corotational'' electric field $\mathbf{E}\approx
 -\mathbf{v}_{\rm rot}\times \mathbf{B}/c$
-(with $\mathbf{v}rot=\symbf{\Omega}\times\br$), which implies the local charge density
-$4\pi\rho_\mathrm{GJ}=\nabla\cdot \mathbf{E} \approx -2\symbf{\Omega}\cdot\mathbf{B}/c$.
+(with $\mathbf{v}_\mathrm{rot}=\bOm\times\br$), which implies the local charge density
+$4\pi\rho_\mathrm{GJ}=\nabla\cdot \mathbf{E} \approx -2\bOm\cdot\mathbf{B}/c$.
 A key feature of the GJ model is the electric current $I_\mathrm{GJ}$ flowing out of
 and into the star along the open magnetic field lines that extend to
 the light cylinder $R_\mathrm{LC}=c/\Omega$. GJ showed that the open field
@@ -119,8 +117,7 @@ $e(\mathbf{E}+\mathbf{v}\times\mathbf{B}/c)$. We use
 \citet{esirkepov_exact_2001}
 charge-conserving scheme for calculating $\mathbf{J}$
 and a semi-implicit algorithm for the field evolution.
-A detailed description of the code and tests are given in the accompanying paper
-(Chen \& Beloborodov, in preparation).
+A detailed description of the code and tests was given in chapter \ref{chap:pic}.
 
 
 Pair creation by accelerated particles occurs in two steps: production of gamma-rays
@@ -140,8 +137,8 @@ For brevity, we call such rotators
 
 
 The axisymmetric pulsar is described by its radius $\Rs\approx 10$~km,
-angular velocity $\symbf{\Omega}$, and magnetic dipole moment $\symbf{\mu}$ (aligned or
-anti-aligned with $\symbf{\Omega}$).  These parameters set the energy scale of
+angular velocity $\bOm$, and magnetic dipole moment $\bmu$ (aligned or
+anti-aligned with $\bOm$).  These parameters set the energy scale of
 the problem. The neutron star is a nearly ideal conductor, and its
 rotation induces voltage $\Phipc\approx \mu\Omega^2/c^2$ across the
 footprint of the open field line bundle;
@@ -153,7 +150,7 @@ it reaches its final value at $t_0=10 \Rs/c$;
 $\Omega=const$ afterwards.
 
 Corotational charge density
-$\rho_{\rm GJ}\approx -\symbf{\Omega}\cdot \mathbf{B}/2\pi c$
+$\rho_{\rm GJ}\approx -\bOm\cdot \mathbf{B}/2\pi c$
 defines the characteristic particle density $n=|\rho_{\rm GJ}|/e$, plasma
 frequency $\omega_p=(4\pi ne^2/m_e)^{1/2}$, and skin-depth
 $\lambda_p=c/\omega_p$.  The magnetic field also determines the
@@ -498,14 +495,14 @@ diocotron instability cannot make the GJ state an attractor for the system.
 
 Our first conclusion is that significant activity of the axisymmetric pulsar
 requires pair creation enabled at $r\sim R_\mathrm{LC}$
-(called type I in this paper); this requires a sufficient optical
+(called type I in this chapter); this requires a sufficient optical
 depth to photon-photon collisions.
 If pair creation is limited to $r\ll R_\mathrm{LC}$ (type II),
 the return current is choked and the axisymmetric magnetosphere relaxes to the
 dome+torus state with suppressed electric currents and pair creation.
 Many observed pulsars are only capable of pair creation at
 $r\ll R_\mathrm{LC}$; we conclude that their activity and spindown should
-be a result of the misalignment of $\symbf{\Omega}$ and $\symbf{\mu}$. This conclusion
+be a result of the misalignment of $\bOm$ and $\bmu$. This conclusion
 supports the arguments of
 % Michel (2004)
 \citet{michel_state_2004}

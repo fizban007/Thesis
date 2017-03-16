@@ -3,7 +3,7 @@
 \def\bj{{\mathbf j}}
 \def\bE{{\mathbf E}}
 \def\rhoGJ{\rho_{\rm GJ}}
-\def\bOm{\symbf{\Omega}}
+% \def\bOm{\mathbf{\Omega}}
 \def\rpc{r_{\rm pc}}
 \def\Apc{A_{\rm pc}}
 \def\RLC{R_{\rm LC}}
@@ -41,7 +41,7 @@ The key dimensionless parameter of the polar-cap accelerator is
 \label{eq:alpha}
    \alpha=\frac{j_B}{c\rho_\mathrm{GJ}},
 \end{equation}
-where $\rho_\mathrm{GJ}=-\symbf{\Omega}\cdot\mathbf{B}/2\pi c$ is the local corotation charge density of
+where $\rho_\mathrm{GJ}=-\bOm\cdot\mathbf{B}/2\pi c$ is the local corotation charge density of
 the magnetosphere
 % \citep{1969ApJ...157..869G}.
 % (Goldreich \& Julian 1969).
@@ -50,21 +50,25 @@ the magnetosphere
 For a special value of $\alpha=\alpha_0$ (close to unity) a steady state was
 found for the polar-cap flow with significant particle acceleration
 % \citep{1977ApJ...217..227F, 1992MNRAS.255...61M}.
-    (e.g. Arons \& Scharlemann 1979; Muslimov \& Tsygan 1992).
+% (e.g. Arons \& Scharlemann 1979; Muslimov \& Tsygan 1992).
+\citep{arons_pair_1979,muslimov_general_1992}.
 However, $\alpha$ is not, in general, expected to take this special value
 % \citep[e.g.][]{springerlink:10.1007/BF00172211}
-    (e.g. Kennel et al. 1979).
+% (e.g. Kennel et al. 1979).
+\citep[e.g.][]{kennel_pulsar_1979}.
 Global solutions for approximately force-free pulsar magnetospheres give
 $\alpha$ that significantly varies across the polar cap
 % \citep{MNR:MNR10192}.
-   (Timokhin 2006).
+% (Timokhin 2006).
+\citep{timokhin_force-free_2006}.
 In general, $\alpha$ can take any value from $-\infty$ to $+\infty$, depending
 on the polar cap distance from the rotation axis and the location inside the
 polar-cap region.
 
 The character of the polar-cap accelerator strongly depends on $\alpha$
 % \citep[hereafter B08]{1985MNRAS.217..443M, 2008ApJ...683L..41B}
-  (Mestel et al. 1985; Beloborodov 2008, hereafter B08).
+% (Mestel et al. 1985; Beloborodov 2008, hereafter B08).
+\citep[hereafter B08]{mestel_axisymmetric_1985, beloborodov_polar-cap_2008}
 The solution with $\alpha=\alpha_0\approx 1$ is a separatrix between two
 opposite regimes of efficient and inefficient acceleration.\footnote{
       Hereafter we will refer to this separatrix as $\alpha=1$, neglecting the
@@ -72,15 +76,16 @@ opposite regimes of efficient and inefficient acceleration.\footnote{
       the curvature of magnetic field lines and the general
       relativistic effects
       % \citep{1992MNRAS.255...61M}
-          (Muslimov \& Tsygan 1992);
+      % (Muslimov \& Tsygan 1992);
+      \citep{muslimov_general_1992};
       its exact value is close to unity and
       is not essential for the rest of the paper.}
 In particular,  if $0<\alpha<1$, $E_\parallel$ is quickly screened in the
 charge-separated plasma flowing from the polar-cap surface. The electric field
 satisfies
 Maxwell equations that read
-% \citep[in the co-rotating frame of the star, see e.g.][]{1977ApJ...217..227F,2005ApJ...631..456L}
-  (in the co-rotating frame of the star, see e.g. Fawley et al. 1977; Levinson et al. 2005),
+\citep[in the co-rotating frame of the star, see e.g.][]{fawley_potential_1977,levinson_large-amplitude_2005}
+  % (in the co-rotating frame of the star, see e.g. Fawley et al. 1977; Levinson et al. 2005),
 \begin{equation}
 \label{eq:Gauss}
    \nabla\cdot\bE=4\pi(\rho-\rho_\mathrm{GJ}),
@@ -99,34 +104,38 @@ comparable to the thermal velocity in the surface material.
 The deviation of $v$ from $\alpha c$ implies $\rho\neq\rho_\mathrm{GJ}$ or
 $j\neq j_B$, which generates electric field.
 B08 argued that
-\Eqs~(\ref{eq:Gauss}) and (\ref{eq:Maxw}) with $0<\alpha<1$
+equations~(\ref{eq:Gauss}) and (\ref{eq:Maxw}) with $0<\alpha<1$
 always drive the flow toward $v=\alpha c$,
 like a pendulum is driven by gravity toward its equilibrium position.
 The resulting oscillations occur in space or time,
-according to \Eqs~(\ref{eq:Gauss}) or (\ref{eq:Maxw}), respectively.
+according to equations~(\ref{eq:Gauss}) or (\ref{eq:Maxw}), respectively.
 For example, the steady-state solution for a cold flow exhibits
 oscillations in space
 % \citep[B08]{1985MNRAS.217..443M}
-   (Mestel et al. 1985; B08).
+\citep[B08]{mestel_axisymmetric_1985}
+   % (Mestel et al. 1985; B08).
 The oscillatory behavior of the flow with $0<\alpha<1$ is, in essence, Langmuir
 oscillations; they are generated near the boundary where the flow is initially
 accelerated toward $v=\alpha c$.
 
-In this chapter, we investigate the accelerator with $0<\alpha<1$ in more detail.
-In \Sect~2, we write down the steady-state solution for the charge-separated
-flow, generalized to non-zero temperature of the polar-cap. We argue that
-the flow is unstable to small perturbations and can develop into a complicated
-time-dependent state with a broad momentum distribution.
-To explore the behavior of the flow, we perform fully kinetic
-time-dependent simulations. The method of simulations is described in \Sect~3,
-and the results are presented in \Sect~4.
-Our simulations show the turbulent oscillatory behavior of the flow with $0<\alpha<1$;
-particle acceleration in the flow is insufficient to ignite pair creation.
-Implications of this ``dead zone'' for radio emission and outer gaps in pulsars
-are discussed in \Sect~5.
+In this chapter, we investigate the accelerator with $0<\alpha<1$ in more
+detail. In \Sect~\ref{sec:pc-steady-state}, we write down the steady-state
+solution for the charge-separated flow, generalized to non-zero temperature of
+the polar-cap. We argue that the flow is unstable to small perturbations and can
+develop into a complicated time-dependent state with a broad momentum
+distribution. To explore the behavior of the flow, we perform fully kinetic
+time-dependent simulations. The method of simulations is described in
+\Sect~\ref{sec:pc-setup}, and the results are presented in
+\Sect~\ref{sec:pc-results}. In \Sect~\ref{sec:pc-ions} we consider the flow with
+mixed species of ions extracted from the surface. Our simulations show the
+turbulent oscillatory behavior of the flow with $0<\alpha<1$; particle
+acceleration in the flow is insufficient to ignite pair creation. Implications
+of this ``dead zone'' for radio emission and outer gaps in pulsars are discussed
+in \Sect~\ref{sec:pc-discussion}.
 
 
 \section{Steady-state solution for a charge-separated flow}
+\label{sec:pc-steady-state}
 
 
 \subsection{Basic equations}
@@ -142,7 +151,7 @@ could expect a steady state to be established unless the flow is prone to an ins
 Consider a charge-separated flow from the polar cap that carries electric current
 $j_B$ along magnetic field $\mathbf{B}$ (because of a strong field, particles are kept in
 the ground Landau state).
-In a steady state $j=j_B$ (\Eq~\ref{eq:Maxw}).
+In a steady state $j=j_B$ (equation~\ref{eq:Maxw}).
 For simplicity, let us assume that $\mathbf{B}$ is approximately perpendicular to
 the polar cap and let $z$ measure the altitude above the stellar surface.
 A particle of mass $m$ and charge $e$ that starts with a Lorentz factor
@@ -166,7 +175,7 @@ the transverse directions, i.e. the acceleration length $l_\parallel$ is much sm
 than the characteristic transverse scale of the problem $l_\perp$, which may be
 associated with the size of the polar cap. This condition is satisfied for the flows considered below.\footnote{
       Alternatively, the additional term $\nabla_\perp^2\Phi$ could be moved to the
-      right-hand side of \Eq~(\ref{eq:Phi}) and included in the effective $\rho_\mathrm{GJ}$.}
+      right-hand side of equation~(\ref{eq:Phi}) and included in the effective $\rho_\mathrm{GJ}$.}
 The term $-\rho_\mathrm{GJ}$ may be viewed as a fixed background charge density.
 The charge density of the flow itself is given by
 \begin{equation}
@@ -174,13 +183,13 @@ The charge density of the flow itself is given by
 \end{equation}
 Here $v(\gamma_0,z)$ is the velocity of particles that started at $z=0$
 with initial Lorentz factor $\gamma_0$; note that $v^2/c^2=1-\gamma^{-2}$ where
-$\gamma(z)$ is given by \Eq~(\ref{eq:a}).
+$\gamma(z)$ is given by equation~(\ref{eq:a}).
 Function $w(\gamma_0)$ describes the probability distribution of $\gamma_0$.
 The width of this distribution is controlled by the temperature of polar cap $T$.
 For example, $w=\delta(\gamma_0-1)$ describes a cold polar cap ($T=0$) where
 all particles have $\gamma_0=1$.
 
-We multiply both sides of \Eq~(\ref{eq:Phi}) by $da/dz=-(e/mc^2)d\Phi/dz$ and find,
+We multiply both sides of equation~(\ref{eq:Phi}) by $da/dz=-(e/mc^2)d\Phi/dz$ and find,
 \begin{equation}
 \label{eq:diff}
      \frac{mc^2}{2e}\,\frac{d}{dz}\left(\frac{da}{dz}\right)^2
@@ -188,8 +197,8 @@ We multiply both sides of \Eq~(\ref{eq:Phi}) by $da/dz=-(e/mc^2)d\Phi/dz$ and fi
    \frac{j_B}{c}\int_1^{\infty} \frac{dp}{dz}(\gamma_0,z)\,w(\gamma_0)\,d\gamma_0
          -\frac{da}{dz}\,\rho_\mathrm{GJ}\right].
 \end{equation}
-On the right-hand side, we used $da/dz=-d\gamma/dz$ (\Eq~\ref{eq:a}) and
-$d\gamma/v=dp/c$. Integration of \Eq~(\ref{eq:diff}) in $z$ gives
+On the right-hand side, we used $da/dz=-d\gamma/dz$ (equation~\ref{eq:a}) and
+$d\gamma/v=dp/c$. Integration of equation~(\ref{eq:diff}) in $z$ gives
 \begin{equation}
 \label{eq:steady}
     \frac{\lambda_p^2}{2}\left(\frac{da}{dz}\right)^2
@@ -200,7 +209,7 @@ where
 \begin{equation}
    p^2(\gamma_0,z)=\gamma^2-1=\left[\gamma_0+a(z)\right]^2-1.
 \end{equation}
-In \Eq~(\ref{eq:steady}) we used $a(0)=0$ and the boundary condition $da/dz(0)=0$
+In equation~(\ref{eq:steady}) we used $a(0)=0$ and the boundary condition $da/dz(0)=0$
 (the stellar surface is modeled as a perfect conductor that can freely emit charges
 with $E_\parallel(0)=0$). We also used $j_B(z)\approx const$ and
 $\rho_\mathrm{GJ}(z)\approx const$, as $j_B$ and $\rho_\mathrm{GJ}$ do not vary much on the
@@ -259,7 +268,7 @@ the neutron star.
 \subsection{Cold and warm solutions}\label{sec:solutions}
 
 Once the injection distribution $w(\gamma_0)$ is specified,
-it is straightforward to numerically integrate \Eq~(\ref{eq:steady}) and find $a(z)$.
+it is straightforward to numerically integrate equation~\eqref{eq:steady} and find $a(z)$.
 In our sample models we chose
 $w(\gamma_0)=(kT)^{-1}\exp[-(\gamma_0-1)/kT]$ with $kT/mc^2=0$ (cold) and
 0.03 (warm); the average injection momentum $p_0$ in the warm model equals
@@ -267,13 +276,13 @@ $0.22mc$. Figure~\ref{fig:steady} shows $\Phi(z)$ for the cold and warm solution
 
 Figure~\ref{fig:steady} also shows a third model where all particles injected at the polar cap
 have $p_0=0.22$, i.e. $w(\gamma_0)$ is a delta-function.
-In this model, \Eq~(\ref{eq:steady}) simplifies to
+In this model, equation~(\ref{eq:steady}) simplifies to
 \begin{equation}
 \label{eq:cold}
     \frac{\lambda_p^2}{2}\left(\frac{da}{dz}\right)^2 = p(\gamma_0,z)-p_0
                                                                                + \frac{a(z)}{\alpha},
 \end{equation}
-[same as \Eq~(3) in B08]. This flow is cold everywhere, i.e. its momentum
+[same as equation~(3) in B08]. This flow is cold everywhere, i.e. its momentum
 distribution is described by $f(p^\prime)=n\,\delta[p^\prime-p(z)]$.
 As one can see in Figure~\ref{fig:steady}, the cold model with $p_0\neq 0$ provides an
 excellent approximation to the exact warm model that has the same {\it average}
@@ -281,7 +290,8 @@ value of $p_0$.
 
 The cold flow solution was discussed in earlier works
 % \citep[B08]{1985MNRAS.217..443M}
-   (Mestel et al. 1985; B08).
+\citep[B08]{mestel_axisymmetric_1985}
+% (Mestel et al. 1985; B08).
 For $1-\alpha\ll 1$, the oscillation period is approximately given by (B08)
 \begin{equation}
     z_0 \approx 2^{3/2}\frac{\lambda_p}{1-\alpha}, \qquad 1-\alpha\ll 1.
@@ -290,7 +300,7 @@ The precise period is obtained by numerical integration; e.g.
 $z_0=11.0\,\lambda_p$ for $\alpha=0.8$.
 The momentum of the steady cold flow $p(z)$ oscillates between the injection
 momentum $p_0\ll 1$ and a maximum value $p_{\max}$. The minima and
-maxima are where $da/dz=0$, and from \Eq~(\ref{eq:cold}) one finds
+maxima are where $da/dz=0$, and from equation~(\ref{eq:cold}) one finds
 \begin{equation}
 \label{eq:pmax}
     p_{\max}=\frac{2\alpha\,\gamma_0-(1+\alpha^2)p_0}{1-\alpha^2}.
@@ -324,7 +334,7 @@ perturbation at $z\approx z_k$. For example, suppose
 a small bunch $\A$ of particles with momenta in a range $(p_1,p_1+\Delta p)$
 are slightly pushed forward while the rest of particles are unperturbed.
 This perturbation implies a local increase in electric current $j>j_B$ and hence
-$\partial E_\parallel/\partial t<0$ (\Eq~\ref{eq:Maxw}), generating negative
+$\partial E_\parallel/\partial t<0$ (equation~\ref{eq:Maxw}), generating negative
 electric field $\delta E_\parallel$ at $z\approx z_k$ that tends to restore the
 condition $j=j_B$. In contrast to the initial perturbation,
 the induced $\delta E_\parallel$ affects {\it all} local particles, regardless their
@@ -351,18 +361,20 @@ simulations; it eventually completely destroys the steady state solution.
 
 %#################################################################
 
-\section{Numerical setup}\label{sec:setup}
+\section{Numerical setup}
+\label{sec:pc-setup}
 
 
 Our numerical method is similar to that used by
 % \citet[hereafter BT07]{2007ApJ...657..967B}
-   Beloborodov \& Thompson (2007, hereafter BT07).
+% Beloborodov \& Thompson (2007, hereafter BT07).
+\citet[hereafter BT07]{beloborodov_corona_2007}
 The plasma is modeled as a large number $N\sim 10^6$ of individual
 particles that flow along the magnetic field lines.
 We assume that the magnetic field is fixed in
 the co-rotating frame of the star; thus $j_B$ and $\rho_\mathrm{GJ}$ are fixed. Then the
 problem becomes essentially one-dimensional, as discussed in detail in BT07.
-In the present paper, we consider only charge-separated flows, with no pair creation.
+In the present chapter, we consider only charge-separated flows, with no pair creation.
 Three other differences from the magnetar simulation in BT07 are as follows:
 (1) The magnetar problem had $\alpha\gg 1$
 ($\rho_\mathrm{GJ}$ was negligible compared with $j_B/c$);
@@ -384,7 +396,7 @@ the surface; we assume that all of them have the same mass $m$ and charge $e$.
 \end{equation}
 where $p_i$ is the momentum of the i-th particle in units of $mc$, and
 $E_\parallel(z_i)$ is the self-consistent electric field at the particle location $z_i$.
-The field is found by integrating Gauss law (\Eq~\ref{eq:Gauss})
+The field is found by integrating Gauss law (equation~\ref{eq:Gauss})
 along the magnetic field line,
 \begin{equation}
  \label{eq:E}
@@ -394,13 +406,13 @@ Here $N(z_i)$ is the column density of particles between $z=0$ and $z=z_i$,
 and we used the boundary condition $E_\parallel(0)=0$, as the material below the
 stellar surface is assumed to be a very good conductor that can emit free charges.
 Divergence of the perpendicular component of electric field $E_\perp$
-is neglected in \Eq~(\ref{eq:E}) (see BT07 for discussion of this approximation).
+is neglected in equation~(\ref{eq:E}) (see BT07 for discussion of this approximation).
 The approximation $|\nabla_\perp\cdot\bE_\perp|\ll |dE_\parallel/dz|$ is valid if the
 characteristic scale of the flow acceleration $z_0$ is smaller than the transverse
 scale $l_\perp$, which is limited by the polar-cap size $\rpc$;
 the condition $z_0\ll \rpc$ is satisfied in the dead-zone models presented below.
 We also assume that $\rho_\mathrm{GJ}$ is approximately constant on scale $z_0$.
-\Eqs~(\ref{eq:p}) and (\ref{eq:E}) in essence describe a relativistic, time-dependent
+equations~(\ref{eq:p}) and (\ref{eq:E}) in essence describe a relativistic, time-dependent
 diode problem with an additional fixed background charge density $-\rho_\mathrm{GJ}$.
 
 As we track the motion of all particles individually, the continuity equation is
@@ -410,8 +422,8 @@ conservation,
 \label{eq:charge}
     \frac{\partial\rho}{\partial t}+\frac{\partial j}{\partial z}=0.
 \end{equation}
-\Eq~(\ref{eq:Maxw}) follows from \Eqs~(\ref{eq:Gauss}) and (\ref{eq:charge}),
-so we will not need \Eq~(\ref{eq:Maxw}).
+equation~(\ref{eq:Maxw}) follows from equations~(\ref{eq:Gauss}) and (\ref{eq:charge}),
+so we will not need equation~(\ref{eq:Maxw}).
 Instead, the parameter $j_B$ enters the problem as a boundary condition.
 The magnetic field lines are frozen in the excellent conductor below the stellar
 surface, which sustains $j(0)=j_B$.
@@ -421,7 +433,7 @@ the computational box at $z=0$ with the fixed rate $j_B$ (BT07).
 The electric current $j_B$ is enforced at one boundary $z=0$. Since
 the computational box has a finite size $H$, we also have to choose the
 boundary condition at $z=H$ and the value of $H$. In all sample models
-shown in this paper we use the simplest boundary condition:
+shown in this chapter we use the simplest boundary condition:
 particles moving out of the box are lost and no particles enter the box at
 $z=H$. This condition may be refined by allowing a small inflow of returning
 particles at the outer boundary. We ran test simulations that show that the
@@ -451,7 +463,7 @@ are well resolved.
 %################################################################
 
 \section{Results}
-
+\label{sec:pc-results}
 
 \subsection{Steady state tests}
 
@@ -468,7 +480,7 @@ where $F(t,z,p)$ is the particle distribution function in phase space. The
 electric current is $j(t,z)=\rho \bar{v}$ where $\bar{v}(t,z)$  is the average
 velocity of the particles. As a first simple test, consider a uniform flow
 with $\rho(z)=\rho_\mathrm{GJ}$, $\bar{v}(z)=\alpha c$, and $E_\parallel(z)=0$.
-It is easy to see from \Eqs~(\ref{eq:p}), (\ref{eq:E}) and (\ref{eq:Vlasov}) that
+It is easy to see from equations~(\ref{eq:p}), (\ref{eq:E}) and (\ref{eq:Vlasov}) that
 the flow must remain in this state. This behavior is reproduced by our simulations.
 The steady uniform flow can have any momentum distribution $F(p)$
 as long as $\bar{v}=\alpha c$. Note that it requires a continual injection of particles
@@ -481,7 +493,8 @@ accelerating the flow. In a steady state, the solution for the cold flow must ha
 the form, $F(z,p^\prime)=n(z)\,\delta[p^\prime-p(z)]$, where $p(z)$ and $n(z)$ can
 be described analytically. We first test the special case $\alpha=1$
 % \citep{1977ApJ...217..227F}.
-   (Michel 1974).
+% (Michel 1974).
+\citep{michel_rotating_1974}.
 The flow is accelerated by the self-consistent $E_\parallel(z)$, and $p$ exceeds
 unity at $z\sim\lambda_p$. At heights $z\gg \lambda_p$, velocity approaches $c$,
 charge density of the flow $\rho=j_B/v$ approaches $\rho_\mathrm{GJ}$, and
@@ -560,7 +573,7 @@ the flow has the minimum velocity $\beta_0$; the height of each spike is
 $\rho_{\max}=j_B/\beta_0=(\alpha/\beta_0)\rho_\mathrm{GJ}$.
 The charge spikes are associated with maxima of the electric potential (Figure~\ref{fig:alpha0.8cold}c).
 The oscillating momentum has maxima $p_{\max}=3.6$, in excellent agreement
-with \Eq~(\ref{eq:pmax}). The period of oscillation is $z_0\approx 11\lambda_p$, same
+with equation~(\ref{eq:pmax}). The period of oscillation is $z_0\approx 11\lambda_p$, same
 as found using the method of \Sect~2.2.
 
 As anticipated in \Sect~2.3, we find that the steady state becomes unstable if we
@@ -596,7 +609,7 @@ understood as follows.
 Consider a particle whose Lorentz factor differs from that of the background cold
 flow by a small $\delta\gamma$. As the particle moves along with the flow, its deviation
 $\delta\gamma$ remains constant, as it travels in the same electrostatic potential as
-the background flow (cf. \Eq~\ref{eq:a}). Using the relation $d\gamma/dp=\beta$, we
+the background flow (cf. equation~\ref{eq:a}). Using the relation $d\gamma/dp=\beta$, we
 find the perturbation of momentum $\delta p$ that corresponds to $\delta\gamma$,
 \begin{equation}
     \delta p = \frac{\delta\gamma}{\beta}\propto \beta^{-1}.
@@ -835,6 +848,7 @@ around $\sim 10^4$ did not change the measured parameters of the flow.
 %#################################################################
 
 \section{Mixed ion flow and two stream instability}
+\label{sec:pc-ions}
 
 
 If $j_B>0$ (which is equivalent to $\rho_\mathrm{GJ}>0$ for $\alpha>0$), the
@@ -866,7 +880,7 @@ two times larger than the proton current $j_1=e_1\dot{N}_1$. Thus,
 $j_2=(2/3)j_B$ and $j_1=(1/3)j_B$ are maintained at the boundary.
 
 To define a charateristic plasma skin depth $\lambda_p$ we use
-\Eq~(\ref{eq:lambda}) where we replace $e,m,j_B$ by $(e_1,m_1,j_1)$
+equation~(\ref{eq:lambda}) where we replace $e,m,j_B$ by $(e_1,m_1,j_1)$
 or, equivalently, by $(e_2,m_2,j_2)$ (note that $e_2j_2/m_2=e_1j_1/m_1$).
 The characteristic plasma frequency is defined by $\omega_p=c/\lambda_p$.
 
@@ -901,10 +915,10 @@ The characteristic plasma frequency is defined by $\omega_p=c/\lambda_p$.
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Figure~7 shows a snapshot of the phase-space distribution of ions long after
-the beginning of the simulation. In this sample model $\alpha=0.4$; the
-modest value of $\alpha$ (not close to unity) implies modest Lorentz factors
-of particles and fast development of instabilities.
+Figure~\ref{fig:2stream} shows a snapshot of the phase-space distribution of
+ions long after the beginning of the simulation. In this sample model
+$\alpha=0.4$; the modest value of $\alpha$ (not close to unity) implies modest
+Lorentz factors of particles and fast development of instabilities.
 %
 % The result of the simulation can be summarized quite well by figure \ref{fig:2stream}.
 % The figure illustrates the following features:
@@ -943,14 +957,16 @@ develop a two-stream instability. The growth rate of the instability may be
 estimated using an idealized model of two streams with densities $n_1$,
 $n_2$ and velocities $v_1,v_2$. It is straightforward to derive the dispersion
 relation for Langmuir modes with frequency $\omega$ and wave-vector $k$
-(e.g. Melrose 1986); it gives,
+% (e.g. Melrose 1986);
+\citep[e.g.][]{melrose_instabilities_1986};
+it gives,
 \begin{equation}
 \label{eq:disp}
     1-\frac{\omega_1^{2}}{\gamma_1^3(\omega - kv_1)^2} - \frac{\omega_2^{2}}{\gamma_2^3(\omega - kv_2)^2} = 0,
 \end{equation}
 where $\omega_1^2=4\pi n_1 e_1^2/m_1$ and $\omega_2^2=4\pi n_2 e_2^2/m_2$.
 Using $\omega_1\approx\omega_2\approx\omega_p$ and the characteristic values
-of velocities $v_1,v_2$ from our simulation, we find from \Eq~(\ref{eq:disp}) that
+of velocities $v_1,v_2$ from our simulation, we find from equation~(\ref{eq:disp}) that
 the most unstable modes have $\omega$ comparable to $\omega_p$ and their
 growth rate is $\Gamma\sim 0.1\omega_p$.
 % The instability does not happen
@@ -976,14 +992,14 @@ No significant particle acceleration is seen in the simulation.
 %#############################################################
 
 \section{Discussion}
-
+\label{sec:pc-discussion}
 
 We have presented detailed one-dimensional time-dependent simulations
 of the plasma flow extracted from the polar caps of neutron stars.
 The simulations provide a fully kinetic description of the flow,
 with self-consistent electric field and particle distribution function.
-In this paper, we focused on the regime $0<\alpha<1$, where $\alpha$ is the main
-parameter of the flow defined by \Eq(\ref{eq:alpha}).
+In this chapter, we focused on the regime $0<\alpha<1$, where $\alpha$ is the main
+parameter of the flow defined by equation \eqref{eq:alpha}.
 In agreement with the estimates of B08, we find that
 the particles are accelerated to Lorentz factors,
 \begin{equation}
@@ -1019,7 +1035,8 @@ $\xi$; besides, it varies across the polar cap. For nearly
 aligned rotators ($\xi\approx 0$),
 $0<\alpha<1$ in the central part of the polar cap and $\alpha<0$
 in a ring-shaped zone near the edge of the polar cap
-(Timokhin 2006; Parfrey et al. 2012).
+% (Timokhin 2006; Parfrey et al. 2012).
+\citep{timokhin_force-free_2006,parfrey_introducing_2012}
 In this case, the dead zone occupies the
 central part of the polar cap, and $e^\pm$ discharge must be confined to the ring,
 % only the ring is expected to produce $e^\pm$ discharge,
@@ -1037,7 +1054,10 @@ At arbitrary misalignment $0<\xi<\pi/2$,
 the values of $\alpha$
 % for various $\xi$ is
 can be provided by global three-dimensional simulations
-of the magnetospheric structure (e.g. Spitkovsky 2006) and should play a key
+of the magnetospheric structure
+% (e.g. Spitkovsky 2006)
+\citep[e.g.][]{spitkovsky_time-dependent_2006}
+and should play a key
 role for the geometry of the radio beam.
 
 
@@ -1049,11 +1069,11 @@ We presented our results using plasma skin depth $\lambda_p$ as a unit of
 length and particle rest-mass $mc^2$ as a unit of energy. In this form, the results
 do not depend on the charge or mass of the particles extracted from the polar cap,
 as long as our assumption --- that the flow is made of identical particles --- is
-satisfied. In particular, \Eq~(\ref{eq:gam2}) is valid for both electron flow
+satisfied. In particular, equation~(\ref{eq:gam2}) is valid for both electron flow
 ($\rho_\mathrm{GJ}<0$) and ion flow ($\rho_\mathrm{GJ}>0$), and the phase-space
 distribution shown in Figure~5 describes both cases.
 Note that the accelerating voltage is proportional to the particle mass;
-voltage implied by \Eq~(\ref{eq:gam2}) is different for ions and electrons by
+voltage implied by equation~(\ref{eq:gam2}) is different for ions and electrons by
 the factor of $m_i/m_e\sim 2\times 10^3$.
 The relatively high voltage in the ion flow,
 $e\Phi\approx\gamma m_ic^2 (1+\alpha^2)/(1-\alpha^2)$,
@@ -1064,7 +1084,10 @@ new effects may enter the problem.
 Firstly, heavy ions pulled out from the polar cap may not be completely ionized
 and begin to lose electrons as they are accelerated and interact with the X-rays
 above the stellar surface; this process effectively creates new charges,
-reminiscent of pair creation (e.g. Jones 2012). Secondly, the ion flow may be a
+reminiscent of pair creation
+% (e.g. Jones 2012).
+\citep[e.g.][]{jones_post-glitch_2002}
+Secondly, the ion flow may be a
 mixture of different nuclei which will be accelerated to different Lorentz factors.
 The mixed ion flow is prone to two-stream instability, possibly leading to formation
 plasma clumps and generation of coherent radio emission.
@@ -1088,13 +1111,18 @@ backflowing particles from distant parts of the open field-line bundle
 density and also serve as an
 additional background charge density, which may be modeled as a contribution to the
 effective ``vacuum'' charge density  $-\rho_\mathrm{GJ}$.
-This would change the effective $\alpha$ (Lyubarsky 1992; B08), most likely reducing it.
+This would change the effective $\alpha$
+% (Lyubarsky 1992; B08),
+\citep[][B08]{lyubarskij_current_1992},
+most likely reducing it.
 % In particular, if an outer gap produces relativistic $e^\pm$ pairs and sends part of them
 % toward the star.
 
 An outer gap is expected to form in a charge-separated flow near the null surface
-$\vec{B}\cdot\vec{\Omega}=0$ (Cheng \& Ruderman 1986).
-On a given field line, the outer gap will be screened if it is loaded by multiple $e^\pm$ pairs
+$\mathbf{B}\cdot\bOm=0$
+% (Cheng \& Ruderman 1986)
+\citep{cheng_energetic_1986}
+. On a given field line, the outer gap will be screened if it is loaded by multiple $e^\pm$ pairs
 produced by discharge at the polar cap.
 % near the star and loads the field lines with $e^\pm$ flow of a high multiplicity.
 Thus, suppression of $e^\pm$ discharge near the field line footpoint is
@@ -1105,14 +1133,16 @@ field lines with footpoints in the dead zone.
 
 % Outer gap; Parfrey et al. (2012)
 
-We did not simulate in this paper flows with $\alpha>1$ or $\alpha<0$;
+We did not simulate in this chapter flows with $\alpha>1$ or $\alpha<0$;
 in these cases particles must be strongly accelerated.
 This regime leads to an $e^\pm$ discharge that must be unsteady,
 with a significant intermittent backflow (B08).
 A model for oscillating discharge can be studied in hydrodynamical approximation
-(Levinson et al. 2005), however a fully kinetic description is essential.
+\citep{levinson_large-amplitude_2005}
+, however a fully kinetic description is essential.
 We defer the kinetic time-dependent simulations with pair creation
 to a future paper.
+
 
 % Local Variables:
 % TeX-master: "../thesis"
