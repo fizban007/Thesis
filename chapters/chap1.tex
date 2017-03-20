@@ -60,18 +60,22 @@ side of equation \eqref{eq:vlasov} to zero.
 The charge and current densities are found by taking the moments of
 the distribution function $f^s$ over the momentum space
 \begin{align}
-  \rho &= \int d \mathbf{u} \sum_s q^s f^s(\mathbf{x}, \mathbf{u}) \label{eqn:rho} \\
-  \mathbf{j} &= \int d \mathbf{u} \sum_s q^s \mathbf{u} f^s(\mathbf{x}, \mathbf{u}) \label{eqn:j}
+  \rho &= \int d \mathbf{u} \sum_s q^s f^s(\mathbf{x}, \mathbf{u}) \label{eqn:pic-rho} \\
+  \mathbf{j} &= \int d \mathbf{u} \sum_s q^s \mathbf{u} f^s(\mathbf{x}, \mathbf{u}) \label{eqn:pic-j}
 \end{align}
-Macro particles are introduced to sample the distribution function
-$f^s$ in both position and momentum space. A macro particle can be
-viewed as a collection of particles smeared out in space, with
-identical physical momentum $\mathbf{p}_{p}$. Therefore, each
-particle represents a distribution function of the type
+Macro particles are introduced to sample the distribution function $f^s$ in both
+position and momentum space. We approximate the distribution function of each
+species by sampling it with a finite but large number of macro particles each
+with a smeared out distribution in space but identical momentum
+$\mathbf{p}_{p}$:
 \begin{equation}
     \label{eq:single-particle}
-    f^s_{p}(\mathbf{x}, \mathbf{u}) = \delta(\gamma \mathbf{u} - \mathbf{p}_{p}) S(\mathbf{x} - \mathbf{x}_{p})
+    f^s(\mathbf{x}, \mathbf{u}) = \sum_{p}f^s_{p}(\mathbf{x}, \mathbf{u}) = \delta(\gamma \mathbf{u} - \mathbf{p}_{p}) S(\mathbf{x} - \mathbf{x}_{p})
 \end{equation}
+% A macro particle can be
+% viewed as a collection of particles smeared out in space, with
+% identical physical momentum $\mathbf{p}_{p}$. Therefore, each
+% particle represents a distribution function of the type
 where $S$ is a function that describes the shape of the macro
 particle, with the property that $S$ has finite support, and that the
 integral of $S$ over all space is normalized to 1. The idea is that,
@@ -82,64 +86,283 @@ dynamics of the plasma.
 
 The dynamic equations for the macro particles can be derived by taking
 the moments of the Vlasov equation with the single particle
-distribution function \eqref{eq:single-particle}. It turns out that
-these dynamic equations are identical to the equations of motion of a
-single particle in electromagnetic field:
-\begin{align}
-  \label{eq:particle-equations}
-  \frac{d\mathbf{x}_p}{dt} = \mathbf{u}_p = \frac{\mathbf{p}_p}{\gamma_p} \\
-  \frac{d\mathbf{p}_p}{dt} = \frac{q_p}{m_p}(\mathbf{E} + \mathbf{u}_p\times \mathbf{B})
-\end{align}
-Therefore it is justified to treat macro particles as their name
-suggests: simply as physical particles. The code simply trace their
-motion in the electromagnetic field as described by the above dynamic
-equations.
+distribution function \eqref{eq:single-particle}. Plugging the single
+particle distribution function into the Vlasov equation and taking the
+zeroth moment by integrating over $\mathbf{u}$, we get
+\begin{equation}
+\begin{split}
+    \int d\mathbf{u}\,\left\{ \left[ \partial_t \delta(\gamma \mathbf{u} - \mathbf{p}_p) \right]S(\mathbf{x} - \mathbf{x}_p) + \delta(\gamma \mathbf{u} - \mathbf{p}_p)\partial_tS(\mathbf{x} - \mathbf{x}_p) \right. \\
+    + \delta(\gamma \mathbf{u} - \mathbf{p}_p) \mathbf{u}\cdot\nabla S(\mathbf{x} - \mathbf{x}_p) \\
+    \left. + S(\mathbf{x} - \mathbf{x}_p)\frac{q_p}{m_p}(\mathbf{E} + \mathbf{u}\times \mathbf{B})\cdot \nabla_{\gamma \mathbf{u}}\delta(\gamma \mathbf{u} - \mathbf{p}_p) \right\} = 0
+\end{split}
+\end{equation}
+The first term is an integral of the derivative of a delta function,
+which should give zero since $S$ is independent of the integrand. The
+second and third term can be integrated trivially to get
+\begin{equation}
+\frac{d\mathbf{x}_p}{dt} = \mathbf{u}_p = \frac{\mathbf{p}_p}{\gamma_p}
+\end{equation}
+The reason is that $\mathbf{x}_p$ depends only on $t$, therefore
+the partial derivative becomes a total derivative,
+$\partial_tS(\mathbf{x} - \mathbf{x}_p) = -\nabla
+S(\mathbf{x} - \mathbf{x}_p) \cdot d\mathbf{x}_p/dt$. The
+last term which involves the electromagnetic force requires a bit more
+attention. The $\mathbf{E}$ field term again integrates to zero
+since it is an integral of the derivative of a delta function. The
+Lorentz force term needs an integration by parts, but then it would
+become zero because $\nabla_{\gamma
+  \mathbf{u}}\cdot(\mathbf{u}\times \mathbf{B})$ is zero.
+
+% The dynamic equations for the macro particles can be derived by taking
+% the moments of the Vlasov equation with the single particle
+% distribution function \eqref{eq:single-particle}. It turns out that
+% these dynamic equations are identical to the equations of motion of a
+% single particle in electromagnetic field:
+% \begin{align}
+%   \label{eq:particle-equations}
+%   \frac{d\mathbf{x}_p}{dt} = \mathbf{u}_p = \frac{\mathbf{p}_p}{\gamma_p} \\
+%   \frac{d\mathbf{p}_p}{dt} = \frac{q_p}{m_p}(\mathbf{E} + \mathbf{u}_p\times \mathbf{B})
+% \end{align}
+% Therefore it is justified to treat macro particles as their name
+% suggests: simply as physical particles. The code simply trace their
+% motion in the electromagnetic field as described by the above dynamic
+% equations.
+
+Taking the first moment of the Vlasov equation yields
+\begin{equation}
+\begin{split}
+    \int d\mathbf{u}\,\left\{ \mathbf{u}\left[ \partial_t \delta(\gamma \mathbf{u} - \mathbf{p}_p) \right]S(\mathbf{x} - \mathbf{x}_p) + \mathbf{u}\delta(\gamma \mathbf{u} - \mathbf{p}_p)\partial_tS(\mathbf{x} - \mathbf{x}_p) \right. \\
+    + \mathbf{u}\delta(\gamma \mathbf{u} - \mathbf{p}_p) \mathbf{u}\cdot\nabla S(\mathbf{x} - \mathbf{x}_p) \\
+    \left. + \mathbf{u}S(\mathbf{x} - \mathbf{x}_p)\frac{q_p}{m_p}(\mathbf{E} + \mathbf{u}\times \mathbf{B})\cdot \nabla_{\gamma \mathbf{u}}\delta(\gamma \mathbf{u} - \mathbf{p}_p) \right\} = 0
+\end{split}
+\end{equation}
+The second and third terms give the same equation of motion as above, and they
+are proportional to the gradient of $S$, independent of the other two terms,
+therefore we ignore them. The rest two terms can be reduced to the simple
+single-particle equation of motion:
+\begin{equation}
+\frac{d\mathbf{p}_p}{dt} = \frac{q_p}{m_p}(\mathbf{E} + \mathbf{u}\times \mathbf{B})
+\end{equation}
+
+These are simply equations of motion for ordinary particles in an
+electromagnetic field. Therefore it is justified to treat macro particles as
+their name suggests: simply as physical particles. A PIC code simply trace their
+motion in the electromagnetic field as described by the above dynamic equations.
+
 
 \subsection{Discretization}
 \label{sec:discretization}
 
-To solve the Maxwell equations and particle dynamic equations
-numerically, one needs to discretize to a finite grid, hence the name
-Particle-in-Cell. The discretization is done on space and time, so
-that fields $\mathbf{E}$ and $\mathbf{B}$ are sampled on a
-finite grid, as well as the current and charge densities
-$\mathbf{J}$ and $\rho$. One evolves the equations using a given
-time evolution scheme step by step starting from the initial
-condition. At each step, one updates the positions and momenta of all
-particles according to the fields on the grid, computes the current
-density due to particle motion, and uses this current density to
-evolve the fields themselves.
+So far the only approximation we have introduced is using an ensemble of macro
+particles to approximate the real distribution function of a plasma system. To
+solve the Maxwell equations and particle dynamic equations numerically, one
+needs to discretize to a finite grid, hence the name Particle-in-Cell. The
+discretization is done on space and time using the Finite Difference Time Domain
+(FDTD) method. %TODO: Reference?
+Fields $\mathbf{E}$ and $\mathbf{B}$ are sampled on a finite
+grid, as well as the current and charge densities $\mathbf{J}$ and $\rho$. One
+evolves the equations using a given time evolution scheme step by step starting
+from the initial condition. At each step, one updates the positions and momenta
+of all particles according to the fields on the grid, computes the current
+density due to particle motion, and uses this current density to evolve the
+fields themselves.
 
-Aperture is a 2.5D PIC code, meaning that the spatial grid is 2D,
-while we compute all 3 components of the field quantities on the
-grid. This is applicable when the problem has inherent symmetry, such
-as axisymmetry or translational invariance in one direction. We use
-the classical staggered Yee grid for electric and magnetic fields.
-% TODO: Insert a picture of the Yee grid
+A PIC code can operate in either 2D or 3D. In the former case, although a grid
+of lower dimension is used, all 3 vector components of $\mathbf{E}$ and
+$\mathbf{B}$ fields need to be evolved\footnote{Sometimes also called ``2.5D''
+  due to full 3D vector quantities defined on a 2D grid.}. This is applicable
+when the problem has inherent symmetry, such as axisymmetry or translational
+invariance in one direction. It is typical to use the classical staggered
+\citet{yee_numerical_1966} grid for electric and magnetic fields (figures
+\ref{fig:Yee} and \ref{fig:Yee-cartesian}).
 
-Since particles stream freely in the cells, the electric and magnetic
-fields a particle sees will need to be interpolated from the grid
-points. This is done by integrating the shape function in equation
-\eqref{eq:single-particle}:
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[label distance=-2.5mm]
+    \begin{scope}[scale=1.3]
+      \draw[->] (-0.5, 0) -- node[left] {$r$} (-0.5, 2);
+      \draw[->] (0, -0.5) -- node[below] {$\theta$} (2, -0.5);
+      \draw[dashed] (0,0) rectangle (3,3);
+      \node [label=below:$\rho\text{, }j_{\phi}\text{, }E_{\phi}$] (center) at (1.5,1.5) {$\times$};
+      \node [label=right:$j_{\theta}\text{, }E_\theta\text{, }B_{r}$] (right) at (3,1.5) {$\times$};
+      \node [label=above:$j_r\text{, }E_r\text{, }B_{\theta}$] (top) at (1.5,3) {$\times$};
+      \node [label=right:$B_\phi$] (top right) at (3,3) {$\times$};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{Staggered Yee cell for a 2D spherical grid.}
+  \label{fig:Yee}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[label distance=-2.5mm]
+    \begin{scope}[scale=1]
+      \pgfmathsetmacro{\l}{4}
+      \pgfmathsetmacro{\h}{2}
+      \pgfmathsetmacro{\d}{0.8}
+      \draw[dashed] (0, 0, 0) -- ++(\l, 0, 0);
+      \draw[dashed] (0, 0, 0) -- ++(0, \l, 0);
+      \draw[dashed] (0, 0, 0) -- ++(0, 0, \l);
+      \draw[thin] (0, 0, \l) -- ++(\l, 0, 0) -- ++(0, 0, -\l)
+      -- ++(0, \l, 0) -- ++(-\l, 0, 0) -- ++(0, 0, \l) -- cycle;
+      \draw[thin] (\l, \l, \l) -- ++(-\l, 0, 0);
+      \draw[thin] (\l, \l, \l) -- ++(0, -\l, 0);
+      \draw[thin] (\l, \l, \l) -- ++(0, 0, -\l);
+      \draw[very thick, ->, red] (\h, \l, \h) node[right] {$B_{z}$} -- ++(0, \d, 0);
+      \draw[very thick, ->, red] (\h, \h, \l) node[below] {$B_{x}$} -- ++(0, 0, -\d);
+      \draw[very thick, ->, red] (\l, \h, \h) node[below] {$B_{y}$} -- ++(\d, 0, 0);
+      \draw[very thick, ->, blue] (0, \h, \l) node[left] {$j_{z},\ E_{z}$} -- ++(0, \d, 0);
+      \draw[very thick, ->, blue] (\h, 0, \l) node[below] {$j_{y},\ E_{y}$} -- ++(\d, 0, 0);
+      \draw[very thick, ->, blue] (\l, 0, \h) node[below right] {$j_{x},\ E_{x}$} -- ++(0, 0, -\d);
+      \node[label=below left:$\rho$] at (0, 0, \l);
+
+      \draw[->] (-3, -3, 0) -- (1, -3, 0) node[below] {$y$};
+      \draw[->] (-3, -3, 0) -- (-3, 1.2, 0) node[left] {$z$};
+      \draw[->] (-3, -3, 0) -- (-3, -3, 3) node[above left] {$x$};
+      % \draw (0,0,0) rectangle (3,0,3);
+      % \draw (0,0,0) rectangle (0,3,3);
+      % \node [label=below:$\rho\text{, }j_{\phi}\text{, }E_{\phi}$] (center) at (1.5,1.5) {$\times$};
+      % \node [label=right:$j_{\theta}\text{, }E_\theta\text{, }B_{r}$] (right) at (3,1.5) {$\times$};
+      % \node [label=above:$j_r\text{, }E_r\text{, }B_{\theta}$] (top) at (1.5,3) {$\times$};
+      % \node [label=right:$B_\phi$] (top right) at (3,3) {$\times$};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{Staggered Yee cell for a 3D Cartesian grid.}
+  \label{fig:Yee-cartesian}
+\end{figure}
+
+The reason for staggering the fields this way is that all derivatives that arise
+in Maxwell equations will automatically have at least second order accuracy. For
+example take the evolution of the $B_z$ term:
 \begin{equation}
-    \label{eq:field-interpolate}
-    \mathbf{E}_p = \int d\mathbf{x}\: S(\mathbf{x} - \mathbf{x}_p)\mathbf{E}(\mathbf{x}) = \sum_c W(\mathbf{x}_c - \mathbf{x}_p)E_c
+  % \label{eq:2}
+  \begin{split}
+    \frac{\Delta B_z(x, y)}{\Delta t} = -(\nabla\times \mathbf{E})_{z} = &-\left[ \frac{E_x(y + \Delta y/2) - E_x(y - \Delta y/2)}{\Delta y} \right. \\
+      &- \left.\frac{E_y(x + \Delta x/2) - E_y(x - \Delta x/2)}{\Delta x} \right]
+  \end{split}
 \end{equation}
-where the subscript $c$ runs over all grid points. The function $W$ is
-a weight function which has finite support centered around
-$\mathbf{x}_p$ and sums to 1 on grid points where it does not
-vanish. They are often chosen to be the so called \textit{B-spline}
-functions, which are functions of minimal support with a given
-polynomial degree. Higher order polynomial B-splines will in general
-produce a smoother interpolation, but will be more computationally
-expensive. In Aperture we support weight functions from 0-th order to
-3-rd order polynomials.
+and due to the symmetric structure of the finite difference, we have
+\begin{equation}
+\frac{E_y(x + \Delta x/2) - E_y(x - \Delta x/2)}{\Delta x} = \partial_xE_y + \mathcal{O}(\Delta x^3)
+\end{equation}
+This naturally applies to all derivative terms in the Maxwell equation.
 
-Conversely, particle motion is interpolated onto the grid to produce a
-current and charge density. To avoid spurious self-force, one needs to
-use the same interpolation for both field to particle, and for
-particle to current. We will discuss current deposition in greater
-detail in section \ref{sec:charge-cons-curr}.
+Macro-particles stream freely in the mesh grid, and their positions and momenta
+are not discretized. To convert between local ``paticle'' quantities and grid
+variables, an interpolation scheme is required. Fortunately we already have a
+function $S(\mathbf{x} - \mathbf{x}_p)$ which describes the shape of the macro
+particle smeared in space. Integrating equation \eqref{eqn:pic-rho} using a
+macro particle distribution function over the volume of a cell gives:
+\begin{equation}
+  \label{eqn:rho-cell}
+  Q_{c} = \rho_{c}\Delta V = \sum_pq_pW(\mathbf{x}_p-\mathbf{x}_{c})
+\end{equation}
+where $q_p$ is the charge of an individual macro particle, and $W$ is defined as
+the integral of $S$:
+\begin{equation}
+  \label{eqn:weight-function}
+  W(\mathbf{x}_p - \mathbf{x}_c) = \int_{\mathbf{x}_c - \mathbf{\Delta}/2}^{\mathbf{x}_c + \mathbf{\Delta}/2} S(\mathbf{x}_p - \mathbf{x})d\mathbf{x}
+\end{equation}
+and $\Delta$ is the size of the support of $S$. Since in the PIC code,
+we will only be using the interpolation functions $W$, not $S$, so we
+will call $W(\mathbf{x}_p - \mathbf{x}_c)$ the ``shape
+functions''. Typical shape functions used in PIC codes are so-called
+``B-spline'' functions, which are piecewise polynomial functions with
+minimal support. Following are the shape functions often used in PIC
+codes, in ascending polynomial order:
+
+\textbf{CIC}: Cloud in Cell
+\begin{equation}
+    W^1(x) = \begin{cases}
+        1 - |\delta| & \quad \text{if } |\delta| < 1, \\
+        0            & \quad \text{otherwise}
+    \end{cases}
+\end{equation}
+
+\textbf{TSC}: Triangular Shaped Cloud
+\begin{equation}
+    W^2(x) =
+    \begin{cases}
+        \frac{3}{4} - \delta^2 & \quad \text{if } |\delta| < 1/2, \\
+        \frac{1}{2} \left( \frac{3}{2} - |\delta| \right)^2 & \quad \text{if } 1/2 \leq |\delta| < 3/2, \\
+        0                      & \quad \text{otherwise}
+    \end{cases}
+\end{equation}
+
+\textbf{PCS}: Piecewise Cubic Spline
+\begin{equation}
+    W^3(x) =
+    \begin{cases}
+        \frac{1}{6} \left( 4 - 6\delta^2 + 3|\delta|^3 \right) & \quad \text{if } |\delta| < 1, \\
+        \frac{1}{6} \left( 2 - |\delta| \right)^3 & \quad \text{if } 1 \leq |\delta| < 2, \\
+        0                      & \quad \text{otherwise}
+    \end{cases}
+\end{equation}
+
+% TODO: insert a plot of these functions
+In 2D or 3D problems, the weight of the particle is given by multiplication of
+these shape functions. In general, higher order shape functions will have better
+noise properties for the result, but are computationally more intensive, not
+only because they involve more multiplications (higher order polynomial), but
+each particle can influence more grid points and one need to sum over more terms
+of nonzero $W$.
+
+Equation \eqref{eqn:rho-cell} can be taken as the definition of the discretized
+charge density in a given cell. In other words, it is the charge density in the
+cell assuming the cell is uniformly filled with charges from the macro particles.
+
+The particle shape function also serves as a way to interpolate the grid
+quantities such as $\mathbf{E}$ and $\mathbf{B}$ fields to the particle
+location:
+\begin{align}
+    \label{eqn:interpolate}
+    \mathbf{E}(\mathbf{x}_p) &= \sum_c \mathbf{E}(\mathbf{x}_c) W(\mathbf{x}_p - \mathbf{x}_c) \\
+    \mathbf{B}(\mathbf{x}_p) &= \sum_c \mathbf{B}(\mathbf{x}_c) W(\mathbf{x}_p - \mathbf{x}_c)
+\end{align}
+where the summation is over the grid points where $W \neq 0$.
+
+One could also define the current density in the same way as charge density,
+from equation \eqref{eqn:pic-j}:
+\begin{equation}
+  \mathbf{j} ( \mathbf{x}_{c} ) = \sum_{p} \frac{q_{p}}{\Delta V}\mathbf{u}_p W (
+  \mathbf{x}_{p} -\mathbf{x}_{c} )
+\end{equation}
+However, simple application of this equation will lead to charge
+conservation issues and violation of the continuity equation
+\begin{equation}
+    \label{eq:18}
+    \partial_t\rho + \nabla\cdot \mathbf{j} = 0
+\end{equation}
+
+To enforce charge conservation at every timestep, instead of interpolating on
+the current, it is desirable to solve the continuity equation directly at every
+timestep. This is done with the so-called charge-conserving current deposition.
+We will discuss various techniques to achieve this in section %TODO: section ref
+
+
+% Since particles stream freely in the cells, the electric and magnetic
+% fields a particle sees will need to be interpolated from the grid
+% points. This is done by integrating the shape function in equation
+% \eqref{eq:single-particle}:
+% \begin{equation}
+%     \label{eq:field-interpolate}
+%     \mathbf{E}_p = \int d\mathbf{x}\: S(\mathbf{x} - \mathbf{x}_p)\mathbf{E}(\mathbf{x}) = \sum_c W(\mathbf{x}_c - \mathbf{x}_p)E_c
+% \end{equation}
+% where the subscript $c$ runs over all grid points. The function $W$ is
+% a weight function which has finite support centered around
+% $\mathbf{x}_p$ and sums to 1 on grid points where it does not
+% vanish. They are often chosen to be the so called \textit{B-spline}
+% functions, which are functions of minimal support with a given
+% polynomial degree. Higher order polynomial B-splines will in general
+% produce a smoother interpolation, but will be more computationally
+% expensive. In Aperture we support weight functions from 0-th order to
+% 3-rd order polynomials.
+
+% Conversely, particle motion is interpolated onto the grid to produce a
+% current and charge density. To avoid spurious self-force, one needs to
+% use the same interpolation for both field to particle, and for
+% particle to current. We will discuss current deposition in greater
+% detail in section \ref{sec:charge-cons-curr}.
 
 \subsection{Coordinate Systems}
 \label{sec:coord-syst-sing}
@@ -163,6 +386,150 @@ We use the Esirkepov current deposition algorithm.
 \subsection{Radiative Transfer}
 \label{sec:radiative-transfer}
 
+\subsection{Units}
+\label{sec:pic-units}
+
+A computer simulation is ignorant of the physical units of the dynamic
+variables, therefore one should choose a unit for all physical quantities, such
+that in the code all quantities are pure numbers. It is to our benefit to choose
+a unit system that is most natural to the problem and in which the dynamic
+equations take the simplest dimensionless form. We try to establish that in this
+section.
+
+The primary goal of the code is to simulate an isolated neutron star, therefore
+the natural length scale is the stellar radius, and there is no other length
+scale {\it a priori}. Naturally, the time scale of the problem would be the
+light-crossing time of the star. Therefore we define the dimensionless length
+and time using the following equations (in all the following equations, a tilde
+on the symbol means the dimensionless version):
+\begin{equation}
+  r = \tilde{r}R_{*},\quad t = \tilde{t}\frac{R_{*}}{c},\quad \omega = \tilde{\omega}\frac{c}{R_{*}}
+\end{equation}
+The radius $r = 1$ shows up mainly as the lower boundary of most of our
+simulations.
+
+Once we add rotation of the star and magnetic field, two important frequencies
+show up in this problem that can then be written in dimensionless units:
+\begin{equation}
+  \tilde{\Omega} = \frac{\Omega R_{*}}{c},\qquad \tilde{\omega}_B = \frac{\omega_BR_{*}}{c} = \frac{e B_0R_{*}}{mc^2}
+\end{equation}
+where $\Omega$ is the rotation angular frequency, equal to $2\pi / P$ where $P$ is the period of rotation, and $B_0$ is the surface magnetic field at the pole. Given a pulsar with certain radius, these two are the dimensionless parameters that will govern the simulation, and hence the physical behavior of the system.
+
+We want to define a unit for charge density. This can be done by relating the
+plasma frequency, a third frequency in the problem, with the local corotation
+charge density $\rho_\mathrm{GJ}$. We define the reference plasma frequency at every
+point as
+\begin{equation}
+  \omega_p^2 = \frac{4\pi \rho_\mathrm{GJ}e}{m}
+\end{equation}
+then we can define a version of dimensionless Goldreich-Julian density, or any charge density
+\begin{equation}
+  \rho_\mathrm{GJ} = \frac{m \tilde{\omega}_p^2 c^2}{4\pi e R_{*}^2} = \tilde{\rho}_\mathrm{GJ} \frac{mc^2}{4\pi eR_{*}^2}
+\end{equation}
+Note the real plasma frequency will depend on the actual plasma number density
+at the point of interest and will in general be different from what we call
+$\omega_p$ above. However, it is still useful to determine such a characteristic
+plasma frequency for reference. What the above equation says is that, by
+choosing these units we make $\tilde{\rho} = \tilde{\omega}_p^2$. Especially,
+there is a simple relationship between the three characteristic frequencies in
+the problem, if we define $\rho_{GJ} = \Omega B_0 / 2\pi c$:
+\begin{equation}
+  \frac{m \omega_p^2}{4\pi e} = \frac{\Omega B_0}{2\pi c} \quad \Longrightarrow \quad \tilde{\omega}_p^2 = 2\tilde{\Omega} \tilde{\omega}_B
+\end{equation}
+Therefore, specifying the numerical values of $\tilde{\Omega}$ and
+$\tilde{\omega}_B$ automatically determines the characteristic plasma frequency
+in the problem.
+
+With the above choices, we can work out the dimensionless electric and magnetic
+fields. Gauss's law gives
+\begin{equation}
+  \nabla\cdot \mathbf{E} = 4\pi \rho \quad \Longrightarrow \quad \frac{\Delta E}{\Delta \tilde{r} R_{*}} = \tilde{\rho} \frac{m c^2}{e R_{*}^2} \quad \Longrightarrow \quad E = \tilde{E}\frac{m c^2}{e R_{*}}
+\end{equation}
+and similarly
+\begin{equation}
+    B = \tilde{B}\frac{m c^2}{e R_{*}}
+\end{equation}
+Note that this means $B$ and $\omega_B$ has the same dimensionless form,
+therefore $\tilde{B}_0 = \tilde{\omega}_B$.
+
+Under these units, Maxwell equations look like
+\begin{equation}
+  \partial_t \tilde{\mathbf{E}} = \tilde{\nabla}\times \tilde{\mathbf{B}} - \tilde{\mathbf{j}},\quad \partial_t \tilde{\mathbf{B}} = - \tilde{\nabla}\times \tilde{\mathbf{E}}
+\end{equation}
+and the particle equations of motion look like
+\begin{equation}
+  \frac{d \tilde{\mathbf{p}}}{d \tilde{t}} = \tilde{\mathbf{E}},\quad \frac{d \tilde{\mathbf{r}}}{d \tilde{t}} = \tilde{\mathbf{u}} = \frac{\tilde{p}}{\sqrt{1 + \tilde{p}^2}} \tilde{\mathbf{p}}
+\end{equation}
+
+Up to now, all the numerical parameters we have introduced are $\tilde{\Omega}$
+and $\tilde{\omega}_B$, and they specify all the physics of the system. For
+simulation purposes, one needs to rescale both of these parameters to bring the
+size of the system into computable regime. However, one more numerical parameter
+is required for interpolating between the particle charge and the charge density
+on the grid, namely the charge of an individual macro particle. Since in PIC
+there is no way to simulate realistic plasma of order $10^{20+}$ particles, one
+needs to use one single macro particle to represent a collection of physical
+particles. A macro particle has the same charge-to-mass ratio as a physical
+particle, but has more charge (therefore mass). The way we choose the charge per
+particle is to normalized it such that our characteristic charge density
+$\rho_\mathrm{GJ}$ would correspond to a certain manageable number of particles $N_p$
+per cell.
+
+The way we compute charge density is to iterate over all particles and deposit
+onto a single cell:
+\begin{equation}
+    \rho_c = \frac{\sum e_p W(\mathbf{r}_p, \mathbf{r}_c)}{\Delta V}
+\end{equation}
+where $e_p$ is the charge per macro particle, $S$ is a shape factor depending on
+particle position $\mathbf{r}_p$ and grid point position $\mathbf{r}_c$, and
+$\Delta V$ is the size of the cell. Assuming every particle has the same charge
+$e$, and there are $N_p$ particles in the cell, up to a form factor, we have
+\begin{equation}
+    \rho = \frac{e N_p}{\Delta V} = \frac{e N_p}{\Delta \tilde{V} R_{*}^{3}} = \tilde{\rho}\frac{mc^2}{4\pi eR_{*}^2}, \quad \tilde{\rho} = \frac{\tilde{e}N_p}{\Delta \tilde{V}}
+\end{equation}
+so we can identify the dimensionless charge per particle
+\begin{equation}
+    \tilde{e} = e \frac{4\pi e}{mc^2R_{*}}
+\end{equation}
+Note that $e$ appears twice on the right hand side. This is because we treat
+$e/m$ as a physical constant, therefore $4\pi e / mc^2R_{*}$ is a physical
+constant which is fixed as soon as we choose the physical size of the star. We'd
+like to choose $\tilde{e}$ such that $N_p$ particles per cell corresponds to the
+characteristic charge density $\rho_\mathrm{GJ}$:
+\begin{equation}
+    \tilde{\rho} \sim \frac{\tilde{e} N_p}{\Delta \tilde{V}} \sim \tilde{\rho}_\mathrm{GJ} \quad \Longrightarrow \quad \tilde{e} = \frac{2\tilde{\Omega} \tilde{B}\Delta \tilde{V}}{N_p}
+\end{equation}
+
+One technical aspect about the numerical value $\tilde{e}$ in the code is that,
+every time we use $\tilde{e}$, we actually use the combination $\tilde{e}/\Delta
+\tilde{V}$, which shows up in charge/current deposition. Therefore it is not
+necessary to carry $\Delta \tilde{V}$ around. We simply remove it from the
+definition of $\tilde{e}$, and don't divide by $\Delta \tilde{V}$. Also a factor
+of 2 is not that important, so in the code the actual value of $\tilde{e}$ is
+taken to be
+\begin{equation}
+    \tilde{e} = \frac{\tilde{\Omega} \tilde{B}_0}{N_{p}}
+\end{equation}
+
+To summarize, the numerical parameters in our simulation are $\tilde{\Omega}$,
+$\tilde{\omega}_B$ (or equivalently $\tilde{B}_{0}$), and $\tilde{e}$ (or
+equivalently $N_p$ after specifying cell size). This completely specifies the
+computational problem. In order to translate this numerical simulation to
+reality, we need to specify $R_{*}$ in physical units (e.g.\ $10^6\,
+\mathrm{cm}$), and multiply the dimensionless units by their physical units to
+get the realistic values. The dimensionful units are summarized below (subscript
+$*$ means that these are the dimensionful units for the physical quantity in
+question, e.g.\ $E = \tilde{E} E_*$)
+\begin{align}
+  r_{*} &= R_{*} = R_6\, 10^6\, \mathrm{cm} \\
+  t_{*} &= R_{*} / c = R_6\,3.33\times 10^{-5}\, \mathrm{s} \\
+  E_{*} &= B_{*} = \frac{mc^2}{eR_{*}} = R_6^{-1}\, 2.08\times 10^{-5}\, \mathrm{statV/cm(G)} \\
+  \rho_{*} &= \frac{mc^2}{4\pi eR_{*}^2} = R_{6}^{-2}\, 1.66\times 10^{-12}\, \mathrm{statC/cm^3} \\
+  j_{*} &= \frac{mc^3}{4\pi eR_{*}^2} = R_{6}^{-2}\, 4.96\times 10^{-2}\, \mathrm{statC/cm^2\cdot s}  \\
+  e_{*} &= \frac{mc^2R_{*}}{4\pi e} = R_6\, 1.66\times 10^6\, \mathrm{statC} \\
+  g_{*} &= R_{*}c^2 = R_6\, 9.0\times 10^{26}\, \mathrm{m^3s^{-2}} \\
+  p_{*} &= mc
+\end{align}
 
 \section{Test Problems}
 \label{sec:test-problems}
