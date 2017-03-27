@@ -66,7 +66,7 @@ also discovered in the known pulsars. The spin-down luminosity can be easily
 estimated given the period and period derivative of the pulsar:
 \begin{equation}
   \label{eq:spindown-power}
-  L = -I\Omega\dot{\Omega} = 4\pi^2 I\frac{\dot{P}}{P^3}
+  L_{d} = -I\Omega\dot{\Omega} = 4\pi^2 I\frac{\dot{P}}{P^3}
 \end{equation}
 which works out to be $\sim 10^{39}\,\mathrm{erg/s}$ for the Crab pulsar, which
 has $P = 33\,\mathrm{ms}$ and $\dot{P} = 4.2\times 10^{-13}\,{s\;s^{-1}}$. This
@@ -82,7 +82,7 @@ The spin-down of the pulsar was typically modeled by a spinning magnetic dipole
 in vacuum. A magnetic dipole of strength $\mu$ will lose energy at a rate:
 \begin{equation}
   \label{eq:dipole-spin-down}
-  L = \frac{2}{3}\frac{\mu^2\Omega^4}{c^3}
+  L_{d} = \frac{2}{3}\frac{\mu^2\Omega^4}{c^3}
 \end{equation}
 therefore one can naively estimate the surface magnetic field by equating this
 with the spin-down luminosity \eqref{eq:spindown-power}
@@ -101,39 +101,108 @@ magnetic field of a newly discovered pulsar.
 \subsection{High-energy radiation from pulsars}
 \label{sec:observ-high-energy}
 
+Although radio emission has been the primary wavelength at which rotation
+powered pulsars are studied, only a tiny fraction ($\sim 10^{-5}$) of their
+spin-down power actually goes into radio emission. For young pulsars and
+millisecond pulsar (MSPs), a significant fraction of their spin-down power go
+into gamma-rays in the $100\,\mathrm{MeV}$--$30\,\mathrm{GeV}$ band \citep[see
+e.g.][]{abdo_fermi_2010}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pics/intro/geminga2.png}
+  \caption{Gamma-ray lightcurves of Geminga in five energy ranges, from {\it
+      Fermi} observations \citep{abdo_fermi-lat_2010}.}
+  \label{fig:geminga}
+\end{figure}
+
+Take the pulsar Geminga for example. It is the second brightest non-variable
+$\mathrm{GeV}$ gamma-ray source in the sky. Its gamma-ray emission was first
+discovered in the 70s by the SAS-2 satellite
+\citep{fichtel_high-energy_1975,kniffen_distribution_1975}. In contrast to the
+Crab pulsar, Geminga is observed to be radio quiet, and is the first
+representative of the class of radio quiet gamma-ray pulsars. As can be seen
+from figure \ref{fig:geminga}, the gamma-ray peak comes in pairs in every
+period, in contrast to the typical radio peaks in rotation powered pulsars,
+suggesting that the gamma-ray emission comes from very different region than
+the radio emission.
+
+After the launch of the {\it Fermi} satellite, the catalog of gamma-ray pulsars
+exploded from 7 to well over 130 \citep{abdo_first_2010,abdo_second_2013}. The
+gamma-ray pulsars are evenly divided into 3 groups: millisecond pulsars, young
+radio-loud pulsars, and young radio-quiet pulsars. This discovery revolutionized
+the way pulsars were studied. The pulsed gamma-ray emission typically carries
+the highest fraction of the spin-down power $L_{d}$, therefore it can reveal the
+most information about the particle acceleration and field structure in pulsar
+magnetospheres, much more so than the radio emission.
+
+Many pulsars are also found to be X-ray sources, with pulsations detected in
+many of them. The emission is usually made up of two components: a thermal
+component from surface cooling or heated polar caps, and a non-thermal component
+that is most likely magnetospheric \citep{kaspi_isolated_2006}.
 
 
-\subsection{Theoretical models and problems}
+% The biggest difficulty in pulsar modeling is to account for this broadband
+% radiation. A self-consistent model needs to explain not only the
+
+\subsection{Theoretical models of the pulsar magnetosphere}
 \label{sec:intro-pulsar-theory}
 
 Despite the success of a simple vacuum dipole model, it proves to be extremely
-difficult to make a more detailed self-consistent model.
+difficult to make a more detailed self-consistent model. The vacuum dipole
+model has a few problems. First is that, the electric field from
+uni-polar induction effect gives a voltage that can accelerate particles to
+% TODO: how high voltage?
+This voltage has two effects: it exceeds the binding energy of electrons and
+ions at the surface of the neutron star and can extract charged particles from
+the stellar surface, and it also accelerates the
+extracted particles to energies that produce high-energy photons that are
+capable of interacting with the intense magnetic field and convert into
+$e^{\pm}$ pairs, thus inducing a pair cascade \citep{erber_high-energy_1966}.
 
-\section{Magnetars}
-\label{sec:intro-magnetars}
+As a result, it is not possible for the pulsar magnetosphere to be near vacuum.
+A minimum corotating charge density is guaranteed around the pulsar which is
+conventionally called the Goldreich-Julian density \citep{goldreich_pulsar_1969}:
+\begin{equation}
+  \label{eq:gj-density}
+  \rho_\mathrm{GJ} = -\frac{\bOm\cdot \mathbf{B}}{2\pi c}\frac{1}{1 - (\Omega r/c)^2\sin^{2}\theta}
+\end{equation}
+where $\theta$ is the angle between magnetic axis and the rotation axis.
 
-\subsection{Observations}
+The problem of the Goldreich-Julian model is that charge lifted from the
+surface alone is not sufficient to fill the magnetosphere with
+$\rho_\mathrm{GJ}$. For an aligned rotator (magnetic axis aligned with rotation
+axis), there exists an electrostatic equilibrium solution for the lifted charge
+\citep{jackson_new_1976, krause-polstorff_pulsar_1985,
+  krause-polstorff_electrosphere_1985}. The surface charge are lifted to form a
+dome around the poles of the star, and a torus near the equator. In both the
+dome and the torus $\mathbf{E}\cdot \mathbf{B} = 0$, whereas an unscreened
+vacuum gap exists between them (figure \ref{fig:electrosphere-intro}). This
+equilibrium solution has no outgoing Poynting flux, therefore no spin-down at
+all. It is a dead pulsar.
 
-\subsection{Theoretical Studies}
-\label{sec:intro-magnetar-theory}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{pics/intro/electrosphere-new.png}
+  \caption{Charge density distribution of the electrosphere of an aligned
+    rotator. Blue indicates negative charge and red indicates positive charge.}
+  \label{fig:electrosphere-intro}
+\end{figure}
 
+It was speculated by \citet{spitkovsky_electrodynamics_2004} that oblique
+rotators will be able to escape this fate due to diocotron instability
+developing inside the torus, which leads to its slow expansion and eventually
+reaching the light cylinder. This might jump-start the global current
+circulation and allow the pulsar to start operating. But no simulation or
+analytical results has been able to confirm this hypothesis. Furthermore,
+\citet{petri_relativistic_2007} showed that this instability is suppressed by
+relativistic effects that become important near the light cylinder.
 
-\section{This Dissertation}
-\label{sec:intro-outline}
-
-In this dissertation we will attempt to address the problem of particle
-acceleration and global structure of the magnetosphere of pulsars and
-magnetars.
-
-Chapter \ref{chap:pic} will be devoted to a detailed introduction of the
-particle-in-cell technique, which will be the basic numerical tool for our
-study.
-
-Chapter \ref{chap:polar-cap} will focus on a local study of the pulsar
-polar cap. We will look at the region well within the pulsar magnetosphere, and
-approximate the geometry as 1D. We will discuss implications of this
-approximation, and what we can and can not learn from this local study.
-
+Another problem with the electrosphere is that, a huge unscreened gap exists
+between the dome and torus, capable of accelerating stray particles to very high
+energies. These particles will be able to produce curvature photons that are
+able to interact with the magnetic field to produce $e^{\pm}$ pairs. This
+eventually renders the electrosphere solution unstable to pair creation.
 Chapter \ref{chap:pulsar} will study the global pulsar magnetosphere, motivated
 by the study of the polar cap particle acceleration.
 

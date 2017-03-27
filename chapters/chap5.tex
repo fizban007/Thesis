@@ -1,0 +1,549 @@
+\zotelo{../thesis.bib}
+
+\chapter{Further Explorations of the Applications of PIC}
+\label{chap:explorations}
+
+\section{General Relativity}
+\label{sec:general-relativity}
+
+This is an exploratory effort of expanding a PIC code to support general
+relativistic simulations. To my knowledge at the time of this writing, no such
+code exists, and a successfully implemented code like this can open up the
+possibility of simulating e.g.\ the pair discharge process around a black hole
+% TODO: Observational implications?
+
+\subsection{Metric and Observer}
+\label{sec:metric}
+
+This subsection is purely for reference. We record the results and move on. When
+referring to a definition of a quantity one should check back to this subsection.
+We start with the $3+1$ split following Macdonald \& Thorne (1982), writing the
+metric as
+\begin{equation}
+  \label{eq:2}
+  ds^2 = (\beta^2 - \alpha^2)dt^2 + 2\beta_idx^idt + \gamma_{ij}dx^idx^j
+\end{equation}
+where $\alpha$ is called the ``lapse function'' and $\beta$ is called the
+``shift vector''. We consider only metric that are time independent meaning
+$\partial_tg_{\alpha\beta} = 0$. We follow Komissarov (2004) in defining the
+fiducial observer (FIDO) 4-velocity:
+\begin{equation}
+  \label{eq:4}
+  n_{\mu} = (-\alpha, 0, 0, 0)
+\end{equation}
+The spatial metric tensor, which is used to raise and lower spatial indices, is
+defined using this FIDO velocity
+\begin{equation}
+  \label{eq:1}
+  \gamma_{\alpha\beta} = g_{\alpha\beta} + n_{\alpha}n_{\beta}
+\end{equation}
+Note since $n_{\alpha}$ only has the temporal component $\gamma_{ij}$ is the
+same as $g_{ij}$. The other useful identities are:
+\begin{align}
+\label{eq:3}
+n^{\mu} &= \frac{1}{\alpha}(1, -\beta^i) \\
+g^{0\mu} &= -\frac{1}{\alpha}n^{\mu} \\
+g^{ij} &= \gamma^{ij} - \frac{\beta^i\beta^j}{\alpha^2}
+\end{align}
+and
+\begin{equation}
+  \label{eq:5}
+  g = -\alpha^{2}\gamma, \quad \beta^i = \gamma^{ij}\beta_{j}, \quad g = \mathrm{det} g_{\mu\nu}, \quad \gamma = \mathrm{det}\gamma_{ij}
+\end{equation}
+
+\subsection{Field Equations}
+\label{sec:field}
+
+We define as usual the Maxwell tensor from the vector potential
+\begin{equation}
+  \label{eq:6}
+  F_{\mu\nu} = \partial_{\mu}A_{\nu} - \partial_{\nu}A_{\mu}
+\end{equation}
+where the physical meaning of $A_{\mu}$ will come clear later. In GR we are
+supposed to replace $\partial_{\mu}$ with $\nabla_{\mu}$, but since
+$\Gamma_{\alpha\beta}^{\mu}$ is symmetric in the lower indices, it is okay to
+simply use partial derivative here. The upper $F^{\mu\nu}$ are defined simply by
+raising the indices
+\begin{equation}
+  \label{eq:8}
+  F^{\mu\nu} = g^{\mu\alpha}g^{\nu\beta}F_{\alpha\beta}
+\end{equation}
+
+
+The covariant Maxwell equations are the usual Maxwell equations with covariant
+derivative in place of ordinary partial derivative:
+\begin{equation}
+  \label{eq:7}
+  \nabla_{\nu}\tensor[^{*}]{F}{^{\mu\nu}} = 0, \quad \nabla_{\nu}F^{\mu\nu} = I^{\mu}
+\end{equation}
+where $I^{\mu}$ is the 4-current. Again, to associate physical meaning to this
+current we need to relate it with particle motion, which we will do
+subsequently.
+
+Taking the first equation, the temporal and spatial parts read separately:
+\begin{align}
+  \frac{1}{\sqrt{-g}}\partial_i(\sqrt{-g}\tensor[^{*}]{F}{^{0i}}) &= 0 \\
+  \frac{1}{\sqrt{-g}}\partial_t(\sqrt{-g}\tensor[^{*}]{F}{^{i0}}) + \frac{1}{\sqrt{-g}}\partial_j(\sqrt{-g}\tensor[^{*}]{F}{^{ij}}) &= 0
+\end{align}
+since $\sqrt{-g} = \alpha\sqrt{\gamma}$, we can write the spatial equation as:
+\begin{equation}
+  \label{eq:10}
+  \frac{1}{\sqrt{\gamma}}\partial_t(\sqrt{\gamma}\alpha\tensor[^{*}]{F}{^{i0}}) + \frac{1}{\sqrt{\gamma}}\partial_j(\alpha\sqrt{\gamma}\tensor[^{*}]{F}{^{ij}}) = 0
+\end{equation}
+This can be simplified to something we can identify with, by defining new fields
+$B^i = \alpha\tensor[^{*}]{F}{^{i0}}$ and $E_i = \frac{1}{2}\alpha
+e_{ijk}\tensor[^{*}]{F}{^{jk}}$ (we also used the fact that $\sqrt{\gamma}$ is time-independent):
+\begin{equation}
+  \label{eq:11}
+  \partial_tB^i + e^{ijk}\partial_jE_k = 0
+\end{equation}
+where $e_{ijk} = \sqrt{\gamma}\epsilon_{ijk}$ is the Levi-Civita pseudo-tensor
+and $\epsilon_{ijk}$ is the totally antisymmetric symbol which is either 1 or
+$-1$. Similarly $e^{ijk} = \epsilon^{ijk}/\sqrt{\gamma}$ where $\epsilon^{ijk}$
+is numerically the same as $\epsilon_{ijk}$. This equation looks like the usual
+Maxwell equation where $\partial_t\mathbf{B} = -\nabla\times \mathbf{E}$,
+however we try not to rely on the usual curl and bold-face vector notation, and
+make clear whenever we talk about a field component whether it is the upper or
+lower index version.
+
+The spatial part of the second Maxwell equation reads:
+\begin{equation}
+  \label{eq:14}
+  \frac{1}{\sqrt{\gamma}}\partial_t(\sqrt{\gamma}\alpha\tensor{F}{^{i0}}) + \frac{1}{\sqrt{\gamma}}\partial_j(\alpha\sqrt{\gamma}\tensor{F}{^{ij}}) = \alpha I^{i}
+\end{equation}
+Similarly we can identify new fields $D^i = \alpha F^{0i}$ and $H_i =
+\frac{1}{2}\alpha e_{ijk}F^{jk}$, such that this equation reads:
+\begin{equation}
+  \label{eq:15}
+  -\partial_tD^i + e^{ijk}\partial_jH_k = \alpha I^i
+\end{equation}
+
+There are in total of 4 dynamic fields: $B^i$, $E_i$, $D^i$, and $H_i$. They are
+not independent so we want to find their relations to cut down the number of
+fields. From the definition of the Maxwell field tensor we have in vacuum
+\begin{equation}
+  \label{eq:17}
+  \tensor[^{*}]{F}{^{\alpha\beta}} = \frac{1}{2}e^{\alpha\beta\mu\nu}F_{\mu\nu}, \quad F^{\mu\nu} = \frac{1}{2}e^{\mu\nu\alpha\beta}\tensor[^{*}]{F}{_{\alpha\beta}}
+\end{equation}
+so we can find that
+\begin{equation}
+  \label{eq:18}
+  H_i = \tensor[^{*}]{F}{_{0i}}, \quad E_i = F_{i0}, \quad B^i = \frac{1}{2}e^{ijk}F_{jk}, \quad D^i = \frac{1}{2}e^{ijk}\tensor[^{*}]{F}{_{jk}}
+\end{equation}
+To figure out the relations between them we can take:
+\begin{equation}
+  \label{eq:19}
+  \begin{split}
+  \alpha D^i &= \alpha^2F^{0i} = \alpha^2g^{0\alpha}g^{i\beta}F_{\alpha\beta} \\
+             &= \alpha^2g^{00}g^{ij}F_{0j} + \alpha^2g^{0j}g^{i0}F_{j0} + \alpha^2g^{0j}g^{ik}F_{jk} \\
+             &= \gamma^{ij}E_j - \frac{\beta^i\beta^j}{\alpha^2}E_j + \frac{\beta^i\beta^j}{\alpha^2}E_j + \beta^jg^{ik}F_{jk} \\
+             &= \gamma^{ij}E_j + \beta^j\gamma^{ik}e_{jkl}B^l - \frac{1}{\alpha}\beta^j\beta^i\beta^ke_{jkl}B^l
+  \end{split}
+\end{equation}
+Since the last term on the left hand side is zero due to antisymmetry we have:
+\begin{equation}
+  \label{eq:20}
+  E_i = \alpha \gamma_{ij}D^j + e_{ijk}\beta^jB^k
+\end{equation}
+Similarly we can work from $\alpha B^i$ to get
+\begin{equation}
+  \label{eq:21}
+  H_i = \alpha \gamma_{ij}B^i - e_{ijk}\beta^jD^k
+\end{equation}
+
+Since we can express $E_i$ and $H_i$ in terms of $B^i$ and $D^i$ and some metric
+coefficients, we will call $B^i$ and $D^i$ our dynamic fields. It is also
+convenient that equations \eqref{eq:11} and \eqref{eq:15} are already time
+evolution equations of these two dynamic fields. Therefore our general strategy
+of solving them will be to figure out the auxiliary fields $E_i$ and $H_i$ from
+equations \eqref{eq:20} and \eqref{eq:21}, then use them to update the fields
+$B$ and $D$.
+
+It is also worth writing down the integral version of the equations
+\eqref{eq:11} and \eqref{eq:15}. If $\Sigma$ is the cell face in direction $i$,
+then we have
+\begin{align}
+  \label{eq:22}
+  \partial_t\int_{\Sigma}\frac{1}{2}e_{ijk}D^i\,dx^j\wedge dx^k &= \oint_{\partial \Sigma}H_i\,dx^i - \int_{\Sigma}\frac{1}{2}\alpha e_{ijk}I^i\,dx^j\wedge dx^k \\
+  \partial_t\int_{\Sigma}\frac{1}{2}e_{ijk}B^i\,dx^j\wedge dx^k &= -\oint_{\partial \Sigma}E_i\,dx^i
+\end{align}
+
+\subsection{Particle Equations}
+\label{sec:particles}
+
+Now that we decided that $B^i$ and $D^i$ should be our dynamic fields, we need
+to find how they affect particles. To do that we use the Lagrangian formalism
+and write down the action as follows (Landau \& Lifshitz):
+\begin{equation}
+  \label{eq:23}
+  S = \sum\int mc d\tau - \sum \int \frac{e}{c}A_{\mu}\,dx^{\mu} - \frac{1}{16\pi c}\int F_{\mu\nu}F^{\mu\nu}\,\sqrt{-g}d\Omega
+\end{equation}
+where the sum is over all particles, and $d\Omega$ is the spacetime volume element.
+
+We try to follow Landau \& Lifshitz to find the equation of motion for a single
+particle. The principle of least action states that (for the two terms of the
+action):
+\begin{equation}
+  \label{eq:9}
+  \delta S = \delta \int \left(mc\,d\tau - \frac{e}{c} A_{\mu}\,dx^{\mu}\right) = 0
+\end{equation}
+We do the variation of the first part in the following way. Starting with
+$d\tau^2 = -ds^2 = -g_{\mu\nu}dx^{\mu}dx^{\nu}$, we have
+\begin{equation}
+  \label{eq:12}
+  \delta d\tau^2 = 2d\tau \delta d\tau = -\delta(g_{\mu\nu}dx^{\mu}dx^{\nu}) = -dx^{\mu}dx^{\nu}\frac{\partial g_{\mu\nu}}{\partial x^{\sigma}}\delta x^{\sigma} - 2g_{\mu\nu}dx^{\mu}d \delta x^{\nu}
+\end{equation}
+we can then write the variation of the whole action
+\begin{equation}
+  \label{eq:13}
+  \begin{split}
+    \delta S &= -mc\int \left( \frac{1}{2}\frac{dx^{\mu}}{d\tau}\frac{dx^{\nu}}{d\tau}\partial_{\sigma}g_{\mu\nu}\delta x^{\sigma} + g_{\mu\nu}\frac{dx^{\mu}}{d\tau}\frac{d\delta x^{\nu}}{d\tau} \right) d\tau - \frac{e}{c}\int \left( A_{\mu}d\delta x^{\mu} + \delta A_{\mu} dx^{\mu} \right) \\
+    &= -mc\int \left[ \frac{1}{2}\frac{dx^{\mu}}{d\tau}\frac{dx^{\nu}}{d\tau}\partial_{\sigma}g_{\mu\nu}\delta x^{\sigma} - \frac{d}{d\tau}\left( g_{\mu\nu}\frac{dx^{\mu}}{d\tau} \right) \delta x^{\nu} \right]d\tau - \frac{e}{c}\int \left( \partial_{\sigma}A_{\mu}dx^{\mu}\delta x^{\sigma} - \partial_{\sigma}A_{\mu}dx^{\sigma}\delta x^{\mu} \right) \\
+    &= -mc\int \left[ \frac{1}{2}\frac{dx^{\mu}}{d\tau}\frac{dx^{\nu}}{d\tau}\partial_{\sigma}g_{\mu\nu} - \frac{d}{d\tau}\left( g_{\mu\sigma}\frac{dx^{\mu}}{d\tau} \right) \right]\delta x^{\sigma} d\tau - \frac{e}{c}\int (\partial_{\sigma}A_{\mu} - \partial_{\mu}A_{\sigma})\frac{dx^{\mu}}{d\tau}\delta x^{\sigma}d\tau
+  \end{split}
+\end{equation}
+Since the variation should vanish for any $\delta x^{\sigma}$, the integrand
+should vanish therefore we get our dynamic equation (as expected):
+\begin{equation}
+  \label{eq:16}
+  g_{\mu\sigma}\frac{du^{\mu}}{d\tau} + \frac{1}{2}\left( \partial_{\nu}g_{\mu\sigma} + \partial_{\mu}g_{\nu\sigma} - \partial_{\sigma}g_{\mu\nu} \right)u^{\mu}u^{\nu} = \frac{e}{c}(\partial_{\sigma}A_{\mu} - \partial_{\mu}A_{\sigma})u^{\mu}
+\end{equation}
+where $u^{\mu} = dx^{\mu}/d\tau$ is the 4-velocity of the particle. We shall
+always use $u^{\mu}$ to denote the standard 4-velocity from now on. In other
+words we have
+\begin{equation}
+  \label{eq:24}
+  mc\frac{Du^{\mu}}{D\tau} = \frac{e}{c}F^{\mu\nu}u_{\nu}, \quad \text{or} \quad mc\frac{D u_{\mu}}{D\tau} = \frac{e}{c}F_{\mu\nu}u^{\nu}
+\end{equation}
+These two are equivalent because the covariant derivative defined by Christoffel
+symbols are automatically metric-compatible, so $\nabla_{\sigma}g_{\mu\nu} = 0$.
+We can therefore freely raise and lower indices inside covariant derivatives.
+
+If we take the spatial part of the second equation, and multiply it by
+$d\tau/dt$, we get (from now on we ignore factors of $c$)
+\begin{equation}
+  \label{eq:25}
+  m\frac{Du_i}{D\tau}\frac{d\tau}{dt} = eF_{i\nu}u^{\nu}\frac{d\tau}{dt},\quad \Longrightarrow m\frac{Du_i}{Dt} = eF_{i\nu}\frac{dx^{\nu}}{dt}
+\end{equation}
+For simplicity of notation lets use $Du_i/Dt$ to refer to the product
+$(Du_i/D\tau)(d\tau/dt)$ although it might not be a proper covariant derivative.
+We also define $v^{\mu} = dx^{\mu}/dt$. From here on $u^{\mu}$ will mean the
+ordinary 4-velocity and $v^{\mu}$ means the derivative with respect to
+coordinate time. Note $v^0 = 1$ by definition. We can now write
+\begin{equation}
+  \label{eq:26}
+  \begin{split}
+  m\frac{Du_i}{Dt} &= e(F_{i0}v^0 + F_{ij}v^j) = e(E_i + e_{ijk}v^jB^k) \\
+                   &= e \left( \alpha \gamma_{ij}D^j + e_{ijk}\beta^jB^k + e_{ijk}v^jB^k \right)
+  \end{split}
+\end{equation}
+The last line is because we want to express particle acceleration in terms of
+our dynamic fields $B^i$ and $D^{i}$. Due to the form of the equation, it is
+convenient to define a new velocity $\bar{v}$ such that
+\begin{equation}
+  \label{eq:27}
+  \alpha \bar{v}^{i} - \beta^i = v^i
+\end{equation}
+Thus we will have
+\begin{equation}
+  \label{eq:28}
+  m\frac{Du_i}{Dt} = e\alpha(\gamma_{ij}D^j + e_{ijk}\bar{v}^jB^k)
+\end{equation}
+which looks like the ordinary Lorentz force.
+
+Now the remaining problem is that we only have an update equation for $u_i$, so
+we need a relation between $u_i$ and $\bar{v}^{i}$. This is relatively simple
+since we know $u^{\mu}u_{\mu} = -1$ for a time-like worldline. Let's call $u^0 =
+dt/d\tau = \gamma_p$. Then
+\begin{equation}
+  \label{eq:29}
+  u_i = g_{i\nu}u^{\nu} = \beta_i\gamma_p + \gamma_{ij}\gamma_pv^j = \alpha \gamma_p \gamma_{ij}\bar{v}^j
+\end{equation}
+And the particle Lorentz factor $\gamma_p$ is related to $\bar{v}^i$ by (from
+$u^{\mu}u_{\mu} = -1$)
+\begin{equation}
+  \label{eq:30}
+  \gamma_{p}^2 = \frac{1}{\alpha^2(1 - \gamma_{ij}\bar{v}^i\bar{v}^j)}
+\end{equation}
+So the Lorentz factor is similar to conventional one with $\bar{v}$, except for
+the extra factor of $\alpha$.
+
+Because by definition we have $v^i = dx^i/dt$, the particle positions can be
+updated by
+\begin{equation}
+  \label{eq:31}
+  \frac{dx^i}{dt} = v^i = \alpha \bar{v}^i - \beta^{i}
+\end{equation}
+
+The only remaining problem with particle dynamics is that we have a hard time
+evaluating the covariant derivative $Du_i/Dt$. An approximation might be simply
+replace it with $du_i/dt$. We will not go into possible different schemes here.
+
+Additional note on implementation of the particle pusher. We need to find an
+efficient way to store the quantities that we need, which in this case is
+$\bar{v}^i$. However when the particles become very relativistic, $\bar{v}^i$ is
+close to 1 and therefore prone to numerical truncation error. It's much better
+to store some form of momentum. We could store directly $u_i$ which we update,
+but then it is slightly difficult to find $\gamma_p$ from it, where a matrix
+inversion of $\gamma_{ij}$ is involved. As a compromise, we can define
+\begin{equation}
+  \label{eq:38}
+  \bar{p}^i = \alpha\gamma_p\bar{v}^i
+\end{equation}
+so that we have the following relations:
+\begin{equation}
+  \label{eq:39}
+  u_i = \gamma_{ij}\bar{p}^j,\quad \gamma_p^2 = \frac{1}{\alpha^2}(1 + \gamma_{ij}\bar{p}^i\bar{p}^j)
+\end{equation}
+
+The particle momentum update step now should look like the following: First we
+find $u_i$ using equation \eqref{eq:39}, and $\bar{v}^i$ using equation
+\eqref{eq:38}, then we use equation \eqref{eq:28} and the modified Vay algorithm
+\ref{sec:Vay-mod} to find $\Delta u_i$ over the time step. When we have the new
+$u_i$ we can invert back to find the $\bar{p}^i$ again by inverting the matrix
+$\gamma_{ij}$. This step will be simple in metrics where $\gamma_{ij}$ is
+diagonal. If we store $\bar{p}^i$ as the momentum of the particles, then
+$\bar{v}^i$ can simply be calculated by dividing it by $\alpha\gamma_p$. It
+might be useful to store $\alpha\gamma_p$ of the particle (where $\alpha$ is
+evaluated at the particle position) in the particle storage as well.
+
+\subsection{Modified Vay Algorithm}
+\label{sec:Vay-mod}
+
+% Vay (2008)
+\citet{vay_simulation_2008}
+showed a stable algorithm for pushing particles in electromagnetic
+field. It was designed to solve discretized equation
+\begin{equation}
+  \label{eq:40}
+  \frac{\gamma^{n+1}\mathbf{v}^{n+1} - \gamma^n\mathbf{v}^n}{\Delta t} = \frac{q}{m}\left( \mathbf{E}^{n+1/2} + \frac{\mathbf{v}^n + \mathbf{v}^{n+1}}{2}\times \mathbf{B}^{n+1/2} \right)
+\end{equation}
+where $\gamma^n = (1 - \mathbf{v}^n\cdot \mathbf{v}^n)^{-1/2}$. Notice that we
+only have one kind of vector in this equation, namely $\mathbf{v}$, or in our
+notation, the contravariant vector $v^i$. If we discretize our equations in the
+same way, then we will find the following equation:
+\begin{equation}
+  \label{eq:41}
+  \frac{\gamma_{ij}(\bar{p}^j)^{n+1} - \gamma_{ij}(\bar{p}^j)^n}{\Delta t} = \frac{\alpha q}{m}\left( \gamma_{ij}D^j + \sqrt{\gamma}\epsilon_{ijk}\frac{(\bar{v}^j)^n + (\bar{v}^j)^{n+1}}{2}B^k \right)
+\end{equation}
+where $\bar{p}^i = \alpha\gamma_p\bar{v}^i$ is similar to how usual relativistic
+momentum is related to velocity. The crucial difference from \eqref{eq:40} is
+the appearance of the metric matrix $\gamma_{ij}$ on the left hand side.
+
+The usual Vay algorithm solves equation \eqref{eq:40} using two steps. First
+step is to split the equation into two parts and define (where $\mathbf{u} =
+\gamma \mathbf{v}$)
+\begin{equation}
+  \label{eq:42}
+  \mathbf{u}' = \mathbf{u}^n + \frac{q\Delta t}{m}\left( \mathbf{E}^{n+1/2} + \frac{\mathbf{v}^n}{2}\times \mathbf{B}^{n+1/2} \right)
+\end{equation}
+then one solve the resulting implicit equation
+\begin{equation}
+  \label{eq:43}
+  \mathbf{u}^{n+1} = \mathbf{u}' + \frac{q\Delta t}{m}\left( \frac{\mathbf{u}^{n+1}}{2\gamma^{n+1}}\times \mathbf{B}^{n+1/2} \right)
+\end{equation}
+If one writes $\mathbf{b} = (q\Delta t/2m)\mathbf{B}^{n+1/2}$, then
+the solution to the above equation is simply (writing $\gamma$ instead of
+$\gamma^{n+1}$ for simplicity)
+\begin{equation}
+  \label{eq:44}
+  \mathbf{u}^{n+1} = \left[ \mathbf{u}' + (\mathbf{u}'\cdot \mathbf{b})\mathbf{b}/\gamma^2 + \mathbf{u}'\times \mathbf{b}/\gamma \right] / (1 + b^2/\gamma^2)
+\end{equation}
+This equation is still incomplete because $\gamma^{n+1}$ appears on the right
+hand side, so we need to carry out the second step, which is to solve for
+$\gamma$. We can do that by dotting $\mathbf{u}^{n+1}$ to equation \eqref{eq:43}
+and make use of the definition of $\gamma$, $\gamma = \sqrt{1 + u^2}$:
+\begin{equation}
+  \label{eq:45}
+  \gamma^2 = 1 + u^2 = 1 + \mathbf{u}'\cdot \mathbf{u} = 1 + \frac{u'^2 + (\mathbf{u}'\cdot \mathbf{b})^2/\gamma^2}{1 + b^2/\gamma^2}
+\end{equation}
+This is a quadratic equation for $\gamma^2$ and we can solve it to find
+$\gamma$. Finally one can plug this back into equation \eqref{eq:44} to find the
+updated momentum $\mathbf{u}^{n+1}$.
+
+In our GR case things becomes more complicated. Due to the appearance of
+$\gamma_{ij}$ matrix in equation \eqref{eq:41}, the direction solution to the
+equation \eqref{eq:44} doesn't work anymore. We still define the intermediate
+$u'$ as
+\begin{equation}
+  \label{eq:47}
+  u'_i = u_i^n + \frac{\alpha q\Delta t}{m}\left(\gamma_{ij}D^j + \sqrt{\gamma}\epsilon_{ijk}\frac{\bar{v}^j}{2}B^k\right)
+\end{equation}
+Now one needs to solve the following equation:
+\begin{equation}
+  \label{eq:46}
+  \left( \gamma_{ij} - \frac{\epsilon_{ijk}b^k}{\alpha\gamma_p} \right)\bar{p}^j = u'_i
+\end{equation}
+where $b^k = (\alpha\sqrt{\gamma} q \Delta t/2m)B^{k}$. The difference is that
+$\gamma_{ij}$ would have been $\delta_{ij}$ in the case of flat space. However,
+this is still a $3\times 3$ matrix equation and one can invert it by brute
+force.
+
+Assuming it is done, we can plug the equation into the relation of $\gamma_p$
+with $\bar{p}^i$ which is
+\begin{equation}
+  \label{eq:48}
+  \alpha^2\gamma_p^2 = 1 + \gamma_{ij}\bar{p}^i\bar{p}^j = 1 + \bar{p}^iu'_i = 1 + \left( \gamma_{ij} - \frac{\epsilon_{ijk}b^k}{\alpha\gamma_p} \right)^{-1}u'_iu'_j
+\end{equation}
+At this point it's obvious we should call the combination $\alpha\gamma_p$ as
+the convenient Lorentz factor $\bar{\gamma}_p$. Again this turns out to be a
+quadratic equation for $\bar{\gamma}_p$, albeit more complicated. I plugged the
+matrix into Mathematica to find the full inverted result (which is surprisingly
+not that complicated):
+\begin{equation}
+  \label{eq:49}
+  \bar{\gamma}_p^2 = 1 + \frac{(u'_ib^i)^2 + \bar{\gamma}_p^2\sigma}{\bar{\gamma}_p^2\det \gamma + \gamma_{ij}b^ib^j}
+\end{equation}
+where the symbol $\sigma$ is (assuming $\gamma_{ij}$ is symmetric, which is
+always true for a metric):
+\begin{equation}
+  \label{eq:50}
+\begin{split}
+  \sigma &= u'^2_{1}(\gamma_{22}\gamma_{33} - \gamma_{23}^2) + u'^2_2(\gamma_{11}\gamma_{33}-\gamma_{13}^2) + u'^2_3(\gamma_{11}\gamma_{22} - \gamma_{12}^2) \\
+& + 2u'_1u'_2(\gamma_{13}\gamma_{23} - \gamma_{12}\gamma_{33}) + 2u'_1u'_3(\gamma_{12}\gamma_{32} - \gamma_{13}\gamma_{22}) + 2u'_2u'_3(\gamma_{21}\gamma_{31} - \gamma_{23}\gamma_{11})
+\end{split}
+\end{equation}
+It would be nice to simplify this $\sigma$ term further! However even at this
+form one should be able to code it into an algorithm. After one solves equation
+\eqref{eq:49} for $\bar{\gamma}_p$ one can plug it into equation \eqref{eq:46}
+to solve for $\bar{p}^i$. This is the modified Vay algorithm for curved space.
+
+\subsection{Effect of Gravity}
+\label{sec:gravity}
+
+Since we have written our particle push equation in complete form:
+\begin{equation}
+  \label{eq:51}
+  m\frac{Du_i}{Dt} = e\alpha (\gamma_{ij}D^j + e_{ijk}\bar{v}^jB^k)
+\end{equation}
+it would be nice to solve it completely accounting for GR effect as well! I
+think it can be done. The covariant derivative on the left hand side can be
+expanded as
+\begin{equation}
+  \label{eq:52}
+  \frac{Du_i}{D\tau} = \frac{du_i}{d\tau} - \Gamma^{\alpha}_{i\nu}u_{\alpha}u^{\nu} = \frac{du_i}{dt} - \frac{1}{2}\left( g_{i\alpha,\mu} + g_{\mu\alpha,i} - g_{i\mu,\alpha} \right)u^{\alpha}u^{\mu}
+\end{equation}
+Two terms in the bracket are antisymmetric with respect to $\alpha$ and $\mu$
+whereas $u^{\alpha}u^{\mu}$ is symmetric, so we only have
+\begin{equation}
+  \label{eq:53}
+  \frac{Du_i}{D\tau} = \frac{du_i}{d\tau} - \frac{1}{2}g_{\mu\alpha,i}u^{\mu}u^{\alpha}
+\end{equation}
+and if we convert the time to coordinate time we have
+\begin{equation}
+  \label{eq:54}
+  \frac{Du_i}{Dt} = \frac{du_i}{dt} - \frac{1}{2}g_{\mu\alpha,i}v^{\alpha}g^{\mu\nu}u_{\nu}
+\end{equation}
+The inverse metric $g^{\mu\nu}$ was inserted so that the right hand side also
+has lower indices $u_{\nu}$. One can totally pre-store the coefficients
+$g_{\mu\alpha,i}g^{\mu\nu}/2$ on the grid, then convolve with $v^{\alpha}$ to
+get the matrix in front of $u_{\nu}$.
+
+Now to combine the Lorentz force with the gravitational correction, one can do
+the so-called ``drift-kick'' trick. The idea is that, we want to separate a
+single timestep into two half-steps. In the first half-step, the particle simply
+drifts along the geodesic, and we have only
+\begin{equation}
+  \label{eq:55}
+  \frac{u_i^{n+1/2} - u_i^n}{\Delta t/2} = \frac{1}{2}g_{\mu\alpha,i}v^{\alpha}g^{\mu\nu}u_{\nu}
+\end{equation}
+Since the right hand side is quadratic in $u$, we either use fully explicit
+scheme, evaluating the right hand side at time step $n$, or we use a
+``semi-implicit'' scheme and solve the following matrix equation
+\begin{equation}
+  \label{eq:56}
+  \frac{u_{\mu}^{n+1/2} - u_{\mu}^n}{\Delta t/2} = \frac{1}{2}g_{\alpha\beta,\mu}(v^{\alpha})^ng^{\beta\nu}(u_{\nu})^{n+1/2}
+\end{equation}
+Note that to do this we should save $u_0$ as part of the dynamic variables now.
+
+After we ``drifted'' the particles for a half-step, we evaluate the ``kick'' on
+the particle due to electromagnetic force. This is computed using the modified
+Vay algorithm detailed in the above subsection. We solve the following equation
+\begin{equation}
+  \label{eq:57}
+  \frac{u_i' - u_i}{\Delta t} = \frac{\alpha q}{m}\left( \gamma_{ij}D^j + e_{ijk}\frac{\bar{v}'^j + \bar{v}^j}{2}B^k \right)
+\end{equation}
+where the primed quantities are the momentum and velocity after the kick. One
+can then compute $u_0'$ from $u_i'$ using the constraint $u_{\mu}u^{\mu} = -1$.
+We have:
+\begin{equation}
+  \label{eq:59}
+  u_0 = \alpha\gamma_p \left[ \gamma_{ij}\beta^i\bar{v}^j - \alpha \right]
+\end{equation}
+
+Then we use these quantities to drift the particles for another half-step
+\begin{equation}
+  \label{eq:58}
+  \frac{u_{\mu}^{n+1} - u'^{n+1/2}_{\mu}}{\Delta t/2} = \frac{1}{2}g_{\alpha\beta,\mu}(v'^{\alpha})^{n+1/2}g^{\beta\nu}(u_{\nu})^{n+1}
+\end{equation}
+
+One question that may be asked is that is the energy of the particle conserved
+during the update. This is on the TODO list and we might go back to this problem
+a bit later.
+
+\subsection{Current Deposition}
+\label{sec:current}
+
+One needs to define the current $I^{\mu}$ that occurs in the Maxwell equations
+\eqref{eq:7} in terms of particle motion. Again following Landau \& Lifshitz we
+do that by referring to the action \eqref{eq:23}. We introduce the charge
+density $\rho$ by summing the charge contained in a certain spatial volume element
+\begin{equation}
+  \label{eq:32}
+  de = \rho\sqrt{\gamma}dx^1dx^2dx^3
+\end{equation}
+Multiplying this by $dx^i$ we have
+\begin{equation}
+  \label{eq:32}
+  de dx^i = \rho dx^\mu\sqrt{\gamma}dx^1dx^2dx^3 = \frac{\rho}{\alpha}\sqrt{-g}d\Omega\,\frac{dx^\mu}{dt}
+\end{equation}
+where $d\Omega = dtdx^1dx^2dx^3$. We therefore define the current 4-vector as
+\begin{equation}
+  \label{eq:33}
+  I^{\mu} = \frac{\rho c}{\alpha}\frac{dx^{\mu}}{dt}
+\end{equation}
+
+Charged particles are represented by delta function in the current and charge
+distributions. Let's define $\int \delta(\mathbf{r})d^3x = 1$, then the charge
+and current densities (Landau \& Lifshitz) are
+\begin{equation}
+  \label{eq:34}
+  \rho = \sum_p\frac{q_p}{\sqrt{\gamma}}\delta(\mathbf{r}-\mathbf{r}_p),\quad I^{\mu} = \sum_p\frac{q_pc}{\alpha\sqrt{\gamma}}\delta(\mathbf{r} - \mathbf{r}_p)\frac{dx^{\mu}}{dt}
+\end{equation}
+The continuity equation is $\nabla_{\mu}I^{\mu} = 0$ and using the divergence
+form \eqref{eq:35} and the above definition we can see it is indeed satisfied.
+The form therefore suggests that in depositing the current the correct
+velocities we should use are $v^i$, definitely not $\bar{v}^i$.
+
+We can also find the integral form of the continuity equation. Since we have
+\begin{equation}
+  \label{eq:35}
+  \frac{1}{\sqrt{-g}}\partial_{\mu}\left( \sqrt{-g} I^{\mu} \right) = 0
+\end{equation}
+we can separate into spatial and temporal part, and integrate both over a given
+cell:
+\begin{equation}
+  \label{eq:36}
+  \partial_t\int_C \alpha\sqrt{\gamma}I^0\,d^3x + \int_C \partial_i \left( \alpha\sqrt{\gamma}I^i \right)\,d^3x = 0
+\end{equation}
+We can use Gauss's theorem to replace the second integral. Because $\int_{\Sigma} d\omega
+= \oint_{\partial\Sigma}\omega$ we have
+\begin{equation}
+  \label{eq:37}
+  \partial_t\int_Cc\rho\sqrt{\gamma}\,d^3x + \oint_{\partial C}\frac{1}{2}e_{ijk}\alpha I^i\,dx^j\wedge dx^k = 0
+\end{equation}
+Notice that the second integral is exactly the integral that occurs in the
+integral form of the Maxwell equations \eqref{eq:22}. Therefore if using
+integral formalism, the we only need to separate the change of charge in a given
+cell into different directions, find the current flux easily and then directly
+use them to update the dynamic fields $B^i$ and $D^i$.
+
+\section{Unstructured Grid}
+\label{sec:unstructured-pic}
+
+
+
+% Local Variables:
+% TeX-master: "../thesis"
+% zotero-collection: #("16" 0 2 (name "Thesis"))
+% End:

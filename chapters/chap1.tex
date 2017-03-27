@@ -6,12 +6,13 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Particle-in-Cell(PIC) codes are a powerful tool to study the kinetic properties
-of plasma from first principles. The strength of a PIC code is that it can
-resolve the plasma skin depth, and reproduce the interaction between particles
-and fields, making them invaluable in the study of particle acceleration
-processes in plasmas. It was very successfully applied to collisionless shocks
-and reconnection processes
+The Particle-in-Cell(PIC) technique is a powerful tool to study the kinetic
+properties of plasma from first principles. The strength of a PIC code is that
+it can resolve the plasma skin depth, and reproduce the interaction between
+particles and fields, making them invaluable in the study of particle
+acceleration processes in plasmas. Also it is relatively straight-forward to
+implement and easily parallelizable. It has been very successfully applied to
+collisionless shocks and reconnection processes in astrophysics
 %TODO: references
 . However, because a PIC code has to resolve the
 plasma skin depth which is usually many orders of magnitude smaller than the
@@ -100,6 +101,7 @@ The first term is an integral of the derivative of a delta function,
 which should give zero since $S$ is independent of the integrand. The
 second and third term can be integrated trivially to get
 \begin{equation}
+  \label{eq:eom-position}
 \frac{d\mathbf{x}_p}{dt} = \mathbf{u}_p = \frac{\mathbf{p}_p}{\gamma_p}
 \end{equation}
 The reason is that $\mathbf{x}_p$ depends only on $t$, therefore
@@ -141,6 +143,7 @@ are proportional to the gradient of $S$, independent of the other two terms,
 therefore we ignore them. The rest two terms can be reduced to the simple
 single-particle equation of motion:
 \begin{equation}
+  \label{eq:eom-momentum}
 \frac{d\mathbf{p}_p}{dt} = \frac{q_p}{m_p}(\mathbf{E} + \mathbf{u}\times \mathbf{B})
 \end{equation}
 
@@ -324,20 +327,22 @@ where the summation is over the grid points where $W \neq 0$.
 One could also define the current density in the same way as charge density,
 from equation \eqref{eqn:pic-j}:
 \begin{equation}
+  \label{eq:naive-j}
   \mathbf{j} ( \mathbf{x}_{c} ) = \sum_{p} \frac{q_{p}}{\Delta V}\mathbf{u}_p W (
   \mathbf{x}_{p} -\mathbf{x}_{c} )
 \end{equation}
 However, simple application of this equation will lead to charge
 conservation issues and violation of the continuity equation
 \begin{equation}
-    \label{eq:18}
+    \label{eq:continuity}
     \partial_t\rho + \nabla\cdot \mathbf{j} = 0
 \end{equation}
 
 To enforce charge conservation at every timestep, instead of interpolating on
 the current, it is desirable to solve the continuity equation directly at every
 timestep. This is done with the so-called charge-conserving current deposition.
-We will discuss various techniques to achieve this in section %TODO: section ref
+We will discuss various techniques to achieve this in section
+\ref{sec:charge-cons-curr}.
 
 
 % Since particles stream freely in the cells, the electric and magnetic
@@ -364,7 +369,66 @@ We will discuss various techniques to achieve this in section %TODO: section ref
 % particle to current. We will discuss current deposition in greater
 % detail in section \ref{sec:charge-cons-curr}.
 
-\subsection{Coordinate Systems}
+\subsection{Current Deposition}
+\label{sec:charge-cons-curr}
+
+There are various ways to achieve charge conservation numerically. The simplest
+way is to use the naive current deposition \eqref{eq:naive-j}, being aware of
+the fact that it does not conserve charge according to the continuity equation.
+As a result, differences between $\nabla\cdot \mathbf{E}$ will slowly deviate
+from the charge density $\rho$. This will turn up in the result as artifacts in
+the electric field as if there is spurious charge density dispersed in the
+plasma distribution which are not tracked by the code. To alleviate this
+problem, the typical way is to employ divergence cleaning. % TODO: Expand on
+% this topic
+
+One difficulty of divergence cleaning lies in parallelization, since the
+divergence is a global operation which involves communication between nodes
+every time. A more efficient way is to solve the continuity equation
+\eqref{eq:continuity} for $\mathbf{j}$ at every timestep, which ensures that it
+is satisfied to numerical precision. Another strength of this method is that
+charge density $\rho$ never really show up in the evolution equation in the
+Maxwell equations. It only serves as a constraint for electric field. As long as
+the condition $\nabla\cdot \mathbf{E} = 4\pi\rho$ is satisfied for the initial
+condition, then continuity equation will guarantee that it is satisfied in
+subsequent times to numerical precision, thus side-stepping the problem of
+charge-conservation.
+
+There are two main ways to solve the continuity equation numerically at each
+timestep. The classical way was proposed by \citet{villasenor_rigorous_1992},
+which uses exact solutions for charge fluxes across cell boundaries for each
+kind of particle movement pattern. This was later improved by
+\citet{umeda_new_2003} to cut down the number of different cases by splitting the
+particle path in the case of cell-crossing into a zigzag pattern. % TODO:
+                                % Improve this description
+
+Another way to solve the continuity equation is proposed by
+\citet{esirkepov_exact_2001}. It decomposes the motion of charged particles into
+motions along individual axes since they are independent. Then the change of
+charge density $\Delta\rho$ is split into components that correspond to
+components of $\nabla\cdot \mathbf{j}$. This is the simplest to write in
+Cartesian coordinates:
+\begin{equation}
+  \label{eq:esirkepov-split}
+  \Delta \rho = \Delta\rho_{x} + \Delta\rho_{y} + \Delta\rho_{z} = -\Delta t(\partial_{x}j_{x} + \partial_{y}j_{y} + \partial_{z}j_{z})
+\end{equation}
+Due to the fact that coordinate directions are independent, motion of particles
+in $x$ direction for example does not generate current in the $y$ and $z$
+direction. This means that we can identify the $\partial_{x}j_{x}$ term with
+$\Delta \rho_{x}$.
+
+% We use the Esirkepov current deposition algorithm \citep{esirkepov_exact_2001}.
+
+\subsection{Finite Difference Scheme}
+\label{sec:finite-difference}
+
+From the discretization scheme we outlined in the previous section, the task of
+solving the Maxwell-Vlasov system reduces to solving the Maxwell equations
+coupled with the particle equations of motion \eqref{eq:eom-position} and
+\eqref{eq:eom-momentum}, with the above-described current deposition scheme to
+translate from particle motion to the current on the grid.
+
+\subsection{Coordinate Systems and Boundary Conditions}
 \label{sec:coord-syst-sing}
 
 Aperture supports the use of orthogonal curvilinear coordinate
@@ -375,16 +439,11 @@ directions.
 The main coordinate systems we support are Cartesian, cylindrical,
 spherical coordinates and some of their variants.
 
-\subsection{Current Deposition}
-\label{sec:charge-cons-curr}
-
-We use the Esirkepov current deposition algorithm.
-
-\subsection{Boundary Conditions}
-\label{sec:boundary-conditions}
-
 \subsection{Radiative Transfer}
 \label{sec:radiative-transfer}
+
+\subsection{Organization of the Code}
+\label{sec:code-organization}
 
 \subsection{Units}
 \label{sec:pic-units}
