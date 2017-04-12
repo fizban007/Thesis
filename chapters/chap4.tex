@@ -272,7 +272,7 @@ For simplicity, consider a symmetric double layer where the positive and
 negative charges have the same mass. In the 1D model, the electric field is
 almost constant between the two surface charges of the double layer, giving a voltage drop,
 \begin{equation}
-  \label{eq:1}
+  \label{eq:double-layer-volt}
   \frac{e\Phi_{e}}{m_{e}c^2} = \frac{4\pi j e L}{\omega_pm_{e}c^{2}} = \frac{\omega_p}{c}L = \frac{L}{\lambda_p},
 \end{equation}
 where $L$ is the size of the layer (the distance between the footpoints).
@@ -358,7 +358,7 @@ where $\omega_B=eB/m_ec$.\footnote{This simple resonance condition remains
    when viewed in the electron rest frame, because of the relativistic aberration effect (BT07).}
 The resonance condition reads
 \begin{equation}
-  \label{eq:9}
+  \label{eq:resonance-condition}
   \gamma(1 - \beta\cos\theta_X)E_t = \hbar\omega_B,
 \end{equation}
 where $\theta_X$ is the angle of the target X-ray with respect to local magnetic
@@ -413,7 +413,7 @@ The longest timescale in the problem is the lifetime of the magnetic twist.
 The finite voltage sustaining the magnetospheric current implies a finite ohmic
 dissipation rate, so the magnetic twist energy $E_\mathrm{twist}$ must dissipate with time,
 \begin{equation}
-  \label{eq:11}
+  \label{eq:twist-dissipation}
   \frac{d\Etw}{dt}
   \approx
   \frac{d}{dt}\int\frac{B_{\phi}^2}{8\pi} \, dV \sim I\Phi_{e},
@@ -531,7 +531,7 @@ profile similar to previous magnetohydrodynamic (MHD) and force-free
 electrodynamic (FFE) simulations of twisted magnetospheres
 (\citealt{mikic_disruption_1994}; PBH13),
 \begin{equation}
-  \label{eq:3}
+  \label{eq:twist-prof}
   \omega(\theta,t) = \omega_0(t)\frac{\Theta}{\sin\theta}\exp \left[ (1 - \Theta^4)/4 \right],
 \end{equation}
 where $\Theta = (\theta - \pi/2)/\Delta\theta_m$ and $\Delta \theta_m = \pi/4$
@@ -777,7 +777,7 @@ the lab frame is given by $\bE=-\bv\times\bB/c$. It corresponds to zero electric
 field in the comoving frame of the stellar crust, which is assumed to be an
 ideal conductor. This gives the following boundary condition at $r=\Rs$,
 \begin{equation}
-  \label{eq:4}
+  \label{eq:boundary-condition-e-theta}
   \mathbf{E}(t,\theta) =
   -\frac{( \mathbf{\omega}(t,\theta)\times \mathbf{r})\times \mathbf{B}}{c}.
 \end{equation}

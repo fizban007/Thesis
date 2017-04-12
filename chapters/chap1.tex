@@ -30,6 +30,7 @@ designed the code to be general enough to be applied to many different problems
 in Astrophysics, especially in problems where particles are accelerated in
 strong magnetic fields and capable of producing pair cascade.
 
+% TODO: Update this paragraph
 In Section \ref{sec:particle-cell-method} of the paper we will present
 the numerical algorithms and techniques employed in the Aperture code,
 from coordinate systems to boundary conditions. In Section
@@ -42,13 +43,13 @@ that we can address using this new PIC code.
 \label{sec:particle-cell-method}
 % This section is the meat of this paper. There will probably be many
 % subsections.
-The PIC method is essentially a way to solve the Maxwell-Vlasov
+The PIC method is essentially a way to solve the coupled Maxwell-Vlasov
 equations by approximating the plasma distribution function using the
 sum of a large number of discrete macro-particle distributions. The
 system of equations under question is simply the Maxwell equations
 combined with the Vlasov equation:
 \begin{align}
-    \frac{\partial f^{s}}{\partial t} + \mathbf{u}\cdot\frac{\partial f^s}{\partial \mathbf{x}} &+ \frac{q^s}{m^s}(\mathbf{E} + \mathbf{u}\times \mathbf{B})\cdot\frac{\partial f^s}{\partial (\gamma \mathbf{u})} = 0 \label{eq:vlasov}\\
+    \frac{\partial f^{s}}{\partial t} + \mathbf{u}\cdot\frac{\partial f^s}{\partial \mathbf{x}} &+ \frac{q^s}{m^s}\left(\mathbf{E} + \frac{\mathbf{u}}{c}\times \mathbf{B}\right)\cdot\frac{\partial f^s}{\partial (\gamma \mathbf{u})} = 0 \label{eq:vlasov}\\
     \nabla\cdot \mathbf{E} &= 4\pi\rho \\
     \nabla\cdot \mathbf{B} &= 0 \\
     \nabla\times \mathbf{E} &= -\frac{1}{c}\partial_t \mathbf{B} \\
@@ -56,10 +57,12 @@ combined with the Vlasov equation:
 \end{align}
 where $s$ denotes the particle species (electrons, positrons, ions,
 \dots). We assume a collisionless plasma by setting the right hand
-side of equation \eqref{eq:vlasov} to zero.
+side of equation \eqref{eq:vlasov} to zero, which is applicable for a lot of
+astrophysical applications.
 
-The charge and current densities are found by taking the moments of
-the distribution function $f^s$ over the momentum space
+The charge and current densities appearing in the Maxwell equations as source
+terms are found by taking the moments of the distribution function $f^s$ over
+the momentum space
 \begin{align}
   \rho &= \int d \mathbf{u} \sum_s q^s f^s(\mathbf{x}, \mathbf{u}) \label{eqn:pic-rho} \\
   \mathbf{j} &= \int d \mathbf{u} \sum_s q^s \mathbf{u} f^s(\mathbf{x}, \mathbf{u}) \label{eqn:pic-j}
@@ -71,19 +74,18 @@ with a smeared out distribution in space but identical momentum
 $\mathbf{p}_{p}$:
 \begin{equation}
     \label{eq:single-particle}
-    f^s(\mathbf{x}, \mathbf{u}) = \sum_{p}f^s_{p}(\mathbf{x}, \mathbf{u}) = \delta(\gamma \mathbf{u} - \mathbf{p}_{p}) S(\mathbf{x} - \mathbf{x}_{p})
+    f^s(\mathbf{x}, \mathbf{u}) = \sum_{p}f^s_{p}(\mathbf{x}, \mathbf{u}) = \sum_{p}\delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_{p}) S(\mathbf{x} - \mathbf{x}_{p})
 \end{equation}
 % A macro particle can be
 % viewed as a collection of particles smeared out in space, with
 % identical physical momentum $\mathbf{p}_{p}$. Therefore, each
 % particle represents a distribution function of the type
-where $S$ is a function that describes the shape of the macro
-particle, with the property that $S$ has finite support, and that the
-integral of $S$ over all space is normalized to 1. The idea is that,
-if each individual macro particle satisfies the Vlasov equation, then
-the linear superposition of a large number of them still satisfy the
-Vlasov equation, and should provide a good approximation for the
-dynamics of the plasma.
+where $S$ is a function that describes the shape of the macro particle, with the
+property that $S$ has finite support, and that the integral of $S$ over all
+space is normalized to 1. Since the Vlasov equation is linear, if each
+individual macro particle satisfies the Vlasov equation, then the linear
+superposition of a large number of them still satisfy the Vlasov equation, and
+should provide a good approximation for the dynamics of the plasma.
 
 The dynamic equations for the macro particles can be derived by taking
 the moments of the Vlasov equation with the single particle
@@ -92,9 +94,9 @@ particle distribution function into the Vlasov equation and taking the
 zeroth moment by integrating over $\mathbf{u}$, we get
 \begin{equation}
 \begin{split}
-    \int d\mathbf{u}\,\left\{ \left[ \partial_t \delta(\gamma \mathbf{u} - \mathbf{p}_p) \right]S(\mathbf{x} - \mathbf{x}_p) + \delta(\gamma \mathbf{u} - \mathbf{p}_p)\partial_tS(\mathbf{x} - \mathbf{x}_p) \right. \\
-    + \delta(\gamma \mathbf{u} - \mathbf{p}_p) \mathbf{u}\cdot\nabla S(\mathbf{x} - \mathbf{x}_p) \\
-    \left. + S(\mathbf{x} - \mathbf{x}_p)\frac{q_p}{m_p}(\mathbf{E} + \mathbf{u}\times \mathbf{B})\cdot \nabla_{\gamma \mathbf{u}}\delta(\gamma \mathbf{u} - \mathbf{p}_p) \right\} = 0
+    \int d\mathbf{u}\,\left\{ \left[ \partial_t \delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_p) \right]S(\mathbf{x} - \mathbf{x}_p) + \delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_p)\partial_tS(\mathbf{x} - \mathbf{x}_p) \right. \\
+    + \delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_p) \mathbf{u}\cdot\nabla S(\mathbf{x} - \mathbf{x}_p) \\
+    \left. + S(\mathbf{x} - \mathbf{x}_p)\frac{q_p}{m_p}\left(\mathbf{E} + \frac{\mathbf{u}}{c}\times \mathbf{B}\right)\cdot \nabla_{\gamma \mathbf{u}}\delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_p) \right\} = 0
 \end{split}
 \end{equation}
 The first term is an integral of the derivative of a delta function,
@@ -102,7 +104,7 @@ which should give zero since $S$ is independent of the integrand. The
 second and third term can be integrated trivially to get
 \begin{equation}
   \label{eq:eom-position}
-\frac{d\mathbf{x}_p}{dt} = \mathbf{u}_p = \frac{\mathbf{p}_p}{\gamma_p}
+\frac{d\mathbf{x}_p}{dt} = \mathbf{u}_p = \frac{\mathbf{p}_p}{\gamma_p m_{p}}
 \end{equation}
 The reason is that $\mathbf{x}_p$ depends only on $t$, therefore
 the partial derivative becomes a total derivative,
@@ -133,9 +135,9 @@ become zero because $\nabla_{\gamma
 Taking the first moment of the Vlasov equation yields
 \begin{equation}
 \begin{split}
-    \int d\mathbf{u}\,\left\{ \mathbf{u}\left[ \partial_t \delta(\gamma \mathbf{u} - \mathbf{p}_p) \right]S(\mathbf{x} - \mathbf{x}_p) + \mathbf{u}\delta(\gamma \mathbf{u} - \mathbf{p}_p)\partial_tS(\mathbf{x} - \mathbf{x}_p) \right. \\
-    + \mathbf{u}\delta(\gamma \mathbf{u} - \mathbf{p}_p) \mathbf{u}\cdot\nabla S(\mathbf{x} - \mathbf{x}_p) \\
-    \left. + \mathbf{u}S(\mathbf{x} - \mathbf{x}_p)\frac{q_p}{m_p}(\mathbf{E} + \mathbf{u}\times \mathbf{B})\cdot \nabla_{\gamma \mathbf{u}}\delta(\gamma \mathbf{u} - \mathbf{p}_p) \right\} = 0
+    \int d\mathbf{u}\,\left\{ \mathbf{u}\left[ \partial_t \delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_p) \right]S(\mathbf{x} - \mathbf{x}_p) + \mathbf{u}\delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_p)\partial_tS(\mathbf{x} - \mathbf{x}_p) \right. \\
+    + \mathbf{u}\delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_p) \mathbf{u}\cdot\nabla S(\mathbf{x} - \mathbf{x}_p) \\
+    \left. + \mathbf{u}S(\mathbf{x} - \mathbf{x}_p)\frac{q_p}{m_p}\left(\mathbf{E} + \frac{\mathbf{u}}{c}\times \mathbf{B}\right)\cdot \nabla_{\gamma \mathbf{u}}\delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_p) \right\} = 0
 \end{split}
 \end{equation}
 The second and third terms give the same equation of motion as above, and they
@@ -144,7 +146,7 @@ therefore we ignore them. The rest two terms can be reduced to the simple
 single-particle equation of motion:
 \begin{equation}
   \label{eq:eom-momentum}
-\frac{d\mathbf{p}_p}{dt} = \frac{q_p}{m_p}(\mathbf{E} + \mathbf{u}\times \mathbf{B})
+\frac{d\mathbf{p}_p}{dt} = q_p\left(\mathbf{E} + \frac{\mathbf{u}_{p}}{c}\times \mathbf{B} \right)
 \end{equation}
 
 These are simply equations of motion for ordinary particles in an
@@ -153,31 +155,35 @@ their name suggests: simply as physical particles. A PIC code simply trace their
 motion in the electromagnetic field as described by the above dynamic equations.
 
 
-\subsection{Discretization}
+\subsection{Discretization and Spatial Grid}
 \label{sec:discretization}
 
 So far the only approximation we have introduced is using an ensemble of macro
 particles to approximate the real distribution function of a plasma system. To
 solve the Maxwell equations and particle dynamic equations numerically, one
-needs to discretize to a finite grid, hence the name Particle-in-Cell. The
-discretization is done on space and time using the Finite Difference Time Domain
-(FDTD) method. %TODO: Reference?
-Fields $\mathbf{E}$ and $\mathbf{B}$ are sampled on a finite
-grid, as well as the current and charge densities $\mathbf{J}$ and $\rho$. One
-evolves the equations using a given time evolution scheme step by step starting
-from the initial condition. At each step, one updates the positions and momenta
-of all particles according to the fields on the grid, computes the current
-density due to particle motion, and uses this current density to evolve the
-fields themselves.
+needs to discretize the continuous field quantities onto a finite grid
+consisting of cells, hence the name Particle-in-Cell. The discretization is done
+on space and time using the Finite Difference Time Domain (FDTD)
+method. %TODO: Reference?
+Fields $\mathbf{E}$ and $\mathbf{B}$ are sampled on a finite grid, as well as
+the current and charge densities $\mathbf{J}$ and $\rho$. One evolves the
+equations using a given time evolution scheme step by step starting from the
+initial condition. At each step, one updates the positions and momenta of all
+particles according to the fields on the grid, computes the current density due
+to particle motion, and uses this current density to evolve the fields
+themselves.
 
-A PIC code can operate in either 2D or 3D. In the former case, although a grid
-of lower dimension is used, all 3 vector components of $\mathbf{E}$ and
-$\mathbf{B}$ fields need to be evolved\footnote{Sometimes also called ``2.5D''
-  due to full 3D vector quantities defined on a 2D grid.}. This is applicable
-when the problem has inherent symmetry, such as axisymmetry or translational
-invariance in one direction. It is typical to use the classical staggered
-\citet{yee_numerical_1966} grid for electric and magnetic fields (figures
-\ref{fig:Yee} and \ref{fig:Yee-cartesian}).
+A PIC code can operate in either 2D or 3D\footnote{In 1D, a discretization is
+  not necessary, since there is no magnetic field, and electric field at any
+  given particle location can be found exactly by integrating Gauss's law.}.
+In the former case, although a grid of lower dimension is used, all 3 vector
+components of $\mathbf{E}$ and $\mathbf{B}$ fields need to be
+evolved\footnote{A code like this is sometimes called ``2.5D'' due to full 3D vector quantities
+  defined on a 2D grid.}. This is applicable when the problem has inherent
+symmetry, such as axisymmetry or translational invariance in one direction. It
+is typical to use the classical staggered \citet{yee_numerical_1966} grid for
+electric and magnetic fields (figures \ref{fig:Yee} and
+\ref{fig:Yee-cartesian}).
 
 \begin{figure}[h]
   \centering
@@ -217,7 +223,7 @@ invariance in one direction. It is typical to use the classical staggered
       \draw[very thick, ->, blue] (0, \h, \l) node[left] {$j_{z},\ E_{z}$} -- ++(0, \d, 0);
       \draw[very thick, ->, blue] (\h, 0, \l) node[below] {$j_{y},\ E_{y}$} -- ++(\d, 0, 0);
       \draw[very thick, ->, blue] (\l, 0, \h) node[below right] {$j_{x},\ E_{x}$} -- ++(0, 0, -\d);
-      \node[label=below left:$\rho$] at (0, 0, \l);
+      \node[label=below left:$\rho$] at (0, 0, \l) {};
 
       \draw[->] (-3, -3, 0) -- (1, -3, 0) node[below] {$y$};
       \draw[->] (-3, -3, 0) -- (-3, 1.2, 0) node[left] {$z$};
@@ -244,11 +250,31 @@ example take the evolution of the $B_z$ term:
       &- \left.\frac{E_y(x + \Delta x/2) - E_y(x - \Delta x/2)}{\Delta x} \right]
   \end{split}
 \end{equation}
-and due to the symmetric structure of the finite difference, we have
+The electric field values needed show up exactly at where they are defined on
+the Yee lattice, and due to the symmetric structure of the finite difference,
+the $\Delta x^{2}$ term in the Taylor expansion naturally cancels:
 \begin{equation}
-\frac{E_y(x + \Delta x/2) - E_y(x - \Delta x/2)}{\Delta x} = \partial_xE_y + \mathcal{O}(\Delta x^3)
+  \label{eq:finite-diff-2nd-order}
+\partial_xE_y = \frac{E_y(x + \Delta x/2) - E_y(x - \Delta x/2)}{\Delta x} + \mathcal{O}(\Delta x^3)
 \end{equation}
 This naturally applies to all derivative terms in the Maxwell equation.
+
+Another strength of the Yee grid is that the differential relations
+$\nabla\cdot(\nabla\times \mathbf{F}) = 0$ and $\nabla \times \nabla f = 0$ are
+satisfied by construction, so as long as Maxwell equation is used for the
+evolution of fields, $\nabla\cdot \mathbf{B} = 0$ should be preserved to
+numerical precision without extra work.
+
+This construction of symmetric finite difference scheme can be extended to
+higher orders as well. Equation \eqref{eq:finite-diff-2nd-order} is accurate to
+second order in $\Delta x$. To achieve 4th order accuracy, we need to use more
+terms to cancel out the $\Delta x^{3}$ term in the Taylor expansion:
+\begin{equation}
+  \label{eq:finite-diff-4th-order}
+  \partial_{x}E_y = \frac{2}{3}\frac{E_y(x + \Delta x/2) - E_y(x - \Delta x / 2)}{\Delta x} - \frac{1}{12}\frac{E_y(x + 3\Delta x / 2) - E_y(x - 3\Delta x / 2)}{\Delta x}
+\end{equation}
+Further
+
 
 Macro-particles stream freely in the mesh grid, and their positions and momenta
 are not discretized. To convert between local ``paticle'' quantities and grid
@@ -260,19 +286,24 @@ macro particle distribution function over the volume of a cell gives:
   \label{eqn:rho-cell}
   Q_{c} = \rho_{c}\Delta V = \sum_pq_pW(\mathbf{x}_p-\mathbf{x}_{c})
 \end{equation}
-where $q_p$ is the charge of an individual macro particle, and $W$ is defined as
+where $q_p$ is the charge of an individual macro particle, $\mathbf{x}_{c}$ is
+the position of the center of the cell, and $W$ is defined as
 the integral of $S$:
 \begin{equation}
   \label{eqn:weight-function}
   W(\mathbf{x}_p - \mathbf{x}_c) = \int_{\mathbf{x}_c - \mathbf{\Delta}/2}^{\mathbf{x}_c + \mathbf{\Delta}/2} S(\mathbf{x}_p - \mathbf{x})d\mathbf{x}
 \end{equation}
-and $\Delta$ is the size of the support of $S$. Since in the PIC code,
-we will only be using the interpolation functions $W$, not $S$, so we
-will call $W(\mathbf{x}_p - \mathbf{x}_c)$ the ``shape
-functions''. Typical shape functions used in PIC codes are so-called
-``B-spline'' functions, which are piecewise polynomial functions with
-minimal support. Following are the shape functions often used in PIC
-codes, in ascending polynomial order:
+and $\Delta$ is the size of the cell. The assumption that $S$ has finite support
+implies that $W$ will be nonzero for only a few cells with $\mathbf{x}_{c}$
+close to $\mathbf{x}_{p}$, and since the integration of $S$ over the whole
+volume is constrained to be 1, the sum of all nonzero $W$ near a certain
+particle is guaranteed to be 1. This is another way of saying total charge is
+conserved. Since in the PIC code, we will only be using the discrete
+interpolation functions $W$, not $S$, so we will call $W(\mathbf{x}_p -
+\mathbf{x}_c)$ the ``shape functions''. Typical shape functions used in PIC
+codes are so-called ``B-spline'' functions, which are piecewise polynomial
+functions with minimal support. Following are the shape functions often used in
+PIC codes, in ascending polynomial order:
 
 \textbf{CIC}: Cloud in Cell
 \begin{equation}
@@ -304,15 +335,17 @@ codes, in ascending polynomial order:
 
 % TODO: insert a plot of these functions
 In 2D or 3D problems, the weight of the particle is given by multiplication of
-these shape functions. In general, higher order shape functions will have better
-noise properties for the result, but are computationally more intensive, not
-only because they involve more multiplications (higher order polynomial), but
-each particle can influence more grid points and one need to sum over more terms
-of nonzero $W$.
+these shape functions, e.g.\ in 3D Cartesian coordinates $W(\mathbf{x}_{p} -
+\mathbf{x}_{c}) = W(x_{p} - x_{c})W(y_{p} - y_{c})W(z_{p} - z_{c})$. In general,
+higher order shape functions will have better noise properties for the result,
+but are computationally more intensive, not only because they involve more
+multiplications (higher order polynomial), but each particle can influence more
+grid points and one need to sum over more terms of nonzero $W$.
 
 Equation \eqref{eqn:rho-cell} can be taken as the definition of the discretized
-charge density in a given cell. In other words, it is the charge density in the
-cell assuming the cell is uniformly filled with charges from the macro particles.
+charge density in a given cell. In other words, it is the average charge
+contained in the cell assuming the cell is uniformly filled with charges from
+the macro particles.
 
 The particle shape function also serves as a way to interpolate the grid
 quantities such as $\mathbf{E}$ and $\mathbf{B}$ fields to the particle
@@ -324,7 +357,7 @@ location:
 \end{align}
 where the summation is over the grid points where $W \neq 0$.
 
-One could also define the current density in the same way as charge density,
+One could also define and compute the current density in the same way as charge density,
 from equation \eqref{eqn:pic-j}:
 \begin{equation}
   \label{eq:naive-j}
@@ -376,23 +409,45 @@ There are various ways to achieve charge conservation numerically. The simplest
 way is to use the naive current deposition \eqref{eq:naive-j}, being aware of
 the fact that it does not conserve charge according to the continuity equation.
 As a result, differences between $\nabla\cdot \mathbf{E}$ will slowly deviate
-from the charge density $\rho$. This will turn up in the result as artifacts in
-the electric field as if there is spurious charge density dispersed in the
-plasma distribution which are not tracked by the code. To alleviate this
-problem, the typical way is to employ divergence cleaning. % TODO: Expand on
-% this topic
+from the charge density $\rho$. This will turn up in the simulation as artifacts
+in the electric field as if there is spurious charge density dispersed in the
+plasma distribution which are not tracked by the code. Depending on the
+application, this might or might not be an issue, and some PIC codes decide to
+ignore this problem in favor of faster computation speed.
+
+A typical way to alleviate this problem is to employ divergence
+cleaning. There is no unique way of doing this, and many methods exist in
+literature.  % TODO: references
+We only outline a simple method here. The goal is to solves the equation
+$\nabla\cdot \mathbf{E} = 4\pi\rho$ every few timesteps. Since the deviation
+built up over a short time should be small as long as the time step is small,
+one can solve a diffusion equation of the electric potential $\phi$
+\begin{equation}
+  \label{eq:diffusion-electric-potential}
+  \frac{\partial\phi}{\partial t} = -\nabla^2\phi - 4\pi\rho
+\end{equation}
+Since the diffusion equation has the property that an initial distribution with
+nonzero right hand side will relax towards an equilibrium where the right hand
+side becomes zero, we only need to apply some relaxation time steps to let it
+happen. A typical method is the Gauss-Seidel method \citep[see
+e.g.][]{press_numerical_2007} which applies a filter to the field consecutively.
+Since the initial deviation should be small, it only takes several relaxation
+iterations to achieve a reasonable result.
 
 One difficulty of divergence cleaning lies in parallelization, since the
-divergence is a global operation which involves communication between nodes
-every time. A more efficient way is to solve the continuity equation
-\eqref{eq:continuity} for $\mathbf{j}$ at every timestep, which ensures that it
-is satisfied to numerical precision. Another strength of this method is that
-charge density $\rho$ never really show up in the evolution equation in the
-Maxwell equations. It only serves as a constraint for electric field. As long as
-the condition $\nabla\cdot \mathbf{E} = 4\pi\rho$ is satisfied for the initial
-condition, then continuity equation will guarantee that it is satisfied in
-subsequent times to numerical precision, thus side-stepping the problem of
-charge-conservation.
+relaxation filter is usually a global operation which involves communication
+between nodes every time. Another problem is that it inevitably introduces tiny
+fluctuations to the electric field, which will couple to particle dynamics and
+introduce heating to the plasma. A more efficient way is to directly solve the
+continuity equation \eqref{eq:continuity} for $\mathbf{j}$ at every timestep,
+which ensures that it is satisfied to numerical precision. Since charge density
+$\rho$ never really shows up in the evolution equations in the first place, it
+only serves as a constraint for electric field, therefore we can actually avoid
+evaluating the charge density and deposit $\mathbf{j}$ directly.
+As long as the condition $\nabla\cdot \mathbf{E} = 4\pi\rho$ is satisfied for
+the initial condition, then continuity equation will guarantee that it is
+satisfied in subsequent times to numerical precision, thus side-stepping the
+problem of charge-conservation.
 
 There are two main ways to solve the continuity equation numerically at each
 timestep. The classical way was proposed by \citet{villasenor_rigorous_1992},
@@ -417,27 +472,373 @@ in $x$ direction for example does not generate current in the $y$ and $z$
 direction. This means that we can identify the $\partial_{x}j_{x}$ term with
 $\Delta \rho_{x}$.
 
-% We use the Esirkepov current deposition algorithm \citep{esirkepov_exact_2001}.
+% TODO: Clarify what is needed to be done afterwards, and explain the extension
+% to higher order. The curvilinear coordinate extension is given in the later
+% section
 
-\subsection{Finite Difference Scheme}
+% We use the Esirkepov current deposition algorithm
+% \citep{esirkepov_exact_2001}.
+
+
+\subsection{Particle Pusher}
 \label{sec:finite-difference}
 
 From the discretization scheme we outlined in the previous section, the task of
 solving the Maxwell-Vlasov system reduces to solving the Maxwell equations
 coupled with the particle equations of motion \eqref{eq:eom-position} and
 \eqref{eq:eom-momentum}, with the above-described current deposition scheme to
-translate from particle motion to the current on the grid.
+translate from particle motion to the current on the grid. In this section and
+the next, we will outline the ways of solving these finite difference equations.
+
+% TODO: Make a graph of the time stepping scheme
+For particle equations of motion, we use the standard leap-frog scheme, meaning
+that $\mathbf{x}$ and $\mathbf{p}$ are always evaluated at a time difference of
+exactly a half timestep $\Delta t/2$ (here $i$ is the time step label):
+\begin{align}
+  \label{eq:leap-frog-particle}
+    \mathbf{x}_{p}^{i+1} &= \mathbf{x}_{p}^{i} +\mathbf{u}_{p}^{i+1/2} \Delta t \\
+    \gamma^{i+1/2} \mathbf{u}_{p}^{i+1/2} &= \gamma^{i-1/2}
+    \mathbf{u}_{p}^{i-1/2} + \frac{q \Delta t}{m} \left( \mathbf{E}^{i}
+    \noplus \noplus + \frac{\bar{\mathbf{u}}^{i}}{c}
+    \times \mathbf{B}^{i} \right)
+\end{align}
+This scheme is stable as long as the time step satisfies the constraint $\Delta
+t < 2/\omega_p$ \citep{tajima_computational_1989}.
+
+Notice that in the second expression of equation \eqref{eq:leap-frog-particle},
+an average velocity $\bar{\mathbf{u}}^{i}$ appears on the right hand side as
+well, meaning that this is an {\it implicit} equation. The simplest way is to
+invert a $3\times 3$ matrix, but it is both slow and prone to numerical errors.
+\citet{boris_relativistic_1970} proposed an algorithm which uses geometric rotations to
+simplify the solution of this equation, which became widely used in PIC codes,
+and the algorithm was named the {\it Boris pusher}.
+
+% The basis of the Boris pusher is the fact that Lorentz force does no work.
+% Therefore the halfstep Lorentz factor can be approximated as
+% TODO: Describe the Boris pusher
+The Boris pusher assumes the following form of the average velocity on the right
+hand side of equation \eqref{eq:leap-frog-particle}:
+\begin{equation}
+  \label{eq:boris-average-u}
+  \bar{\mathbf{u}}^{i} = \frac{\mathbf{p}^{i-1/2} + \mathbf{p}^{i+1/2}}{2\bar{\gamma}^i},\quad \text{where } \bar{\gamma}^i = \sqrt{1 + \left( \mathbf{p}^{i-1/2} + \frac{q\Delta t}{2m}\mathbf{E}^i \right)^2/c^2}
+\end{equation}
+One can define intermediate momenta
+\begin{equation}
+  \label{eq:boris-intermediate-momenta}
+  \mathbf{p}^{i-1/2} = \mathbf{p}^{-} - \frac{q\Delta t}{2m}\mathbf{E}^{i},\quad \mathbf{p}^{i+1/2} = \mathbf{p}^{+} + \frac{q\Delta t}{2m}\mathbf{E}^i
+\end{equation}
+then the equation for momentum update becomes
+\begin{equation}
+  \label{eq:boris-momentum-update}
+  \frac{\mathbf{p}^+-\mathbf{p}^{-}}{\Delta t} = \frac{q}{2m \bar{\gamma}^ic}(\mathbf{p}^+ + \mathbf{p}^{-})\times \mathbf{B}^{i}
+\end{equation}
+From geometry, this means that the angle to rotate from
+$\mathbf{p}^+-\mathbf{p}^{-}$ to $\mathbf{p}^++\mathbf{p}^{-}$ is related to
+$\mathbf{B}$. An illustration is given in figure
+\ref{fig:boris-velocity-rotation}. The gist is that we have
+\begin{equation}
+  \mathbf{p}' = \mathbf{p}^{-} + \mathbf{p}^{-}\times \mathbf{t},\quad \mathbf{t} = \frac{q\Delta t}{2\bar{\gamma}^imc}\mathbf{B}^{i}
+\end{equation}
+and we can compute $\mathbf{p}^{+}$ from $\mathbf{p}'$ by
+\begin{equation}
+  \mathbf{p}^+ = \mathbf{p}^{-} + \mathbf{p}'\times \mathbf{s},\quad \mathbf{s} = \frac{2\mathbf{t}}{1 + t^2}
+\end{equation}
+This method greatly improves the numerical accuracy and speed of the particle
+momentum update in PIC simulations, and has become the {\it de facto} particle
+pusher in many plasma simulation codes.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{pics/chap1/boris.png}
+  \caption[Illustration of Boris velocity rotation]{Illustration of Boris
+    velocity rotation, from \citep{boris_relativistic_1970}}
+  \label{fig:boris-velocity-rotation}
+\end{figure}
+
+
+However one can see that an approximation was made in Boris pusher, namely the
+average velocity vector between timesteps $i+1/2$ and $i-1/2$ is given by
+equation \eqref{eq:boris-average-u}. However this is an approximation since
+Boris pusher was derived with non-relativistic particle dynamics in mind.
+\citet{vay_simulation_2008} pointed out that in the special case where
+$\mathbf{E} + \mathbf{u}\times \mathbf{B}/c = 0$ the Boris pusher may introduce a
+spurious force on the particles. A better average is simply given by
+\begin{equation}
+  \label{eq:vay-average-u}
+  \bar{\mathbf{u}}^i = \frac{\mathbf{u}^{i-1/2} + \mathbf{u}^{i+1/2}}{2}
+\end{equation}
+However this means that the simple Boris scheme is no longer applicable. Vay
+outlined a new scheme which is slightly more complicated but more accurate when
+the Lorentz force of the particles is almost balanced by the electric force. The
+procedure is as follows. One first define $\mathbf{p}'$ similar to that in Boris
+pusher
+\begin{equation}
+  \label{eq:vay-p-prime}
+  \mathbf{p}' = \mathbf{p}^{i-1/2} + \frac{q\Delta t}{m}\left( \mathbf{E}^i + \frac{\mathbf{u}^{i-1/2}}{2c}\times \mathbf{B}^i \right)
+\end{equation}
+then one can find $\mathbf{p}^{i+1/2}$ and $\gamma^{i+1/2}$ as follows:
+\begin{align}
+  \label{eq:vay-solution}
+  \gamma^{i+1/2} &= \sqrt{\frac{\sigma + \sqrt{\sigma^2 + 4(\tau^2 + p_{*}^2)}}{2}} \\
+  \mathbf{p}^{i+1/2} &= s \left[ \mathbf{p}' + (\mathbf{p}'\cdot \mathbf{t})\mathbf{t} + \mathbf{p}'\times \mathbf{t} \right]
+\end{align}
+where $\bm{\tau} = (q\Delta t/2mc)\mathbf{B}^i$, $p_{*}=\mathbf{p}'\cdot\bm{\tau}/c$,
+$\sigma = \gamma'^2-\tau^2$, $\gamma' = \sqrt{1 + p'^2/c^2}$, $\mathbf{t} =
+\bm{\tau}/\gamma^{i+1/2}$, and $s = 1/(1 + t^2)$.
+
+Since in the simulations of our interest, much of the plasma is both
+relativistic and close to force-free, meaning that $\mathbf{E} +
+\mathbf{u}\times \mathbf{B}/c$ is close to zero, it is important to use Vay
+pusher to avoid spurious forces. Therefore in Aperture we use the Vay pusher
+exclusively.
+
+\subsection{Finite Difference Scheme for Maxwell Equations}
+\label{sec:fd-maxwell}
+
+In this section we outline how we use the fields $\mathbf{E}^{i}$ and
+$\mathbf{B}^{i}$ to the compute their values at the next time step. The most
+natural way is to use the traditional leapfrog method again
+\begin{align}
+  \label{eq:maxwell-leapfrog}
+  \mathbf{E}^{i+1} &= \mathbf{E}^i + \Delta t (c\nabla\times \mathbf{B}^{i+1/2} - 4\pi \mathbf{j}^{i+1/2}) \\
+  \mathbf{B}^{i+1/2} &= \mathbf{B}^{i-1/2} - \Delta t (c\nabla\times \mathbf{E}^i)
+\end{align}
+This scheme is stable as long as the time step $\Delta t$ satisfies the Courant
+condition $\Delta t < \Delta x / c\sqrt{3}$ where $\Delta x$ is the smallest
+grid spacing. However, one difficulty is that, in this scheme $\mathbf{E}$ and
+$\mathbf{B}$ fields are not defined at the same time step, whereas in our
+particle pusher \eqref{eq:leap-frog-particle} they are implicitly assumed to be
+sampled at the same time step.
+
+An improved method we employ is the semi-implicit field solver used by
+\citep{haugboelle_photon-plasma:_2012}. We start from the following finite
+difference equations:
+\begin{align}
+  \frac{\mathbf{E}^{i+1} -\mathbf{E}^{i}}{\Delta t} & = \nabla \times (
+  \alpha \mathbf{B}^{i+1} + \beta \mathbf{B}^{i} ) -\mathbf{j}^{i+1/2}\\
+  \frac{\mathbf{B}^{i+1} -\mathbf{B}^{i}}{\Delta t} & = - \nabla \times
+  ( \alpha \mathbf{E}^{i+1} + \beta \mathbf{E}^{i} )
+\end{align}
+where $\alpha$ and $\beta$ are numerical parameters that determines
+the ``implicitness'' of the scheme, with the constraint $\alpha +
+\beta = 1$. If $\alpha \gtrsim 0.5$ then the scheme is unconditionally
+stable. Bigger $\alpha$ leads to the damping of grid-scale waves,
+which helps smoothing the solution.
+
+To solve these equations, we can plug in the first equation into the second one
+to eliminate $\mathbf{E}^{i+1}$, explicitly assuming $\nabla\cdot \mathbf{B} =
+0$:
+\begin{equation}
+  \begin{split}
+    (1 - \alpha^2\Delta t^2\nabla^2)\mathbf{B}^{i+1} &= \mathbf{B}^i + \alpha\beta \Delta t^2\nabla^2 \mathbf{B}^i \\
+    &\phantom{=} -\Delta t\nabla\times \mathbf{E}^i + \alpha\Delta t^2\nabla\times \mathbf{j}^{i + 1/2}
+  \end{split}
+\end{equation}
+Now this is an equation of $\mathbf{B}^{i+1}$ only. We can solve it by inverting
+the operator $(1 - \alpha^2\Delta t\nabla^2)$ and apply it to the right hand side
+\begin{equation}
+  \label{eq:20}
+  (1 - \alpha^2\Delta t^2\nabla^2)^{-1} = (1 + \alpha^2\Delta t^2\nabla^2 + (\alpha^2\Delta t^2\nabla^2)^2 + \dots)
+\end{equation}
+Provided $\Delta t$ is small enough, this series converges rapidly. Practically
+we found that it is sufficient to terminate the series at around 4 terms, giving
+a relative numerical error less than $10^{-8}$. Thus, although the Laplace
+operator is a global operation and a global exchange of guard cell values is
+required, the field solver is still significantly faster than the particle
+pusher, rendering the overhead negligible.
+
+One particular note is that if higher order numerical differential operators
+were used in current deposition, then the same order of differential operators
+should be used here in the field evolution, otherwise the exact charge
+conservation will not be imposed. This is because we need the curl of
+$\mathbf{B}$ to be divergence-free to numerical precision, which is only true
+when the divergence and curl are evaluated to the same order of accuracy with
+the same staggering structure (see section \ref{sec:discretization}).
 
 \subsection{Coordinate Systems and Boundary Conditions}
 \label{sec:coord-syst-sing}
 
-Aperture supports the use of orthogonal curvilinear coordinate
-systems. A coordinate system is given by three functions $h_1$, $h_2$,
-and $h_3$ which are the scale functions in the three coordinate
-directions.
+Aperture supports the use of orthogonal curvilinear coordinate systems, which
+basically means any parametrization of the Euclidean $\mathbb{R}^{3}$ that has a
+diagonal metric. The coordinate system can be specified by three scale functions
+$h_{i} = \sqrt{g_{ii}}$. Since the metric is diagonal, this contains all the
+information of the metric.
 
-The main coordinate systems we support are Cartesian, cylindrical,
-spherical coordinates and some of their variants.
+The vector operations that we use in solving the Maxwell equations can be
+written in terms of these scale functions:
+\begin{align}
+  \label{eq:vector-derivatives}
+  \nabla f &= \frac{1}{h_{i}}\partial_{i}f \\
+  \nabla \cdot \mathbf{V} &= \frac{1}{\prod_{k}h_{k}}\partial_i(V_i\prod_{j\neq i}h_{j}) \\
+  \nabla \times \mathbf{V} &= \frac{1}{\prod_lh_l}\mathbf{e}_{i}\epsilon_{ijk}h_i\partial_j(h_kV_k)
+\end{align}
+where Einstein summation convention is assumed and repeated indices are summed
+over (except in the product sign). Due to the general form of these equations,
+it is straightforward to implement a general framework that works with vector
+derivatives, that can take in any scale functions $h_{i}$.
+
+Despite the designed flexibility, the main coordinate systems we support in the
+actual code are Cartesian, cylindrical, spherical coordinates and some of their
+variants. The scale functions of these coordinate systems are listed in table
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{lccc}
+    \hline
+    Coordinate System & $h_1$ & $h_2$ & $h_3$ \\ \hline
+    Cartesian ($x$, $y$, $z$) & 1 & 1 & 1 \\ \hline
+    Cylindrical ($\rho$, $\theta$, $z$) & 1 & $\rho$ & 1 \\ \hline
+    Spherical ($r$, $\theta$, $\phi$) & 1 & $r$ & $r\sin\theta$ \\ \hline
+    Log spherical ($x$, $\theta$, $\phi$) & $e^x$ & $e^{x}$ & $e^x\sin\theta$ \\ \hline
+  \end{tabular}
+  \caption{Scale functions for coordinate systems implemented in Aperture}
+  \label{tab:scale-functions}
+\end{table}
+
+An additional challenge in implementation of the coordinate systems
+has to do with how boundary singularities are treated, which varies for
+different coordinate systems. We will outline the treatment for the axis
+boundary in the spherical coordinates here since it is the one implemented
+first, and most relevant for the physics applications detailed in the later part
+of the thesis.
+
+For 2D spherical coordinates, axisymmetry means $\partial_{\phi} = 0$ in all
+Maxwell equations. By symmetry, we automatically have on the axis
+\begin{equation}
+  E_{\theta} = E_{\phi} = B_{\theta} = B_{\phi} = 0
+\end{equation}
+simply because there is no preferred direction of these field components.
+Furthermore, since we have $B_{\phi} = E_{\phi} = 0$ at the boundary for all
+times, their time derivatives should vanish, which makes the following
+conditions on the axis:
+\begin{equation}
+  \partial_r(rB_{\theta}) - \partial_{\theta}B_r = 0,\quad \partial_r(rE_{\theta}) - \partial_{\theta}E_{r} = 0
+\end{equation}
+Since $B_{\theta} = E_{\theta} = 0$ on the axis, so are their $r$
+derivatives, therefore we have instead
+\begin{equation}
+  \partial_{\theta}B_r = \partial_{\theta}E_r = 0
+\end{equation}
+which is akin to a ``symmetric'' boundary condition for both $E_r$ and $B_r$.
+
+The more important boundary condition is not on the fields, but on the
+differential operators. Naively one might want to just apply the most
+general differential operator on all points, and then correct for the
+fields afterwards, but that approach is not ideal when higher order
+differential operators are involved, nor is it appropriate when one
+wants to chain several differential operators together to evaluate,
+say, $\nabla\times(\nabla\times \mathbf{B})$.
+
+Therefore let us reformulate the problem into finding the appropriate
+boundary condition for $\nabla\times \mathbf{E}$ and $\nabla\times
+\mathbf{B}$ at the axis $\theta = 0$, $\pi$. The differential operator
+looks like the following:
+\begin{equation}
+  \begin{split}
+    \nabla\times \mathbf{E} &= \hat{\mathbf{r}}\frac{1}{r\sin\theta}\partial_{\theta}^-\sin\theta E_{\phi} \\
+    &- \hat{\bm{\theta}}\frac{1}{r}\partial_r^-rE_{\phi} \\
+    &+ \hat{\bm{\phi}}\left( \frac{1}{r}\partial_r^-rE_\theta - \frac{1}{r}\partial_{\theta}^-E_r \right)
+  \end{split}
+\end{equation}
+And similar for $\mathbf{B}$. Note that all differential operators are
+$\partial^-$ in the case of $\nabla\times \mathbf{E}$, and
+$\partial^+$ in the case of $\nabla\times \mathbf{B}$. Near the axis,
+the problematic terms are the $\partial_{\theta}$ derivatives. That
+means the $\partial_{\theta}\sin\theta E_{\phi}$ term and the
+$\partial_{\theta}E_r$ term.
+
+For the later, we have the powerful condition that right on the axis
+$\partial_{\theta}E_r = 0$. In fact, we have $(\nabla\times
+\mathbf{E})_{\phi} = 0$ at the axis boundary. For $\nabla\times
+\mathbf{E}$, it is directly evaluated on the boundary, therefore we
+impose the above condition directly on the boundary cell. For the cell
+in the box directly next to the boundary, we use the modified
+one-sided 4th order scheme:
+\begin{equation}
+  \label{eq:1-sided-4th-order}
+  \partial_{\theta}^-E_{i,j}^r = \frac{1}{\Delta r}\left[-\frac{11}{24} E_{i,j}^{r} + \frac{17}{24}E_{i+1,j}^{r} + \frac{3}{8}E^{r}_{i+2,j} - \frac{5}{24}E^{r}_{i+3,j} + \frac{1}{24}E^r_{i+4,j} )\right]
+\end{equation}
+Since $E_{\phi}$ and $E_r$ are similarly staggered in the $\theta$
+direction, same formula applies. Points further into the box do not
+feel the presence of the boundary.
+
+For the former term it is a bit tricky, since the coefficient
+$1/r\sin\theta$ vanishes at the axis. A limit analysis reveals that
+\begin{equation}
+  \lim_{\theta\to 0}\frac{1}{r\sin\theta}\partial_{\theta}\sin\theta E_{\phi} = \frac{2\partial_{\theta}E_{\phi}}{r}
+\end{equation}
+And since $(\nabla\times \mathbf{E})_r$ is directly evaluated on the
+axis boundary, we need to use the above formula to compute its
+value. When computing the derivative $\partial_{\theta}E_r$, we can
+use an even more extreme version of the 4th-order one-sided
+derivative:
+    % return (-f1 * 31.0 / 8.0 + f2 * 229.0 / 24.0 - f3 * 75.0 / 8.0 + f4 * 37.0 / 8.0 - f5 * 11.0 / 12.0) / delta;
+\begin{equation}
+  \partial_{\theta}^-E_{i,j}^\phi = \frac{1}{\Delta r}\left[-\frac{31}{8} E_{i+1,j}^{\phi} + \frac{229}{24}E_{i+2,j}^{\phi} - \frac{75}{8}E^{\phi}_{i+3,j} + \frac{37}{8}E^{\phi}_{i+4,j} - \frac{11}{12}E^\phi_{i+5,j} )\right]
+\end{equation}
+However, there is one piece of information we can use, which is the
+fact that $E_{\phi} = 0$ on the boundary. If taken this condition into
+account, then we can reduce the above equation into the modified
+one-sided derivative:
+\begin{equation}
+  \partial_{\theta}^-E_{i,j}^\phi = \frac{1}{\Delta r}\left[\frac{35}{8} E_{i+1,j}^{\phi} - \frac{35}{24}E_{i+2,j}^{\phi} + \frac{21}{40}E^{\phi}_{i+3,j} - \frac{5}{56}E^{\phi}_{i+4,j} )\right]
+\end{equation}
+
+For $\nabla\times \mathbf{B}$ the analysis is similar. However, due to
+the difference in staggering scheme, different components are
+evaluated at the boundary. Therefore different boundary considerations
+apply. For the $\partial_{\theta}B_r$ term, since it is not evaluated
+directly on the boundary, we need only use the one-sided derivative
+\eqref{eq:1-sided-4th-order} for the point closest to the boundary.
+
+For the $\partial_r(\sin\theta B_{\phi})/r\sin\theta$ term, again it
+is not evaluated directly on the boundary, therefore we only need to
+use \eqref{eq:1-sided-4th-order} on the point closest to the boundary,
+similar to the above term.
+
+The analysis up to this point completely fixes $\nabla\times
+\mathbf{E}$ and $\nabla\times \mathbf{B}$ at the axis boundary. Even
+if our $\theta$ boundary is not taken to be exactly at $\theta = 0$,
+$\pi$, the above conditions should still approximately hold. Plus,
+since the evaluation of the curl does not need anything from the ghost
+cells, we can evaluate $\nabla\times(\nabla\times \mathbf{B})$ with no
+problem.
+
+If we want to implement the semi-implicit scheme, then we need to fix
+the boundary condition for the differential operator $\nabla\cdot
+\mathbf{B}$ at the axis as well. We have
+\begin{equation}
+  \begin{split}
+        \nabla\cdot \mathbf{B} &= \frac{1}{r^2}\partial_r^-(r^2B_r) + \frac{1}{r\sin\theta}\partial_{\theta}^-(\sin\theta B_{\theta}) \\
+        &= \frac{1}{r^3\sin\theta}\left[ \partial_x^-(r^2\sin\theta B_r) + \partial_{\theta}^-(r^2\sin\theta B_{\theta}) \right]
+    \end{split}
+\end{equation}
+The second line is written out explicitly in log-spherical
+coordinates. Both terms present a challenge since $\sin\theta$ is zero
+on the axis. The second term reduces to
+$2\partial_{\theta}B_{\theta}/r$ similar to what happens before, and
+can be dealt with using the modified one-sided derivative
+\eqref{eq:14}. This is actually the property of the
+$\partial_{\theta}^-$ operator. The first term need to be evaluated
+with $\sin\theta$ moved out from the derivative, and this needs to be
+done in the code by hand as a special case.
+
+Lastly we have the gradient operator. We actually have two different
+versions depending on whether $f$ is evaluated at the center of the
+cell or at the corner of the cell. If we call the former $f^-$ and the
+latter $f^+$, then
+\begin{equation}
+  \nabla f^- = \hat{\mathbf{r}}\partial_r^-f + \hat{\bm{\theta}}\frac{1}{r}\partial_{\theta}^-f
+\end{equation}
+and similar for $f^+$. Obviously $\nabla\cdot \mathbf{B}$ belongs to $f^+$.
+% and the two components have the same stagger structure as $\mathbf{B}$
+% if $f = \nabla\cdot \mathbf{B}$.
+% The problem near the axis arises in the second term in the $\theta$
+% derivative.
+Since the derivative involved is $\partial^+$ and therefore not
+evaluated on the axis, simply using \eqref{eq:1-sided-4th-order} near
+the axis will fix the problem.
+
 
 \subsection{Radiative Transfer}
 \label{sec:radiative-transfer}

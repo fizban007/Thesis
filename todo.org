@@ -23,6 +23,34 @@
 ** DONE Go through all parts of the existing papers and make the formatting consistent
    CLOSED: [2017-03-13 Mon 15:46]
    At least make the whole document able to compile using LaTeX
-** STARTED Go through all existing chapters and make citations correct
+** DONE Go through all existing chapters and make citations correct
+   CLOSED: [2017-04-11 Tue 23:51]
 ** TODO Go through all existing chapters and change the text to reflect logical flow
-** STARTED Incorporate the existing code notes into the first part of the paper
+** DONE Incorporate the existing code notes into the first part of the paper
+   CLOSED: [2017-04-11 Tue 23:51]
+** TODO Finish writing the Introduction
+*** Describe gaps in pulsar magnetospheres
+*** History of the magnetars
+*** Magnetar models, twist, energy dissipation
+** TODO Finish writing the code part
+*** Discretization section
+    Fix the higher order derivative part. More description and better logical flow.
+*** Charge conserving deposition
+    Describe the Buneman deposition in some detail. Highlight its simplicity and
+    limitations. Introduce Esirkepov deposition. Emphasize its strengths for
+    curvilinear and higher order shape functions, and the avoidance of branching
+    conditions. Need to discuss the extension to higher order derivatives too.
+*** Coordinate system and boundary conditions
+    Explain the boundary conditions at the axis of spherical coordinates. One
+    sided derivatives. Cite the result and refer to appendix for details on how
+    to construct numerically correct finite difference operators. Also explain
+    stellar injection boundary condition and gravity.
+*** Radiative transfer
+    Discuss how photons are treated. Curvature radiation. Radiative damping.
+    Resonant scattering. Radiative force due to resonant scattering.
+*** Code particulars (code organization, parallelization, GPU)
+*** Test problems and benchmarks
+** TODO Appendices
+*** How to obtain the finite difference operators
+*** Resonance scattering in Magnetars
+***

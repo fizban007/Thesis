@@ -54,8 +54,8 @@ star; the extreme regular pulsation is a result of its rapid rotation
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.6\textwidth]{pics/intro/pulses.png}
-  \caption{A record of the pulsating radio source discovered in 1967
-    \citep{hewish_observation_1968}}
+  \caption[A record of pulsating radio source]{A record of the pulsating radio
+    source discovered in 1967 \citep{hewish_observation_1968}}
   \label{fig:pulse}
 \end{figure}
 
@@ -111,8 +111,9 @@ e.g.][]{abdo_fermi_2010}.
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.7\textwidth]{pics/intro/geminga2.png}
-  \caption{Gamma-ray lightcurves of Geminga in five energy ranges, from {\it
-      Fermi} observations \citep{abdo_fermi-lat_2010}.}
+  \caption[Gamma-ray lightcurves of Geminga]{Gamma-ray lightcurves of Geminga in
+    five energy ranges, from {\it Fermi} observations
+    \citep{abdo_fermi-lat_2010}.}
   \label{fig:geminga}
 \end{figure}
 
@@ -184,7 +185,8 @@ all. It is a dead pulsar.
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.6\textwidth]{pics/intro/electrosphere-new.png}
-  \caption{Charge density distribution of the electrosphere of an aligned
+  \caption[Charge density distribution of the electrosphere of an aligned
+  rotator.]{Charge density distribution of the electrosphere of an aligned
     rotator. Blue indicates negative charge and red indicates positive charge.}
   \label{fig:electrosphere-intro}
 \end{figure}
@@ -198,11 +200,67 @@ analytical results has been able to confirm this hypothesis. Furthermore,
 \citet{petri_relativistic_2007} showed that this instability is suppressed by
 relativistic effects that become important near the light cylinder.
 
-Another problem with the electrosphere is that, a huge unscreened gap exists
-between the dome and torus, capable of accelerating stray particles to very high
-energies. These particles will be able to produce curvature photons that are
-able to interact with the magnetic field to produce $e^{\pm}$ pairs. This
-eventually renders the electrosphere solution unstable to pair creation.
+Another problem with the electrosphere is that, a huge region with unscreened
+parallel electric field exists between the dome and torus, capable of
+accelerating stray particles to very high energies. These particles will be able
+to produce curvature photons that are able to interact with the magnetic field
+to produce $e^{\pm}$ pairs. This eventually renders the electrosphere solution
+unstable to pair creation.
+
+Pair creation in the pulsar magnetosphere has been studied extensively since the
+first theoretical models of the pulsar. There are several motivations for the
+pulsars to produce abundant $e^{\pm}$ outflow. One such motivation stems from
+models attempting to explain the radio emission which was central to pulsar
+studies for decades. Most models for radio emission involves some plasma
+instability causing the clumping of charges, which requires a dense
+quasi-neutral plasma. Another motivation is the observed synchrotron-radiating
+$e^{\pm}$ pairs in the pulsar wind nebulae. In the case of Crab, the
+multiplicity of pairs (number of $e^{\pm}$ pairs over the minimum
+Goldreich-Julian density) is estimated to be $\mathcal{M} \gtrsim 10^{6}$
+\citep{de_jager_gamma-ray_1996}, thus requiring the abundant pair creation in
+the magnetosphere.
+
+Therefore, particle acceleration and pair creation has been a major topic in
+theoretical pulsar research for decades. One of the challenges for the models is
+that pair creation is by construction a self-limiting process. The creation of
+abundant neutral plasma tend to screen the accelerating electric field, thus
+reducing its efficiency or even turning off the process altogether. Therefore it
+is difficult to have large regions in the magnetosphere where there is
+unscreened parallel electric field: all pulsar particle acceleration models
+involve a somewhat local ``gap'' where unscreened electric field keeps
+accelerating particles, and pairs are created outside the ``gap'', unable to
+screen it.
+
+% TODO: Gap models
+
+\section{Magnetars}
+\label{sec:intro-magnetars}
+
+% TODO: Introduce magnetars, and open up the historical observation discussions
+
+\subsection{Observations}
+\label{sec:intro-magnetar-observation}
+
+\subsection{Theoretical Studies}
+\label{sec:intro-magnetar-theory}
+
+
+\section{This Dissertation}
+\label{sec:intro-outline}
+
+In this dissertation we will attempt to address the problem of particle
+acceleration and global structure of the magnetosphere of pulsars and
+magnetars.
+
+Chapter \ref{chap:pic} will be devoted to a detailed introduction of the
+particle-in-cell technique, which will be the basic numerical tool for our
+study.
+
+Chapter \ref{chap:polar-cap} will focus on a local study of the pulsar
+polar cap. We will look at the region well within the pulsar magnetosphere, and
+approximate the geometry as 1D. We will discuss implications of this
+approximation, and what we can and can not learn from this local study.
+
 Chapter \ref{chap:pulsar} will study the global pulsar magnetosphere, motivated
 by the study of the polar cap particle acceleration.
 
