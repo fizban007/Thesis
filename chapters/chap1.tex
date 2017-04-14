@@ -13,7 +13,7 @@ particles and fields, making them invaluable in the study of particle
 acceleration processes in plasmas. Also it is relatively straight-forward to
 implement and easily parallelizable. It has been very successfully applied to
 collisionless shocks and reconnection processes in astrophysics
-%TODO: references
+%% TODO: references
 . However, because a PIC code has to resolve the
 plasma skin depth which is usually many orders of magnitude smaller than the
 scale of a realistic astrophysical problem, this kind of simulation is extremely
@@ -22,9 +22,9 @@ microphysics in a relatively large system.
 
 This chapter introduces the PIC technique in detail, and then introduces
 Aperture, a versatile PIC code designed and developed from scratch as part of my
-PhD thesis. The name is a recursive acronym which stands for Aperture is a code
+PhD thesis. The name is a recursive acronym which stands for ``Aperture is a code
 for Particles, Electrodynamics and Radiative Transfer at Ultra-Relativistic
-Energies. The original and main purpose of the code was to simulate the global
+Energies''. The original and main purpose of the code was to simulate the global
 structure of the Pulsar magnetosphere from first principles. However, we
 designed the code to be general enough to be applied to many different problems
 in Astrophysics, especially in problems where particles are accelerated in
@@ -49,11 +49,11 @@ sum of a large number of discrete macro-particle distributions. The
 system of equations under question is simply the Maxwell equations
 combined with the Vlasov equation:
 \begin{align}
-    \frac{\partial f^{s}}{\partial t} + \mathbf{u}\cdot\frac{\partial f^s}{\partial \mathbf{x}} &+ \frac{q^s}{m^s}\left(\mathbf{E} + \frac{\mathbf{u}}{c}\times \mathbf{B}\right)\cdot\frac{\partial f^s}{\partial (\gamma \mathbf{u})} = 0 \label{eq:vlasov}\\
-    \nabla\cdot \mathbf{E} &= 4\pi\rho \\
-    \nabla\cdot \mathbf{B} &= 0 \\
-    \nabla\times \mathbf{E} &= -\frac{1}{c}\partial_t \mathbf{B} \\
-    \nabla\times \mathbf{B} &= \frac{1}{c}\partial_t \mathbf{E} + \frac{4\pi}{c} \mathbf{j}
+  \frac{\partial f^{s}}{\partial t} + \mathbf{u}\cdot\frac{\partial f^s}{\partial \mathbf{x}} &+ \frac{q^s}{m^s}\left(\mathbf{E} + \frac{\mathbf{u}}{c}\times \mathbf{B}\right)\cdot\frac{\partial f^s}{\partial (\gamma \mathbf{u})} = 0 \label{eq:vlasov}\\
+  \nabla\cdot \mathbf{E} &= 4\pi\rho \\
+  \nabla\cdot \mathbf{B} &= 0 \\
+  \nabla\times \mathbf{E} &= -\frac{1}{c}\partial_t \mathbf{B} \\
+  \nabla\times \mathbf{B} &= \frac{1}{c}\partial_t \mathbf{E} + \frac{4\pi}{c} \mathbf{j}
 \end{align}
 where $s$ denotes the particle species (electrons, positrons, ions,
 \dots). We assume a collisionless plasma by setting the right hand
@@ -73,8 +73,8 @@ species by sampling it with a finite but large number of macro particles each
 with a smeared out distribution in space but identical momentum
 $\mathbf{p}_{p}$:
 \begin{equation}
-    \label{eq:single-particle}
-    f^s(\mathbf{x}, \mathbf{u}) = \sum_{p}f^s_{p}(\mathbf{x}, \mathbf{u}) = \sum_{p}\delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_{p}) S(\mathbf{x} - \mathbf{x}_{p})
+  \label{eq:single-particle}
+  f^s(\mathbf{x}, \mathbf{u}) = \sum_{p}f^s_{p}(\mathbf{x}, \mathbf{u}) = \sum_{p}\delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_{p}) S(\mathbf{x} - \mathbf{x}_{p})
 \end{equation}
 % A macro particle can be
 % viewed as a collection of particles smeared out in space, with
@@ -93,11 +93,13 @@ distribution function \eqref{eq:single-particle}. Plugging the single
 particle distribution function into the Vlasov equation and taking the
 zeroth moment by integrating over $\mathbf{u}$, we get
 \begin{equation}
-\begin{split}
+  \begin{split}
     \int d\mathbf{u}\,\left\{ \left[ \partial_t \delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_p) \right]S(\mathbf{x} - \mathbf{x}_p) + \delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_p)\partial_tS(\mathbf{x} - \mathbf{x}_p) \right. \\
     + \delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_p) \mathbf{u}\cdot\nabla S(\mathbf{x} - \mathbf{x}_p) \\
-    \left. + S(\mathbf{x} - \mathbf{x}_p)\frac{q_p}{m_p}\left(\mathbf{E} + \frac{\mathbf{u}}{c}\times \mathbf{B}\right)\cdot \nabla_{\gamma \mathbf{u}}\delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_p) \right\} = 0
-\end{split}
+    \left. + S(\mathbf{x} - \mathbf{x}_p)\frac{q_p}{m_p}\left(\mathbf{E} +
+        \frac{\mathbf{u}}{c}\times \mathbf{B}\right)\cdot \nabla_{\gamma
+        \mathbf{u}}\delta(\gamma m_{p}\mathbf{u} - \mathbf{p}_p) \right\} = 0
+  \end{split}
 \end{equation}
 The first term is an integral of the derivative of a delta function,
 which should give zero since $S$ is independent of the integrand. The
@@ -520,24 +522,24 @@ The Boris pusher assumes the following form of the average velocity on the right
 hand side of equation \eqref{eq:leap-frog-particle}:
 \begin{equation}
   \label{eq:boris-average-u}
-  \bar{\mathbf{u}}^{i} = \frac{\mathbf{p}^{i-1/2} + \mathbf{p}^{i+1/2}}{2\bar{\gamma}^i},\quad \text{where } \bar{\gamma}^i = \sqrt{1 + \left( \mathbf{p}^{i-1/2} + \frac{q\Delta t}{2m}\mathbf{E}^i \right)^2/c^2}
+  \bar{\mathbf{u}}^{i} = \frac{\mathbf{p}^{i-1/2} + \mathbf{p}^{i+1/2}}{2\bar{\gamma}^i},\quad \text{where } \bar{\gamma}^i = \sqrt{1 + \left( \mathbf{p}^{i-1/2} + \frac{q\Delta t}{2}\mathbf{E}^i \right)^2/(mc)^2}
 \end{equation}
 One can define intermediate momenta
 \begin{equation}
   \label{eq:boris-intermediate-momenta}
-  \mathbf{p}^{i-1/2} = \mathbf{p}^{-} - \frac{q\Delta t}{2m}\mathbf{E}^{i},\quad \mathbf{p}^{i+1/2} = \mathbf{p}^{+} + \frac{q\Delta t}{2m}\mathbf{E}^i
+  \mathbf{p}^{i-1/2} = \mathbf{p}^{-} - \frac{q\Delta t}{2}\mathbf{E}^{i},\quad \mathbf{p}^{i+1/2} = \mathbf{p}^{+} + \frac{q\Delta t}{2}\mathbf{E}^i
 \end{equation}
 then the equation for momentum update becomes
 \begin{equation}
   \label{eq:boris-momentum-update}
-  \frac{\mathbf{p}^+-\mathbf{p}^{-}}{\Delta t} = \frac{q}{2m \bar{\gamma}^ic}(\mathbf{p}^+ + \mathbf{p}^{-})\times \mathbf{B}^{i}
+  \frac{\mathbf{p}^+-\mathbf{p}^{-}}{\Delta t} = \frac{q}{2 \bar{\gamma}^ic}(\mathbf{p}^+ + \mathbf{p}^{-})\times \mathbf{B}^{i}
 \end{equation}
 From geometry, this means that the angle to rotate from
 $\mathbf{p}^+-\mathbf{p}^{-}$ to $\mathbf{p}^++\mathbf{p}^{-}$ is related to
 $\mathbf{B}$. An illustration is given in figure
 \ref{fig:boris-velocity-rotation}. The gist is that we have
 \begin{equation}
-  \mathbf{p}' = \mathbf{p}^{-} + \mathbf{p}^{-}\times \mathbf{t},\quad \mathbf{t} = \frac{q\Delta t}{2\bar{\gamma}^imc}\mathbf{B}^{i}
+  \mathbf{p}' = \mathbf{p}^{-} + \mathbf{p}^{-}\times \mathbf{t},\quad \mathbf{t} = \frac{q\Delta t}{2\bar{\gamma}^ic}\mathbf{B}^{i}
 \end{equation}
 and we can compute $\mathbf{p}^{+}$ from $\mathbf{p}'$ by
 \begin{equation}
@@ -574,7 +576,7 @@ procedure is as follows. One first define $\mathbf{p}'$ similar to that in Boris
 pusher
 \begin{equation}
   \label{eq:vay-p-prime}
-  \mathbf{p}' = \mathbf{p}^{i-1/2} + \frac{q\Delta t}{m}\left( \mathbf{E}^i + \frac{\mathbf{u}^{i-1/2}}{2c}\times \mathbf{B}^i \right)
+  \mathbf{p}' = \mathbf{p}^{i-1/2} + q\Delta t\left( \mathbf{E}^i + \frac{\mathbf{u}^{i-1/2}}{2c}\times \mathbf{B}^i \right)
 \end{equation}
 then one can find $\mathbf{p}^{i+1/2}$ and $\gamma^{i+1/2}$ as follows:
 \begin{align}
@@ -582,7 +584,7 @@ then one can find $\mathbf{p}^{i+1/2}$ and $\gamma^{i+1/2}$ as follows:
   \gamma^{i+1/2} &= \sqrt{\frac{\sigma + \sqrt{\sigma^2 + 4(\tau^2 + p_{*}^2)}}{2}} \\
   \mathbf{p}^{i+1/2} &= s \left[ \mathbf{p}' + (\mathbf{p}'\cdot \mathbf{t})\mathbf{t} + \mathbf{p}'\times \mathbf{t} \right]
 \end{align}
-where $\bm{\tau} = (q\Delta t/2mc)\mathbf{B}^i$, $p_{*}=\mathbf{p}'\cdot\bm{\tau}/c$,
+where $\bm{\tau} = (q\Delta t/2c)\mathbf{B}^i$, $p_{*}=\mathbf{p}'\cdot\bm{\tau}/c$,
 $\sigma = \gamma'^2-\tau^2$, $\gamma' = \sqrt{1 + p'^2/c^2}$, $\mathbf{t} =
 \bm{\tau}/\gamma^{i+1/2}$, and $s = 1/(1 + t^2)$.
 
@@ -604,7 +606,7 @@ natural way is to use the traditional leapfrog method again
   \mathbf{B}^{i+1/2} &= \mathbf{B}^{i-1/2} - \Delta t (c\nabla\times \mathbf{E}^i)
 \end{align}
 This scheme is stable as long as the time step $\Delta t$ satisfies the Courant
-condition $\Delta t < \Delta x / c\sqrt{3}$ where $\Delta x$ is the smallest
+condition $\Delta t < \Delta x / c$ where $\Delta x$ is the smallest
 grid spacing. However, one difficulty is that, in this scheme $\mathbf{E}$ and
 $\mathbf{B}$ fields are not defined at the same time step, whereas in our
 particle pusher \eqref{eq:leap-frog-particle} they are implicitly assumed to be
@@ -843,8 +845,39 @@ the axis will fix the problem.
 \subsection{Radiative Transfer}
 \label{sec:radiative-transfer}
 
-\subsection{Organization of the Code}
-\label{sec:code-organization}
+A significant feature of Aperture compared to traditional PIC codes is the
+inclusion of various radiative transfer mechanisms that are important in
+high-energy astrophysics. In this section we list the supported physical
+processes and outline how we model them in the code.
+
+\subsubsection{Channels for pair creation}
+\label{sec:instant-pair}
+
+In the magnetosphere of neutron stars, energetic electrons or positrons can
+induce vacuum breakdown and create $e^{\pm}$ pairs. This is usually a 2-step
+process. First, a high energy photon ($E_\mathrm{ph} > 2m_{e}c^2$) is emitted
+from the energetic particle, and the photon will then convert into a pair of
+$e^{\pm}$. In rotation powered pulsars, the first process is believed to be
+mainly from curvature radiation from electrons accelerated to Lorentz factors
+$\gamma \gtrsim 10^{8}$. % TODO: refer to the intro section
+However in magnetars where the magnetic field is strong, the energetic photons
+mainly come from resonantly up scattered X-ray photons from either the thermal
+emission from the surface of the star, or from synchrotron emission of the
+plasma in the magnetic field.
+
+Aperture models both kinds of high-energy photon emission with a threshold
+condition and an emission rate.
+
+
+\subsubsection{Synchrotron and general radiative loss}
+\label{sec:synchrotron-loss}
+
+\subsubsection{Radiative drag due to resonant scattering}
+\label{sec:resonant-scattering}
+
+
+% \subsection{Organization of the Code}
+% \label{sec:code-organization}
 
 \subsection{Units}
 \label{sec:pic-units}
@@ -990,6 +1023,8 @@ question, e.g.\ $E = \tilde{E} E_*$)
   g_{*} &= R_{*}c^2 = R_6\, 9.0\times 10^{26}\, \mathrm{m^3s^{-2}} \\
   p_{*} &= mc
 \end{align}
+
+\section{Aperture}
 
 \section{Test Problems}
 \label{sec:test-problems}
