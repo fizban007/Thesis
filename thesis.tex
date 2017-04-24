@@ -40,7 +40,6 @@ letterpaper,
 \usepackage[section]{placeins}
 
 % \usepackage{braket}
-\usepackage{tikz}
 \usepackage{import}
 \usepackage{setspace}
 \usepackage{xcolor}
@@ -57,6 +56,9 @@ letterpaper,
 \usepackage{ulem}
 \usepackage{indentfirst}
 \usepackage{tensor}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows}
 
 \DeclareGraphicsRule{.1}{eps}{.1}{}
 \DeclareGraphicsExtensions{.pdf}
@@ -110,7 +112,7 @@ letterpaper,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% Appendix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{appendices}
   \include{appendix/finite-diff}
-  \include{appendix/resonant-scattering}
+  \include{appendix/gpu}
 \end{appendices}
 
 \end{document}

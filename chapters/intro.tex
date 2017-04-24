@@ -150,16 +150,17 @@ that is most likely magnetospheric \citep{kaspi_isolated_2006}.
 \label{sec:intro-pulsar-theory}
 
 Despite the success of a simple vacuum dipole model, it proves to be extremely
-difficult to make a more detailed self-consistent model. The vacuum dipole
-model has a few problems. First is that, the electric field from
-uni-polar induction effect gives a voltage that can accelerate particles to
+difficult to make a more detailed self-consistent model. The vacuum dipole model
+has a few problems. First is that, the electric field from uni-polar induction
+effect gives a voltage that can accelerate particles to $\sim
+10^{14}\,\mathrm{V}$.
 % TODO: how high voltage?
-This voltage has two effects: it exceeds the binding energy of electrons and
+This voltage has two effects: it far exceeds the binding energy of electrons and
 ions at the surface of the neutron star and can extract charged particles from
-the stellar surface, and it also accelerates the
-extracted particles to energies that produce high-energy photons that are
-capable of interacting with the intense magnetic field and convert into
-$e^{\pm}$ pairs, thus inducing a pair cascade \citep{erber_high-energy_1966}.
+the stellar surface; it also accelerates the extracted particles to energies
+that produce high-energy photons that are capable of interacting with the
+intense magnetic field and convert into $e^{\pm}$ pairs, thus inducing a pair
+cascade \citep{erber_high-energy_1966}.
 
 As a result, it is not possible for the pulsar magnetosphere to be near vacuum.
 A minimum corotating charge density is guaranteed around the pulsar which is
@@ -169,6 +170,7 @@ conventionally called the Goldreich-Julian density \citep{goldreich_pulsar_1969}
   \rho_\mathrm{GJ} = -\frac{\bOm\cdot \mathbf{B}}{2\pi c}\frac{1}{1 - (\Omega r/c)^2\sin^{2}\theta}
 \end{equation}
 where $\theta$ is the angle between magnetic axis and the rotation axis.
+% TODO: expand on the GJ model
 
 \subsubsection{Electrosphere}
 \label{sec:electrosphere}
@@ -237,12 +239,60 @@ screen it.
 \subsubsection{MHD and force-free models}
 \label{sec:mhd-force-free}
 
+Although the existence of gaps is crucial to fill the magnetosphere with the
+required amount of plasma, it is instructive to study what happens to the
+magnetosphere when plasma supply is not an issue. It makes sense to study the
+approximation where plasma is so abundant as to screen all parallel electric
+fields, $\mathbf{E}\cdot \mathbf{B}\approx 0$. This model assumes that the
+inertial mass of the particles is much less than the magnetic field energy
+$B^{2}/8\pi c$. This limit is called ``Force-free electrodynamics'' (FFE),
+defined by the equation
+\begin{equation}
+  \label{eq:force-free}
+  \rho \mathbf{E} + \frac{\mathbf{J}\times \mathbf{B}}{c} = 0
+\end{equation}
 
+Force-free electrodynamics has no constraints on the distribution of the plasma,
+other than the obvious requirement that $\rho = \nabla\times \mathbf{E} / 4\pi$,
+and that $\mathbf{J}$ satisfies the force-free equation \eqref{eq:force-free}.
+It assumes that enough plasma is always supplied to maintain these two
+conditions as demanded by the electromagnetic field.
 
-\subsubsection{Models for gaps}
+The force-free equations together with Maxwell equations form a closed system
+and can be solved for the boundary condition of a rotating neutron star. The
+equations were first solved numerically by \citet{contopoulos_axisymmetric_1999}
+\citetext{see also e.g.\ \citealp{goodwin_idealized_2004};
+  \citealp{gruzinov_power_2005}; \citealp{timokhin_force-free_2006};
+  \citealp{parfrey_introducing_2012}}. The force-free solution of the pulsar
+magnetosphere shows a few interesting features:
+\begin{itemize}
+\item An open zone where magnetic field lines extend to infinity, $B_{\phi}\neq
+  0$ and current flows along the field lines. Poynting flux $\mathbf{S} =
+  \mathbf{E}\times \mathbf{B}$ points outward along the poloidal $\mathbf{B}$
+  field.
+\item A closed zone where $B_{\phi} = 0$ and poloidal $j=0$, filled by plasma
+  with density equal to $\rho_\mathrm{GJ}$. The closed zone corotates with the
+  star, similar to the torus in the electrosphere solution. Poloidal magnetic
+  field remains close to dipole configuration.
+\item A thin Y-shaped current sheet that separates the close and open zones,
+  with the Y-point close to the light cylinder.
+\end{itemize}
+
+% TODO: Finish up the discussion for FFE, with 3D results and other stuff
+
+However, FFE remains an approximation, and it glaringly breaks down in some
+regions of the magnetosphere, namely inside the current sheets and in some
+inevitable gaps where $\mathbf{E}\cdot \mathbf{B} \neq 0$ and particles are
+accelerated to produce the plasma required by FFE. One can introduce finite
+resistivity and use full MHD approach to study the magnetosphere % TODO: ref
+. However the issue of particle acceleration and formation of localized gaps
+remains impossible to tackle in this framework.
+
+\subsubsection{Gaps and pair cascade}
 \label{sec:gap-models}
 
-
+Several mechanisms of forming and maintaining localized gaps where particles are
+accelerated have been proposed over the years of pulsar research.
 
 % TODO: Gap models
 
@@ -250,13 +300,122 @@ screen it.
 \label{sec:intro-magnetars}
 
 % TODO: Introduce magnetars, and open up the historical observation discussions
+Magnetars are a class of neutron stars with very drastic variability in X-ray
+and soft $\gamma$-ray bands. They exhibit recurrent bursts, flares, and
+sometimes giant bursts that can briefly outshine entire galaxies in the X-ray
+luminosity. Their activity is powered by the decay of their strong magnetic
+field, which is typically 100 times higher than ordinary rotation-powered
+pulsars.
 
-\subsection{Observations}
+\subsection{Early Observations}
 \label{sec:intro-magnetar-observation}
 
-\subsection{Theoretical Studies}
+Historically ``magnetar ''was not the name given upon its discovery. The first
+reports for magnetar activity can be traced back to 1979. The Venera 11 and
+Venera 12 space probes recorded 3 repeated soft gamma-ray bursts from a single
+source B1900+14 \citep{mazets_soft_1979}. It was believed to share similar
+origins with other short gamma-ray bursts. During the same year, the space
+probes also recorded hard X-ray bursts from a different source FXP 0520-66 in
+Dorado, which was apparently an X-ray pulsar from the beginning
+\citep{mazets_observations_1979}. These sources were designated ``Soft Gamma-ray
+Repeaters'' (SGRs).
+
+Several years later another SGR 1806-20 was found in our galaxy, and it
+underwent repeated bursts on the order of 100 times over less than 10 years
+\citep{kouveliotou_smm_1987,laros_new_1987}. It was also the first SGR that had
+a measured spin-down rate \citep{kouveliotou_x-ray_1998}. The dipolar magnetic
+field computed by the simple spin-down formula \eqref{eq:surface-B-field} gives
+a surface field strength of $8\times 10^{14}\,\mathrm{G}$, much higher than
+typical rotation-powered pulsars discovered yet. The ultrastrong magnetic field
+of SGR 1806-20 was in line of the magnetar model proposed by
+\citet{duncan_formation_1992}. In their paper they coined the term ``magnetar''
+to describe young neutron stars with high magnetic field ($10^{14}\sim
+10^{15}\,\mathrm{G}$), and argued that magnetars are the sources of SGRs, where
+the bursts are powered by spontaneous decay of the strong magnetic field of the
+magnetar. Being young objects with age $10^{3}\sim 10^{4}$ years, magnetars are
+still dynamically evolving internally and build up stress that can lead to
+breaking of the crust, releasing a significant amount of energy into the
+magnetosphere in Alfven waves, which then powers the X-ray and soft gamma-ray
+emission.
+
+Another class of magnetars was discovered separately and recognized as
+``Anomalous X-ray Pulsars'' (AXPs). In 1980 it was reported that in the
+region CTB 109 there was ``an extraordinary new celestial X-ray
+source'' which was a supernova remnant \citep{gregory_extraordinary_1980}. Soon
+it was found that this source displays very strong pulsation with a period of
+$\sim 3.5\,\mathrm{s}$ \citep{fahlman_x-ray_1981}. More X-ray pulsars were
+subsequently discovered that also have similar few-second period, and share
+similar soft X-ray spectra.
+
+Thompson and Duncan speculated that AXPs may be related to SGRs, and predicted
+that long-term observations of AXPs might lead to bursting behavior
+\citet{thompson_soft_1996}. This was then confirmed by
+observation. %TODO: flesh out this paragraph
+
+Now both AXPs and SGRs are recognized under the same umbrella known as
+magnetars. Among the $\sim 30$ known magnetars, a more intrinsic
+characterization is their quiescent luminosity. {\it Transient magnetars} are
+typically only detected during their bursts, while {\it persistent magnetars}
+are what used to be associated with AXPs, showing up with strong X-ray
+pulsations.
+
+\subsection{Observational Puzzles}
+\label{sec:magnetar-puzzles}
+
+For transient magnetars, apart from short and irregular bursts that are the
+signature of SGR activity, they also show large outbursts with short rise time
+and long decay. A classic example is the transient magnetar XTE J1810-197, which
+underwent an outburst in early 2013 \citep{ibrahim_discovery_2004}, and its
+luminosity slowly decayed to quiescent levels over several years (figure
+\ref{fig:outburst-light-curve}). \citet{gotthelf_anatomy_2007} found that the
+X-ray spectrum of the magnetar during outburst can be fitted by 2 blackbody
+components, one with lower temperature and larger area, which subsequently cooled
+but expanded to cover almost the entire star, and another with smaller area and
+higher temperature, and {\it shrinking} over time (figure \ref{fig:shrinking-hotspot}).
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pics/intro/transient.png}
+  \caption[Light curve for the outburst from transient magnetar XTE J1810-197]{Light curve for the outburst from transient magnetar XTE J1810-197 \citep{gotthelf_anatomy_2007}.}
+  \label{fig:outburst-light-curve}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pics/intro/shrink-spot.png}
+  \caption[Evolution of the fitted area of the hot component in the X-ray
+    spectrum of XTE J1810-197.]{Evolution of the fitted area of the hot component in the X-ray
+    spectrum of XTE J1810-197. The area shrunk by a factor of more than 8 over
+    the course of a few years.}
+  \label{fig:shrinking-hotspot}
+\end{figure}
+
+The shrinking hotspot feature was not only seen in one transient magnetar.
+Figure \ref{fig:hotspots} shows the evolution of luminosity versus the area of
+the fitted hotspot for 7 of the known transient magnetars for which a hotspot
+has been identified. All seem to follow a similar trajectory over the $A$-$L$ plane.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pics/intro/hot-spot.png}
+  \caption[The evolution of hotspots observed on transient magnetars following
+    outbursts.]{The evolution of hotspots observed on transient magnetars following
+    outbursts. The hotspots shrink and become dimmer over time, tracking a
+    similar trajectory on the $A$-$L$ plane. \citep{beloborodov_magnetar_2016}}
+  \label{fig:hotspots}
+\end{figure}
+
+% TODO: Fill this part
+
+The
+
+
+\subsection{Theoretical Models}
 \label{sec:intro-magnetar-theory}
 
+Here describe the crustal shear and magnetospheric twist model. Describe the
+particle flow, acceleration. Double layer. Resonant scattering. Go into more
+detail in the appendix.
 
 \section{This Dissertation}
 \label{sec:intro-outline}
@@ -278,6 +437,9 @@ Chapter \ref{chap:pulsar} will study the global pulsar magnetosphere, motivated
 by the study of the polar cap particle acceleration.
 
 Chapter \ref{chap:magnetar} will study the twisted magnetosphere of magnetars.
+
+Chapter \ref{chap:explorations} will contain some exploratory extensions of the
+PIC code in the hope of tackling practical physical problems.
 
 % Local Variables:
 % TeX-master: "../thesis"
