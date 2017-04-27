@@ -3,13 +3,14 @@
 \chapter{Introduction}
 \label{chap:intro}
 
-A lot of astrophysics has to do with observing objects at various radiation
-frequencies. Many objects are sources of high energy radiation, including but
-not limited to pulsars, gamma-ray bursts, magnetars, super-massive black holes,
-etc. In many of the objects, the spectrum is highly non-thermal, and the
-radiation is produced by accelerated particles. The study of particle
-acceleration and dissipation of other forms of energy into particle kinetic
-energy is therefore vital in the study of high-energy astrophysics.
+Astrophysics builds upon observations of astronomical objects at various
+radiation bands. Some of the most interesting objects in the sky are sources of
+high energy radiation, including but not limited to pulsars, gamma-ray bursts,
+magnetars, super-massive black holes, etc. The high-energy spectra of these
+objects up to hard X-ray and gamma-rays is often highly non-thermal, speaking of
+radiation from high-energy particles accelerated in some means. The study of
+particle acceleration and dissipation of other forms of energy into particle
+kinetic energy is therefore vital in the study of high-energy astrophysics.
 
 In many of the sources, the most notable source of energy for nonthermal
 particles is the magnetic energy. In some sources such as pulsars, magnetic
@@ -32,7 +33,7 @@ of the system of interest.
 This dissertation will be focusing on the physics of isolated neutron stars. In
 the following sections we will examine the history and basic physics of
 rotation-powered pulsars, and the exotic magnetars which have extremely high
-magnetic field. Finally we will outline the chapters of the thesis.
+magnetic field. Finally we will give an outline of this thesis.
 
 \section{Pulsars}
 \label{sec:intro-pulsars}
@@ -175,6 +176,17 @@ where $\theta$ is the angle between magnetic axis and the rotation axis.
 \subsubsection{Electrosphere}
 \label{sec:electrosphere}
 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.54\textwidth]{pics/intro/electrosphere-new.png}
+  \caption[Charge density distribution of the electrosphere of an aligned
+  rotator.]{Charge density distribution of the electrosphere of an aligned
+    rotator. Blue indicates negative charge and red indicates positive charge.
+    Snapshot taken at time of $47.5R_{*}/c$ which is about 1.5 rotations of the
+    star, and quasisteady state has been achieved.}
+  \label{fig:electrosphere-intro}
+\end{figure}
+
 The problem of the Goldreich-Julian model is that charge lifted from the
 surface alone is not sufficient to fill the magnetosphere with
 $\rho_\mathrm{GJ}$. For an aligned rotator (magnetic axis aligned with rotation
@@ -186,15 +198,6 @@ dome and the torus $\mathbf{E}\cdot \mathbf{B} = 0$, whereas an unscreened
 vacuum gap exists between them (figure \ref{fig:electrosphere-intro}). This
 equilibrium solution has no outgoing Poynting flux, therefore no spin-down at
 all. It is a dead pulsar.
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.6\textwidth]{pics/intro/electrosphere-new.png}
-  \caption[Charge density distribution of the electrosphere of an aligned
-  rotator.]{Charge density distribution of the electrosphere of an aligned
-    rotator. Blue indicates negative charge and red indicates positive charge.}
-  \label{fig:electrosphere-intro}
-\end{figure}
 
 It was speculated by \citet{spitkovsky_electrodynamics_2004} that oblique
 rotators will be able to escape this fate due to diocotron instability
@@ -280,7 +283,7 @@ magnetosphere shows a few interesting features:
 
 % TODO: Finish up the discussion for FFE, with 3D results and other stuff
 
-However, FFE remains an approximation, and it glaringly breaks down in some
+However, FFE remains an approximation, that glaringly breaks down in some
 regions of the magnetosphere, namely inside the current sheets and in some
 inevitable gaps where $\mathbf{E}\cdot \mathbf{B} \neq 0$ and particles are
 accelerated to produce the plasma required by FFE. One can introduce finite
@@ -292,9 +295,107 @@ remains impossible to tackle in this framework.
 \label{sec:gap-models}
 
 Several mechanisms of forming and maintaining localized gaps where particles are
-accelerated have been proposed over the years of pulsar research.
+accelerated have been proposed over the years of pulsar research. The classical
+picture was that the gap exists at the pulsar polar cap
+\citep{sturrock_model_1971}. The motivation here is that, for open field lines
+that penetrate the light cylinder, the plasma corotating on the field lines
+can't move faster than the speed of light, therefore they have to lag behind at
+the light cylinder, bending the field lines backwards to create a spiral-like
+pattern. This creates non-zero $\nabla\times \mathbf{B}$ therefore nonzero
+current along the open field lines: current flowing from the polar cap region.
+\citet{sturrock_model_1971} considered space-charge limited flow
+\citep{pierce_theory_1954} from the polar cap and estimated the voltage drop
+from the surface of the star, and it was enough for particles to emit energetic
+gamma-rays that can convert into $e^{\pm}$ pairs in the strong magnetic field.
+The polar caps operate as ``guns'' shooting electron-positron pairs along the
+open field lines and serve as the source of radio emission. From the pulse
+profile, the width of the pulse is very small, indicating that radio emission is
+coming from close to the star. Therefore the accelerating gap must be close to
+the star as well.
 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{pics/intro/ruderman-sutherland.png}
+  \caption[Breakdown of the polar gap.]{Breakdown of the polar gap. The electric
+    field accelerates positrons out of the gap and electrons towards the star.}
+  \label{fig:ruderman-gap-pic}
+\end{figure}
+
+Instead of space-charge limited flow, \citet{ruderman_theory_1975} considered
+the case where positive charges need to be extracted from the star (e.g.\
+anti-aligned rotator) but the electric field is not enough to overcome the
+binding energy. In this case a vacuum gap near the polar cap is developed and a
+pair discharge is initiated (figure \ref{fig:ruderman-gap-pic}). In the
+originally vacuum gap, any stray electron or positron can initiate this process
+of pair avalanche, where the stray particle is accelerated and produce highly
+energetic curvature radiation. The photon propagates a short distance before
+converting to an $e^{\pm}$ pair, which then serve as seeds for the same process.
+The gap height $h$ is self-regulated such that this process does not shut down,
+and keep generating new plasma as they flow out to the light cylinder to conduct
+the required current. The difference between these two models lies in whether
+primary particles are extracted from the star, or recycled from the previous
+generation of created pairs (figure \ref{fig:polar-gaps}).
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pics/intro/polar-gaps.png}
+  \caption[Space-charge limited polar gap and vacuum polar gap.]{Space-charge
+    limited polar gap vs vacuum polar gap \citep{harding_high-energy_2009}.}
+  \label{fig:polar-gaps}
+\end{figure}
+
+Another gap model is the outer gap, proposed by \citet{cheng_energetic_1986},
+which originate from the region in the magnetosphere where $\rho_\mathrm{GJ} =
+0$, or in other words, $\bOm\cdot \mathbf{B} = 0$. A charge-separated flow from
+the star cannot penetrate this boundary since the space charge density changes
+sign here. Therefore, if the current from the star is carried by particles
+extracted from the surface, this is where an unscreened gap will develop,
+leading to a pair discharge in the outer magnetosphere.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{pics/intro/outer-gap.png}
+  \caption[Outer gap]{Outer gap \citet{cheng_energetic_1986}.}
+  \label{fig:outer-gap}
+\end{figure}
+
+This outer gap model predicts a double pulse gamma-ray light curve that is
+similar to that observed in Crab and Vela, which is one of the reasons that it
+is popular among observers in explaining the emission from gamma-ray pulsars.
+However, the outer gap picture assumes a vacuum dipole field configuration even
+up to the outer magnetosphere, whereas we know from FFE simulations that the
+field structure is significantly altered by the presence of plasma.
+\citet{bai_modeling_2010} used the more realistic field configuration from 3D
+FFE calculations and showed that in fact this traditional outer gap model is
+capable of producing only one peak under general conditions because a large
+fraction of open field lines do not cross the null surface.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{pics/intro/slot-gap2.png}
+  \caption[Slot gap geometry.]{Slot gap geometry \citep{muslimov_extended_2003}.
+  The gap exists between the plasma created in the polar cap cascade and the
+  closed field line zone which is filled with plasma extracted from the star.}
+  \label{fig:slot-gap}
+\end{figure}
+
+Another gap model is the slot gap which is an extension of the polar gap along
+the last closed field line (figure \ref{fig:slot-gap}), which also aims at
+explaining the high energy gamma-ray emission from pulsars. The original idea
+was proposed by \citet{arons_pair_1979} who realized that the acceleration
+potential varies significantly across the polar cap, resulting in an extended
+pair creation front almost parallel to the last closed field line. This gap is
+capable of slowly accelerating particles along the field lines to high energies
+at a much higher altitude than the polar cap gap, producing gamma-ray emission
+from curvature radiation.
 % TODO: Gap models
+
+Despite the decades of effort, a global picture of the pulsar magnetosphere with
+both a realistic FFE field structure and a gap that self-consistently generate
+this required plasma is still lacking. The physics of the pulsar magnetosphere
+is surprisingly rich and it is important to take into account the interplay
+between plasma physics and radiative transfer at very high energies. A global
+simulation from first principles is needed to fully understand how pulsars work.
 
 \section{Magnetars}
 \label{sec:intro-magnetars}
@@ -362,6 +463,13 @@ pulsations.
 \subsection{Observational Puzzles}
 \label{sec:magnetar-puzzles}
 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pics/intro/transient.png}
+  \caption[Light curve for the outburst from transient magnetar XTE J1810-197]{Light curve for the outburst from transient magnetar XTE J1810-197 \citep{gotthelf_anatomy_2007}.}
+  \label{fig:outburst-light-curve}
+\end{figure}
+
 For transient magnetars, apart from short and irregular bursts that are the
 signature of SGR activity, they also show large outbursts with short rise time
 and long decay. A classic example is the transient magnetar XTE J1810-197, which
@@ -371,14 +479,10 @@ luminosity slowly decayed to quiescent levels over several years (figure
 X-ray spectrum of the magnetar during outburst can be fitted by 2 blackbody
 components, one with lower temperature and larger area, which subsequently cooled
 but expanded to cover almost the entire star, and another with smaller area and
-higher temperature, and {\it shrinking} over time (figure \ref{fig:shrinking-hotspot}).
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.7\textwidth]{pics/intro/transient.png}
-  \caption[Light curve for the outburst from transient magnetar XTE J1810-197]{Light curve for the outburst from transient magnetar XTE J1810-197 \citep{gotthelf_anatomy_2007}.}
-  \label{fig:outburst-light-curve}
-\end{figure}
+higher temperature, and {\it shrinking} over time (figure
+\ref{fig:shrinking-hotspot}). This has very important implications for modeling
+the magnetar outburst: the model should be able to explain the origin of the
+hotspot, as well as the reason and timescale of its shrinking.
 
 \begin{figure}[h]
   \centering
@@ -405,28 +509,146 @@ has been identified. All seem to follow a similar trajectory over the $A$-$L$ pl
   \label{fig:hotspots}
 \end{figure}
 
-% TODO: Fill this part
+Persistent magnetars also pose an important observational puzzle. Previously
+AXPs were observed to have a soft X-ray spectrum that can be described by a
+blackbody plus power law. The X-ray spectrum turns down and was predicted to be
+not detectable above $10\,\mathrm{keV}$. However \citet{kuiper_discovery_2006}
+discovered hard spectral tails for 3 persistent magnetars 1RXS J1708$-$4009, 4U
+0142+4009, and 1E 2259+586. This turned out to be a great surprise. Furthermore
+the X-ray component above $10\,\mathrm{keV}$ is extraordinarily hard and extends
+up to and beyond $150\,\mathrm{keV}$. Later \citet{enoto_broadband_2010}
+reported the identification of the hard X-ray tail in 7 magnetars including 2
+transient magnetars in outburst states, namely SGR 0501+4516
+\citep{enoto_wide-band_2010} and 1E 1547.0$-$5408 \citep{enoto_suzaku_2010}. By
+now it has been recognized that this soft emission plus hard tail being a common
+feature for magnetars. This high-energy nonthermal component dominates the
+emission energy, and is thought to be of magnetospheric origin. This hard X-ray
+component is another interesting puzzle posed by the magnetar observations.
 
-The
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{pics/intro/hard-x-ray.png}
+  \caption[X-ray spectrum of 1E 2259+586.]{X-ray spectrum of 1E 2259+586
+    \citep{vogel_nustar_2014}. The graph truncates at 100keV but the spectrum
+    extends above that.}
+  \label{fig:magnetar-hard-x-ray}
+\end{figure}
 
 
 \subsection{Theoretical Models}
 \label{sec:intro-magnetar-theory}
 
-Here describe the crustal shear and magnetospheric twist model. Describe the
-particle flow, acceleration. Double layer. Resonant scattering. Go into more
-detail in the appendix.
+% Here describe the crustal shear and magnetospheric twist model. Describe the
+% particle flow, acceleration. Double layer. Resonant scattering. Go into more
+% detail in the appendix.
+Magnetars are all very young neutron stars that have very high surface magnetic
+field. The interior of a neutron star is an excellent conductor, and magnetic
+field is practically frozen into the material. Field evolution is a result of
+the evolution of electron fluid coupled to the ion and neutron fluids, which can
+be described by two processes: ambipolar diffusion and Hall drift
+\citep{goldreich_magnetic_1992}. These processes move magnetic field lines and
+can build up magnetic stress inside a neutron star, which could lead to a sudden
+failure of the crust and ejection of this energy into the magnetosphere
+\citep{thompson_soft_1995, thompson_giant_2001}. An alternative way of
+triggering this release is a slow build up of the stress due to a gradual
+deformation of the magnetosphere, as long as this process is faster than the
+rate it is damped \citep{lyutikov_magnetar_2006}.
+
+In any case, the result of surface shear is the deformation of the external
+magnetosphere from the quasisteady configuration, twisting the magnetic field
+lines and launching Alfven waves into the magnetosphere, creating regions where
+$\nabla\times \mathbf{B} \neq 0$. Current will flow along the twisted field line
+bundle, $\mathbf{j} = (c/4\pi)\nabla\times \mathbf{B}$. A strongly twisted
+magnetosphere is prone to global instability \citep{uzdensky_shear-driven_2002},
+and will result in the formation of an equatorial current sheet, where magnetic
+reconnection happens and energy is released violently in a short time scale.
+This was seen in force-free simulations carried out by
+\citep{parfrey_dynamics_2013}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{pics/intro/ffe-giant-flare.png}
+  \caption[Formation of the equatorial current sheet in over twisted magnetar
+    magnetosphere.]{Formation of the equatorial current sheet in over twisted magnetar
+    magnetosphere. Color shows toroidal current density. Time is indicated in
+    units of light crossing time of the star. From \citep{parfrey_dynamics_2013}}
+  \label{fig:overtwisted-magnetar}
+\end{figure}
+
+When the twist is not as dramatic, the current bundle can be long-lived. This
+should feed the observed long decay of the X-ray luminosity after an outburst
+event. \citet{beloborodov_corona_2007} studied the dynamics of the current loop,
+concluding that electric field will be induced to extract particles from the
+surface of the star, accelerate them, and initiate a pair avalanche similar to
+that in pulsar magnetosphere. The current loop acts as a ``corona'' of the
+magnetar. Particles are lost to the stellar surface over one light crossing time
+of the system and are constantly replenished from pair creation. The main
+channel for pair creation is from photons upscattered resonantly: electrons
+moving at Lorentz factor of $\sim 1000$ will see a background sea of soft X-ray
+photons of a few keV, which when boosted into the rest frame of the electron
+matches the energy to excite the particle from the ground Landau level to the
+first excited level. When this resonance condition is satisfied, the electron
+will be able to absorb the photon and re-emit it. The re-emitted photon will see
+an energy boost of $\sim \gamma^{2}$ in the lab frame, and capable of creating
+$e^{\pm}$ pairs by means of magnetic conversion.
+
+The lifetime of the magnetar twist is determined by the acceleration voltage
+induced in the $j$-bundle, which is in turn governed by the threshold of pair
+discharge. However the self-regulation of this process is a non-trivial problem.
+It was also discovered by \citet{beloborodov_untwisting_2009} that the process
+of untwisting proceeds in an interesting manner. A current cavity develops first
+in the inner magnetosphere, which subsequently expands and erasing the current
+carrying part of the twisted field lines. This effectively means that the
+cross-sectional area of the current bundle shrinks as the magnetosphere untwists
+over time. If the hotspot seen in the blackbody spectrum after an outburst is to
+be mapped to the footprint of the $j$-bundle, then this provides a natural
+explanation of the shrinking hotspot.
+
+Resonant scattering not only provides a means to generate high-energy photons
+that can convert to pairs, it also affects the relativistic flow of the pair
+plasma along the twisted field lines. \citet{beloborodov_mechanism_2013}
+proposed a mechanism for the hard X-ray component seen in the magnetar spectrum.
+Particles are extracted from the star and undergo acceleration to $\gamma\gg
+10$. In this region the resonantly scattered photons interact with the local $B$
+field and quickly convert to $e^{\pm}$ pairs, effectively pair loading the
+plasma with multiplicity $\mathcal{M}\sim 100$. When the flow gets to a region
+with weaker magnetic field, the resonantly scattered photon will be able to
+escape to form the observed X-ray spectrum (figure \ref{fig:magnetar-loop}).
+Finally at the tip of the magnetic loop near the equator, the radiative drag
+will be strong enough to stop the particles to $\gamma \sim 1$. The particles
+suspended near the equator will serve as a reflector for the X-ray photons from
+the star. They might also be able to generate radio emission which is seen in
+some of the magnetars.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\textwidth]{pics/intro/magnetar-loop.png}
+  \caption[Sketch of a twist magnetic loop.]{Sketch of a twist magnetic loop.
+    Particles are accelerated in the blue region and resonantly scatter photons
+    reflected from the pink region. The upscattered photons convert to pairs
+    near the star, but can escape in the white region to form the observed X-ray
+    spectrum \citep{beloborodov_mechanism_2013}.}
+  \label{fig:magnetar-loop}
+\end{figure}
+
+The picture described above was successfully used to fit the phase-resolved
+spectra of several magnetars \citep{hascoet_phase-resolved_2014}. The narrowness
+of the fitted parameters space is a strong indication for the correctness of the
+model. It would be a decisive confirmation if the model can be reproduced in a
+first-principle kinetic simulation.
 
 \section{This Dissertation}
 \label{sec:intro-outline}
 
-In this dissertation we will attempt to address the problem of particle
+In this dissertation we will attempt to study the problem of particle
 acceleration and global structure of the magnetosphere of pulsars and
-magnetars.
+magnetars using numerical experiments. Most of the work is done using a computer
+code named Aperture that I developed in the course of the PhD.
 
-Chapter \ref{chap:pic} will be devoted to a detailed introduction of the
+Chapter \ref{chap:pic} will be devoted to a detailed exposition of the
 particle-in-cell technique, which will be the basic numerical tool for our
-study.
+study. We will introduce the Aperture code, and explain its novel features, as
+well as providing some tests to demonstrate its correctness.
 
 Chapter \ref{chap:polar-cap} will focus on a local study of the pulsar
 polar cap. We will look at the region well within the pulsar magnetosphere, and
@@ -434,12 +656,16 @@ approximate the geometry as 1D. We will discuss implications of this
 approximation, and what we can and can not learn from this local study.
 
 Chapter \ref{chap:pulsar} will study the global pulsar magnetosphere, motivated
-by the study of the polar cap particle acceleration.
+by the study of the polar cap particle acceleration. We will discuss the
+result from global PIC simulations and contrast it with force-free results, and
+study the condition under which a pulsar can sustain itself through pair discharge.
 
-Chapter \ref{chap:magnetar} will study the twisted magnetosphere of magnetars.
+Chapter \ref{chap:magnetar} will study the twisted magnetosphere of magnetars
+and attempt to answer how particles are accelerated in the current bundle and
+what regulates the overall voltage.
 
 Chapter \ref{chap:explorations} will contain some exploratory extensions of the
-PIC code in the hope of tackling practical physical problems.
+PIC code into the general relativistic regime.
 
 % Local Variables:
 % TeX-master: "../thesis"

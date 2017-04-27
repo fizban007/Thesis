@@ -10,7 +10,11 @@ This is an exploratory effort of expanding a PIC code to support general
 relativistic simulations. To my knowledge at the time of this writing, no such
 code exists, and a successfully implemented code like this can open up the
 possibility of simulating e.g.\ the pair discharge process around a black hole.
-Here I outline a possible implementation of a full GR PIC code.
+Here I outline a possible implementation of a full GR PIC code. In all of the
+following chapter, Einstein summation convention is assumed, where repeated
+indices are contracted and summed over. Greek indices $\mu$, $\nu$, etc. denote
+summation over $0$, $1$, $2$, $3$; Latin indices $i$, $j$, etc. only go over
+spatial indices $1$, $2$, $3$.
 % TODO: Observational implications?
 
 \subsection{Metric and Observer}
@@ -18,7 +22,9 @@ Here I outline a possible implementation of a full GR PIC code.
 
 This subsection is purely for reference. We record the results and move on. When
 referring to a definition of a quantity one should check back to this subsection.
-We start with the $3+1$ split following Macdonald \& Thorne (1982), writing the
+We start with the $3+1$ split following
+% Macdonald \& Thorne (1982)
+\citet{macdonald_black-hole_1982}, writing the
 metric as
 \begin{equation}
   \label{eq:2}

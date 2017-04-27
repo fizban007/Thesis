@@ -663,11 +663,14 @@ First off, no branching condition is necessary at all. All particles are assumed
 to undergo 3 segments of displacement in every timestep, and every segment is
 treated uniformly. This has huge implications on SIMD platforms like GPUs where
 branching incurs significant loss of parallelization, often doubling or tripling
-the effective computational load (more on this in section %TODO: fill section number
+the effective computational load (more on this in appendix
+\ref{app:gpu} %TODO: fill section number
 ). Secondly, it is trivial to extend to higher order shape functions, since one
 can explicitly insert equations \eqref{eq:second-order-deposit} or
 \eqref{eq:third-order-deposit} into the above solutions and evaluate on the
-cells where $S$ is nonzero.
+cells where $S$ is nonzero. It is also possible to extend it to higher order
+spatial derivatives, whereas it is not apparently doable for the Buneman pusher.
+This will be discussed in appendix \ref{app:finite-diff}.
 
 Although the original paper by Esirkepov explicitly stated that the method is
 limited to Cartesian geometry, it is actually simple to extend it to other
@@ -897,6 +900,7 @@ derivatives, that can take in any scale functions $h_{i}$.
 Despite the designed flexibility, the main coordinate systems we support in the
 actual code are Cartesian, cylindrical, spherical coordinates and some of their
 variants. The scale functions of these coordinate systems are listed in table
+\ref{tab:scale-functions}.
 
 \begin{table}[h]
   \centering
@@ -918,6 +922,9 @@ different coordinate systems. We will outline the treatment for the axis
 boundary in the spherical coordinates here since it is the one implemented
 first, and most relevant for the physics applications detailed in the later part
 of the thesis.
+
+\subsubsection{Coordinate boundary condition}
+\label{sec:coord-bc}
 
 For 2D spherical coordinates, axisymmetry means $\partial_{\phi} = 0$ in all
 Maxwell equations. By symmetry, we automatically have on the axis
@@ -981,25 +988,41 @@ $\Delta \theta$, we can use:
 We will discuss this in more detail and the extension to higher order in
 appendix \ref{app:finite-diff}.
 
-The other two kinds of boundary conditions that are relevant for magnetospheric
-simulations are boundary condition at the star, and the condition at the outer
-boundary of the simulation box. The stellar boundary is treated as a perfect
-conductor: $\mathbf{E} = -\mathbf{v}_\mathbf{rot}\times \mathbf{B}$ and
-$\mathbf{B} = \mathbf{B}_\mathrm{dipole}$ below the surface.
-$\mathbf{v}_\mathrm{rot} = \mathbf{r}\times \bOm$ is the rotation velocity of
-the star, and is how the rotation of the star enters the simulation. Particles
-are injected into the simulation domain below the surface in pairs of electrons
-and ions. In order to not introduce artificial charges into the simulation, they
-are injected at exactly the same location with only a small random thermal
-velocity. Particles entering the star are erased once they penetrate deep enough
-such that all cells they contribute the current to are below the surface. This
-is again to avoid violating the Gauss's law inside the simulation domain, since
-erasing charges in general introduce errors to the Gauss's law.
+\subsubsection{Stellar boundary condition}
+\label{sec:stellar-bc}
+
+In magnetospheric simulations, the inner boundary of the box is always the
+neutron star itself. The stellar boundary is treated as a perfect conductor:
+$\mathbf{E} = -\mathbf{v}_\mathbf{rot}\times \mathbf{B}$ and $\mathbf{B} =
+\mathbf{B}_\mathrm{dipole}$ below the surface. $\mathbf{v}_\mathrm{rot} =
+\mathbf{r}\times \bOm$ is the rotation velocity of the star, and is how the
+simulation knows about the rotation of the star. Typically at the beginning of
+the simulation $\mathbf{v}_\mathrm{rot}$ is taken to be identically zero, and
+the star is spun up smoothly over a relatively short time frame. For magnetar
+simulations, it is the differential rotation of the star that we impose, which
+is done through an angle dependent $\mathbf{v}_\mathrm{rot}(\theta)$, and the
+rotation of the star is ignored (see chapter \ref{chap:magnetar}).
+
+Particles are injected into the simulation domain below the surface in pairs of
+electrons and ions. In order to not introduce artificial charges into the
+simulation, they are injected at exactly the same location with only a small
+random thermal velocity. Particles entering the star are erased once they
+penetrate deep enough such that all cells they contribute the current to are
+below the surface. This is again to avoid violating the Gauss's law inside the
+simulation domain, since erasing charges in general introduce errors to the
+Gauss's law.
+
+For magnetospheric simulations we also implemented gravity for all particles to
+control the injection layer. Injected particles have a thermal momentum
+distribution with mean momentum $\bar{p}$,
+
+\subsubsection{Free escape boundary condition}
+\label{sec:escape-bc}
 
 The outer boundary uses a free escape condition. To achieve this we place a
 damping layer at the outer boundary
 
-% TODO: Finish boundary condition
+% TODO: Finish boundary conditions
 
 % The more important boundary condition is not on the fields, but on the
 % differential operators. Naively one might want to just apply the most
@@ -1137,7 +1160,7 @@ process. First, a high energy photon ($E_\mathrm{ph} > 2m_{e}c^2$) is emitted
 from the energetic particle, and the photon will then convert into a pair of
 $e^{\pm}$. In pulsar magnetospheres, the first process is typically from
 curvature radiation from electrons accelerated to Lorentz factors $\gamma
-\gtrsim 10^{8}$ (see discussion in section \ref{sec:gap-models}). Another
+\gtrsim 10^{6}$ (see discussion in section \ref{sec:gap-models}). Another
 channel for producing highly energetic photons capable of converting into
 $e^{\pm}$ pairs is from resonant upscattering of background X-ray photons. The
 electron absorbs photons that have the energy to excite it from the lowest
@@ -1309,7 +1332,7 @@ where $\beta_{*} = \mu = B_r/B$, $\Theta = kT/m_{e}c^2$ and
   g(y) = \frac{y^3}{e^y - 1},\quad y = \frac{\hbar\omega_\mathrm{res}}{kT} = \frac{B/B_Q}{\gamma(1 - \beta\mu)\Theta}
 \end{equation}
 
-The effect of the force \eqref{eq:resonant-force} is pushing the flow velocity
+The effect of the force \eqref{eq:resonant-drag} is pushing the flow velocity
 towards the ``radiation locked flow'' velocity $\beta_{*}$. Numerically we
 implement the force with two parameters:
 \begin{equation}
@@ -1321,7 +1344,13 @@ parameters are $\mathcal{D}$ and $\Theta$. The former determines the overall
 strength of the drag, and the second determines which part of the thermal
 spectrum gets interacting with the particles. Depending on these two parameters,
 a certain part of the field line bundle will have particles stopping at the
-equator since $\beta_{*} = \mu = 0$ at the equator.
+equator since $\beta_{*} = \mu = 0$ at the equator. In the inner magnetosphere
+where $B$ field is too strong ($B \gtrsim B_{Q}$) only very high energy
+particles resonantly scatter thermal photons, and the drag is not enough to stop
+particles near the equator. The scenario described in chapter
+\ref{chap:magnetar} can be thought of to be effectively describing this region.
+For very extended field lines the drag is too weak since it scales with
+$r^{-2}$, and particles are not stopped at the equator either.
 
 % TODO: expand a bit this section
 
@@ -1536,8 +1565,9 @@ font=\small\sffamily, minimum width=3.0cm]
     \path [line] (field) -| (data);
     \path [line] (data) |- (momentum);
   \end{tikzpicture}
-  \caption{Anatomy of one single timestep in Aperture code. Steps where
-    communication between nodes is required are colored red.}
+  \caption[Anatomy of one single timestep in Aperture code.]{Anatomy of one
+    single timestep in Aperture code. Steps where communication between nodes is
+    required are colored red.}
   \label{fig:aperture-flow}
 \end{figure}
 
@@ -1557,10 +1587,10 @@ decomposition. The overall domain is split into a number of patches matching the
 number of parallel computation nodes. Each patch is assigned to one node.
 Inter-node communication is buffered using guard cells. Guard cells are extra
 cells that pad the boundary of a node, which hold identical information as the
-corresponding cells in the neighboring node (figure ). There are two main types of
-guard cell communication. For field solver (section \ref{sec:fd-maxwell}), the
-guard cells need to be filled with the value of the corresponding cells in the
-neighboring node; for the current deposition (section
+corresponding cells in the neighboring node (figure \ref{fig:guard-cells}).
+There are two main types of guard cell communication. For field solver (section
+\ref{sec:fd-maxwell}), the guard cells need to be filled with the value of the
+corresponding cells in the neighboring node; for the current deposition (section
 \ref{sec:charge-cons-curr}), the charge $\Delta \rho$ deposited into the guard
 cells need to be transferred to the neighboring node and added to the
 corresponding cells. All particles that move into guard cells at the end of each
@@ -1573,11 +1603,41 @@ always begin with $j=0$.
 
 \begin{figure}[h]
   \centering
-
-  \caption{Guard cells between nodes. Two modes of inter-node communication.}
+  \begin{tikzpicture}
+    \begin{scope}
+      \foreach \y in {0,1,2,3} {
+        \foreach \x in {0,1,2,3} {
+          \draw[very thick] (\x, \y) rectangle (\x + 1, \y + 1);
+        }
+        \draw[dashed] (4,\y) rectangle (5,\y+1);
+      }
+    \end{scope}
+    \begin{scope}[xshift=7.2cm]
+      \foreach \y in {0,1,2,3} {
+        \draw[dashed] (-1,\y) rectangle (0,\y+1);
+        \foreach \x in {0,1,2,3} {
+          \draw[very thick] (\x, \y) rectangle (\x + 1, \y + 1);
+        }
+      }
+    \end{scope}
+    \draw[->] (3.5, -0.2) -- (3.5, -0.7) -- node[midway,below] {1. Copy field values} (6.7, -0.7) -- (6.7, -0.2);
+    \draw[->] (4.5, 4.2) -- (4.5, 4.7) -- node[midway,above] {2. Add to deposit result} (7.7, 4.7) -- (7.7, 4.2);
+    \draw[dashed, very thick] (5.6, 0.3) -- (5.6, 3.7);
+\end{tikzpicture}
+  \caption[Guard cells between nodes.]{Guard cells between nodes. Two modes of
+    inter-node communication. For field solver, the guard cells copies the values
+  of the corresponding cells in the neighboring node (mode 1). For current
+  deposition, the deposit results in the guard cells are added to the
+  corresponding cells in the neighboring node (mode 2).}
   \label{fig:guard-cells}
 \end{figure}
 
+The CPU version of Aperture has been deployed on different platforms and shows
+excellent scaling properties. It has been run on a local workstation with 12
+cores, the Habanero cluster at Columbia on $\sim 250$ cores, and the NASA
+Pleiades cluster on more than $10,000$ cores.
+
+INSERT A PLOT SHOWING SCALING PROPERTIES
 
 % Architecture of the code, each component is an independent class. Modularity.
 % Special choices for GPU. Esirkepov deposit. High order shape functions and
