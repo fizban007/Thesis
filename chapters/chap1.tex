@@ -897,11 +897,6 @@ over (except in the product sign). Due to the general form of these equations,
 it is straightforward to implement a general framework that works with vector
 derivatives, that can take in any scale functions $h_{i}$.
 
-Despite the designed flexibility, the main coordinate systems we support in the
-actual code are Cartesian, cylindrical, spherical coordinates and some of their
-variants. The scale functions of these coordinate systems are listed in table
-\ref{tab:scale-functions}.
-
 \begin{table}[h]
   \centering
   \begin{tabular}{lccc}
@@ -915,6 +910,50 @@ variants. The scale functions of these coordinate systems are listed in table
   \caption{Scale functions for coordinate systems implemented in Aperture}
   \label{tab:scale-functions}
 \end{table}
+
+Although the code was designed with flexibility, the main coordinate systems we
+support in the actual code are Cartesian, cylindrical, spherical coordinates and
+some of their variants. The scale functions of these coordinate systems are
+listed in table \ref{tab:scale-functions}. One particular challenge for each
+curvilinear coordinate system is the treatment of particle movement, since
+technically one needs to solve the geodesic equation, since the orthonormal
+coordinate basis is position dependent. However our curvilinear coordinates are
+always a parametrization of $\mathbb{R}^{3}$, so instead of trying to solve for
+the geodesic equation, we always convert the position and velocity of the
+particle to the corresponding Cartesian values before moving it, where we can
+simply use the equation \eqref{eq:eom-position} to update particle position.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \begin{scope}
+      \coordinate (A) at (0, 0);
+      \draw (A) ++(75:2.0) -- ++(75:4.0);
+      \draw (A) ++(45:2.0) -- ++(45:4.0);
+      \draw (A) ++(15:2.0) -- ++(15:4.0);
+      \draw (A) ++(85:3.0) arc (85:7:3.0);
+      \draw (A) ++(85:5.0) arc (85:7:5.0);
+      \draw[thick, ->] (A) ++ (35:3.4) -- ++(1.2,-0.4);
+    \end{scope}
+    \node[single arrow,draw,fill=black!10,minimum width=2cm,minimum height=0.5cm,anchor=west,single arrow head extend=0.2cm] at (6.0,4.5) {\rule{1.5cm}{0ex}};
+    \node[single arrow,draw,fill=black!10,minimum width=2cm,minimum height=0.5cm,anchor=west,single arrow head extend=0.2cm,shape border rotate=180] at (6.0,1.5) {\rule{1.5cm}{0ex}};
+    \begin{scope}[xshift=9.0cm]
+      \draw (0,1.0) -- (6.0,1.0);
+      \draw (0,3.0) -- (6.0,3.0);
+      \draw (0,5.0) -- (6.0,5.0);
+      \draw (1.0,0.0) -- (1.0,6.0);
+      \draw (3.0,0.0) -- (3.0,6.0);
+      \draw (5.0,0.0) -- (5.0,6.0);
+      \draw[thick, ->] (0,0) ++ (35:3.4) -- ++(1.2,-0.4);
+    \end{scope}
+    % \draw (A) -- ++(75:4.0);
+  \end{tikzpicture}
+  \caption[Particle movement in curvilinear coordinates.]{Particle movement in
+    curvilinear coordinates. The particle position and momentum is transformed
+    into the corresponding Cartesian values, moved in a straight line, and then
+    transformed back to curvilinear coordinates.}
+  \label{fig:particle-move}
+\end{figure}
 
 An additional challenge in implementation of the coordinate systems
 has to do with how boundary singularities are treated, which varies for
