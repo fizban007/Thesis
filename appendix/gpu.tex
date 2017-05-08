@@ -101,6 +101,34 @@ costly and difficult to do on the main memory. In K40 each block can have up to
 main memory repeatedly, loading that part of main memory into shared memory
 first can accelerate the memory access speed by a factor of more than a hundred.
 
+In general, memory speed is an important aspect of the GPU program design. The
+different levels of memory accessible to a program forms a hierarchy in terms of
+speed and latency. The system RAM is the slowest, since every access from the
+GPU need to go through the PCIe bus, which has a latency of $\sim 1000$ cycles
+and a bandwidth of only a fraction of the system RAM bandwidth. The on board GPU
+memory\footnote{The on board GPU memory is called ``global memory'' in CUDA.}
+does not suffer from this issue, and due to design its bandwidth is much higher
+than the system RAM, however it still suffers from very high latency: an access
+to the GPU main memory requires $\sim 200$ clock cycles. A faster but very
+limited memory space is the L1 cache/shared memory as mentioned above. An access
+to the shared memory only has latency of a few clock cycles, and multiple
+threads reading the same address can be done in a single operation.
+Figure % TODO: figure
+shows the GPU memory hierarchy and the perspective memory bandwidth/latency.
+
+\begin{figure}[h]
+  \centering
+
+  \caption[Memory hierarchy of Nvidia GPUs.]{Memory hierarchy of Nvidia GPUs.}
+  \label{fig:gpu-memory}
+\end{figure}
+
+Therefore the optimal strategy is to either keep all the computation data on GPU
+main memory, or to overlap memory copy with computation as much as possible.
+When processing data on GPU main memory, try to manipulate a local block of data
+at a time by loading them to the shared memory of a thread block, do the
+calculation in parallel compute kernels, and then save them back to the GPU main
+memory.
 
 \section{Parallelization and optimization in Aperture}
 \label{sec:optimization}
@@ -115,6 +143,55 @@ is the main kind of arithmetic operations used in a PIC code. The only
 potential problem for parallelization lies in current deposition, where by
 definition multiple particles need to be processed and then write the result to
 the same cell, which can only be done serially.
+
+\subsubsection{Particle pusher}
+\label{sec:gpu-pusher}
+
+Most of the particle pusher algorithm is completely parallelizable. Given the
+values of $E$ and $B$ fields at the particle location, every particle can be
+processed independently to update their momenta and positions. This lend itself
+well to the parallel structure of GPUs. The only nontrivial optimization is to
+interpolate the field values to particle position, which involves frequent random
+access to the field array which is not a strength of the GPU architecture.
+
+The way we optimize this part of the code is to subdivide the whole
+computational domain in ``tiles'', such that the 6 field components of each tile
+can fit into the shared memory of a thread block. In 2D simulations we found
+that $8\times 8$ tiles works very nicely. In the compute kernel, a thread block
+is assigned to every tile in the domain, and the threads first load the $E$ and
+$B$ field values from global memory into the shared memory of the block. Then
+the threads in the block work through the particles inside the tile in parallel,
+interpolating the field values to the local particle position using the values
+in the shared memory, then update the particle momentum using Vay pusher
+(section \ref{sec:ptc-pusher}).
+
+% TODO: A graph or pseudo code to demonstrate the process
+
+A small sacrifice for this algorithm is that we need to have the particles
+sorted by tile all the time. Therefore at each time step we sort them
+immediately after particle move and production of new pairs, since both
+operations mess up the particle order: movement between tile boundary, and
+because all new particles are added to the end of the particle array. However we
+found this to be the best way since current deposition also benefits from having
+a sorted particle array (see \ref{sec:gpu-deposit}).
+
+\subsubsection{Current deposition}
+\label{sec:gpu-deposit}
+
+Current deposition poses a main problem for a massively parallelized
+architecture like the GPU, since by definition many threads (particles) need to
+write the same memory location (current values on the grid), which can not be
+done in parallel.
+
+\subsubsection{Pair creation}
+\label{sec:gpu-pair}
+
+Pair creation poses a similar problem as current deposition. Since new particles
+are appended to the end of the main particle array, every photon that is to
+convert to a pair will need to access the end of the array and race condition
+may occur unless the process is serialized.
+
+
 
 % Local Variables:
 % TeX-master: "../thesis"

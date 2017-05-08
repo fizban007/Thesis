@@ -28,7 +28,8 @@
 ** TODO Go through all existing chapters and change the text to reflect logical flow
 ** DONE Incorporate the existing code notes into the first part of the paper
    CLOSED: [2017-04-11 Tue 23:51]
-** TODO Finish writing the Introduction
+** DONE Finish writing the Introduction
+   CLOSED: [2017-05-08 Mon 10:06]
 *** Describe gaps in pulsar magnetospheres
 *** History of the magnetars
 *** Magnetar models, twist, energy dissipation
@@ -51,12 +52,16 @@
     Resonant scattering. Radiative force due to resonant scattering.
 *** Code particulars (code organization, parallelization, GPU)
 *** Test problems and benchmarks
-    Need benchmarks for scaling performance. 1 core, 12 cores, 128 cores, 1024
-    cores, maybe 10,000 cores??? Prepare a good initial condition for this test
-    and let Rui do it.
-
-    What kind of test problems??
-** TODO Appendices
+**** TODO Write an initial condition for the benchmark!
+    Benchmark for scalability! Need data point for 1, 10, 100, 1000, 10000 cores.
+    Cartesian and spherical version separately?
+**** TODO Write test problems:
+***** Two stream instability (Cartesian)
+***** Weibel instability (Cartesian)
+***** Spectral modes (Cylindrical)
+***** Monopole (Spherical)
+      What kind of test problems??
+** STARTED Appendices
 *** How to obtain the finite difference operators
 *** Resonance scattering in Magnetars
 *** Cuda specific?

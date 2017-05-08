@@ -315,8 +315,8 @@ polynomial order:
 \begin{equation}
   \label{eq:first-order-deposit}
   S^1(x) = \begin{cases}
-    1 - |\delta| & \quad \text{if } |\delta| < 1, \\
-    0            & \quad \text{otherwise}
+    \displaystyle 1 - |\delta| & \quad \text{if } |\delta| < 1, \\
+    \displaystyle 0            & \quad \text{otherwise}
   \end{cases}
 \end{equation}
 
@@ -325,9 +325,9 @@ polynomial order:
   \label{eq:second-order-deposit}
   S^2(x) =
   \begin{cases}
-    \frac{3}{4} - \delta^2 & \quad \text{if } |\delta| < 1/2, \\
-    \frac{1}{2} \left( \frac{3}{2} - |\delta| \right)^2 & \quad \text{if } 1/2 \leq |\delta| < 3/2, \\
-    0                      & \quad \text{otherwise}
+    \displaystyle \frac{3}{4} - \delta^2 & \quad \text{if } |\delta| < 1/2, \\
+    \displaystyle \frac{1}{2} \left( \frac{3}{2} - |\delta| \right)^2 & \quad \text{if } 1/2 \leq |\delta| < 3/2, \\
+    \displaystyle 0                      & \quad \text{otherwise}
   \end{cases}
 \end{equation}
 
@@ -336,9 +336,9 @@ polynomial order:
   \label{eq:third-order-deposit}
   S^3(x) =
   \begin{cases}
-    \frac{1}{6} \left( 4 - 6\delta^2 + 3|\delta|^3 \right) & \quad \text{if } |\delta| < 1, \\
-    \frac{1}{6} \left( 2 - |\delta| \right)^3 & \quad \text{if } 1 \leq |\delta| < 2, \\
-    0                      & \quad \text{otherwise}
+    \displaystyle \frac{1}{6} \left( 4 - 6\delta^2 + 3|\delta|^3 \right) & \quad \text{if } |\delta| < 1, \\
+    \displaystyle \frac{1}{6} \left( 2 - |\delta| \right)^3 & \quad \text{if } 1 \leq |\delta| < 2, \\
+    \displaystyle 0                      & \quad \text{otherwise}
   \end{cases}
 \end{equation}
 
@@ -700,7 +700,7 @@ divide by the appropriate scale functions to obtain the correct current.
 
 
 \subsection{Particle Pusher}
-\label{sec:finite-difference}
+\label{sec:ptc-pusher}
 
 From the discretization scheme we outlined in the previous section, the task of
 solving the Maxwell-Vlasov system reduces to solving the Maxwell equations
@@ -714,32 +714,33 @@ For particle equations of motion, we use the standard leap-frog scheme, meaning
 that $\mathbf{x}$ and $\mathbf{p}$ are always evaluated at a time difference of
 exactly a half timestep $\Delta t/2$ (here $i$ is the time step label):
 \begin{align}
-  \label{eq:leap-frog-particle}
+  \label{eq:leap-frog-ptc-pos}
     \mathbf{x}_{p}^{i+1} &= \mathbf{x}_{p}^{i} +\mathbf{u}_{p}^{i+1/2} \Delta t \\
+  \label{eq:leap-frog-ptc-momentum}
     \gamma^{i+1/2} \mathbf{u}_{p}^{i+1/2} &= \gamma^{i-1/2}
     \mathbf{u}_{p}^{i-1/2} + \frac{q \Delta t}{m} \left( \mathbf{E}^{i}
-    \noplus \noplus + \frac{\bar{\mathbf{u}}^{i}}{c}
+    \noplus \noplus + \frac{\mathbf{\bar{u}}^{i}}{c}
     \times \mathbf{B}^{i} \right)
 \end{align}
 This scheme is stable as long as the time step satisfies the constraint $\Delta
 t < 2/\omega_p$ \citep{tajima_computational_1989}.
 
-Notice that in the second expression of equation \eqref{eq:leap-frog-particle},
-an average velocity $\bar{\mathbf{u}}^{i}$ appears on the right hand side as
-well, meaning that this is an {\it implicit} equation. The simplest way is to
-invert a $3\times 3$ matrix, but it is both slow and prone to numerical errors.
-\citet{boris_relativistic_1970} proposed an algorithm which uses geometric rotations to
-simplify the solution of this equation, which became widely used in PIC codes,
-and the algorithm was named the {\it Boris pusher}.
+Notice that in equation \eqref{eq:leap-frog-ptc-momentum}, an average velocity
+$\mathbf{\bar{u}}^{i}$ appears on the right hand side, meaning that this
+is an {\it implicit} equation. The simplest way is to invert a $3\times 3$
+matrix, but it is both slow and prone to numerical errors.
+\citet{boris_relativistic_1970} proposed an algorithm which uses geometric
+rotations to simplify the solution of this equation, which became widely used in
+PIC codes, and the algorithm was named the {\it Boris pusher}.
 
 % The basis of the Boris pusher is the fact that Lorentz force does no work.
 % Therefore the halfstep Lorentz factor can be approximated as
 % TODO: Describe the Boris pusher
 The Boris pusher assumes the following form of the average velocity on the right
-hand side of equation \eqref{eq:leap-frog-particle}:
+hand side of equation \eqref{eq:leap-frog-ptc-momentum}:
 \begin{equation}
   \label{eq:boris-average-u}
-  \bar{\mathbf{u}}^{i} = \frac{\mathbf{p}^{i-1/2} + \mathbf{p}^{i+1/2}}{2\bar{\gamma}^im},\quad \text{where } \bar{\gamma}^i = \sqrt{1 + \left( \mathbf{p}^{i-1/2} + \frac{q\Delta t}{2}\mathbf{E}^i \right)^2/(mc)^2}
+  \mathbf{\bar{u}}^{i} = \frac{\mathbf{p}^{i-1/2} + \mathbf{p}^{i+1/2}}{2\bar{\gamma}^im},\quad \text{where } \bar{\gamma}^i = \sqrt{1 + \left( \mathbf{p}^{i-1/2} + \frac{q\Delta t}{2}\mathbf{E}^i \right)^2/(mc)^2}
 \end{equation}
 One can define intermediate momenta
 \begin{equation}
@@ -777,14 +778,14 @@ pusher in many plasma simulation codes.
 
 However one can see that an approximation was made in Boris pusher, namely the
 average velocity vector between timesteps $i+1/2$ and $i-1/2$ is given by
-equation \eqref{eq:boris-average-u}. However this is an approximation since
+equation \eqref{eq:boris-average-u}. This is an approximation since
 Boris pusher was derived with non-relativistic particle dynamics in mind.
 \citet{vay_simulation_2008} pointed out that in the special case where
 $\mathbf{E} + \mathbf{u}\times \mathbf{B}/c = 0$ the Boris pusher may introduce a
 spurious force on the particles. A better average is simply given by
 \begin{equation}
   \label{eq:vay-average-u}
-  \bar{\mathbf{u}}^i = \frac{\mathbf{u}^{i-1/2} + \mathbf{u}^{i+1/2}}{2} = \frac{\mathbf{p}^{i-1/2}/\gamma^{i-1/2} + \mathbf{p}^{i+1/2}/\gamma^{i+1/2}}{2m}
+  \mathbf{\bar{u}}^i = \frac{\mathbf{u}^{i-1/2} + \mathbf{u}^{i+1/2}}{2} = \frac{\mathbf{p}^{i-1/2}/\gamma^{i-1/2} + \mathbf{p}^{i+1/2}/\gamma^{i+1/2}}{2m}
 \end{equation}
 However this means that the simple Boris scheme is no longer applicable. Vay
 outlined a new scheme which is slightly more complicated but more accurate when
@@ -823,11 +824,12 @@ natural way is to use the traditional leapfrog method again
   \mathbf{B}^{i+1/2} &= \mathbf{B}^{i-1/2} - \Delta t (c\nabla\times \mathbf{E}^i)
 \end{align}
 This scheme is stable as long as the time step $\Delta t$ satisfies the Courant
-condition $\Delta t < \Delta x / c$ where $\Delta x$ is the smallest
-grid spacing. However, one difficulty is that, in this scheme $\mathbf{E}$ and
+condition $\Delta t < \Delta x / c$ where $\Delta x$ is the smallest grid
+spacing. However, one difficulty is that, in this scheme $\mathbf{E}$ and
 $\mathbf{B}$ fields are not defined at the same time step, whereas in our
-particle pusher \eqref{eq:leap-frog-particle} they are implicitly assumed to be
-sampled at the same time step.
+particle pusher \eqref{eq:leap-frog-ptc-pos} and
+\eqref{eq:leap-frog-ptc-momentum} they are implicitly assumed to be sampled at
+the same time step.
 
 An improved method we employ is the semi-implicit field solver used by
 \citep{haugboelle_photon-plasma:_2012}. We start from the following finite
@@ -926,17 +928,17 @@ simply use the equation \eqref{eq:eom-position} to update particle position.
 \begin{figure}[h]
   \centering
   \begin{tikzpicture}
-    \begin{scope}
+    \begin{scope}[xshift=-0.5cm]
       \coordinate (A) at (0, 0);
       \draw (A) ++(75:2.0) -- ++(75:4.0);
       \draw (A) ++(45:2.0) -- ++(45:4.0);
       \draw (A) ++(15:2.0) -- ++(15:4.0);
       \draw (A) ++(85:3.0) arc (85:7:3.0);
       \draw (A) ++(85:5.0) arc (85:7:5.0);
-      \draw[thick, ->] (A) ++ (35:3.4) -- ++(1.2,-0.4);
+      \draw[thick, ->, dashed] (A) ++ (35:3.4) node[above] {$\mathbf{x}_\mathrm{sph}$} -- ++(1.2,-0.4) node[right] {$\mathbf{x}_\mathrm{sph}'$};
     \end{scope}
-    \node[single arrow,draw,fill=black!10,minimum width=2cm,minimum height=0.5cm,anchor=west,single arrow head extend=0.2cm] at (6.0,4.5) {\rule{1.5cm}{0ex}};
-    \node[single arrow,draw,fill=black!10,minimum width=2cm,minimum height=0.5cm,anchor=west,single arrow head extend=0.2cm,shape border rotate=180] at (6.0,1.5) {\rule{1.5cm}{0ex}};
+    \node[single arrow,draw,fill=black!10,minimum width=2cm,minimum height=0.5cm,anchor=west,single arrow head extend=0.3cm] at (5.7,4.5) {$\mathbf{x}_\mathrm{sph} \Rightarrow \mathbf{x}_{c}$};
+    \node[single arrow,draw,fill=black!10,minimum width=2cm,minimum height=0.5cm,anchor=west,single arrow head extend=0.3cm,shape border rotate=180] at (5.7,1.5) {$\mathbf{x}'_{c} \Rightarrow \mathbf{x}'_\mathrm{sph}$};
     \begin{scope}[xshift=9.0cm]
       \draw (0,1.0) -- (6.0,1.0);
       \draw (0,3.0) -- (6.0,3.0);
@@ -944,12 +946,12 @@ simply use the equation \eqref{eq:eom-position} to update particle position.
       \draw (1.0,0.0) -- (1.0,6.0);
       \draw (3.0,0.0) -- (3.0,6.0);
       \draw (5.0,0.0) -- (5.0,6.0);
-      \draw[thick, ->] (0,0) ++ (35:3.4) -- ++(1.2,-0.4);
+      \draw[thick, ->] (0,0) ++ (35:3.4) node[left] {$\mathbf{x}_{c}$} -- ++(1.2,-0.4) node[right] {$\mathbf{x}_{c}'$};
     \end{scope}
     % \draw (A) -- ++(75:4.0);
   \end{tikzpicture}
   \caption[Particle movement in curvilinear coordinates.]{Particle movement in
-    curvilinear coordinates. The particle position and momentum is transformed
+    curvilinear coordinates. The particle position and momentum are transformed
     into the corresponding Cartesian values, moved in a straight line, and then
     transformed back to curvilinear coordinates.}
   \label{fig:particle-move}
@@ -1564,15 +1566,6 @@ how GPU architecture is different from traditional CPUs and the challenges in
 designing software to take advantage of this architecture in appendix
 \ref{app:gpu}.
 
-The structure of the Aperture code is modular by design. Each algorithm
-component is encapsulated in a C++ \verb!class!, and can be used mostly
-independently. The control flow of the Aperture code is shown in figure
-\ref{fig:aperture-flow}: the code first read all the physical and numerical
-parameters from a configuration file, then prepares the initial condition for
-the simulation. From here it enters a loop over a specified number of timesteps;
-for each timestep it executes each module in order, and writes out field and
-current distribution data at a set interval.
-
 \tikzstyle{decision} = [diamond, draw, fill=blue!20,
     text badly centered, node distance=3cm, inner sep=0pt]
 \tikzstyle{block} = [rectangle, draw, fill=blue!20,
@@ -1610,6 +1603,15 @@ font=\small\sffamily, minimum width=3.0cm]
   \label{fig:aperture-flow}
 \end{figure}
 
+The structure of the Aperture code is modular by design. Each algorithm
+component is encapsulated in a C++ \verb!class!, and can be used mostly
+independently. The flow of the main loop in the Aperture code is shown in figure
+\ref{fig:aperture-flow}: the code first read all the physical and numerical
+parameters from a configuration file, then prepares the initial condition for
+the simulation. From here it enters a loop over a specified number of timesteps;
+for each timestep it executes each module in order, and writes out field and
+current distribution data at a set interval.
+
 The GPU version of the code is designed to be run on a workstation with 1-4 GPUs
 and does not contain any multi-node parallelization. All particle and field data
 is stored and evolved on the GPU, and the total number of particles in the
@@ -1623,22 +1625,31 @@ parameters.
 
 Parallelization of the CPU version over MPI is done using traditional domain
 decomposition. The overall domain is split into a number of patches matching the
-number of parallel computation nodes. Each patch is assigned to one node.
-Inter-node communication is buffered using guard cells. Guard cells are extra
-cells that pad the boundary of a node, which hold identical information as the
-corresponding cells in the neighboring node (figure \ref{fig:guard-cells}).
-There are two main types of guard cell communication. For field solver (section
-\ref{sec:fd-maxwell}), the guard cells need to be filled with the value of the
-corresponding cells in the neighboring node; for the current deposition (section
-\ref{sec:charge-cons-curr}), the charge $\Delta \rho$ deposited into the guard
-cells need to be transferred to the neighboring node and added to the
-corresponding cells. All particles that move into guard cells at the end of each
-time step need to be moved to the corresponding cells in the neighbor, so that
-at the beginning of each time step, all guard cells are empty. This also ensures
-that no current will ever flow through the outer boundary of the guard cells,
-and the current prefix sum described in section \ref{sec:charge-cons-curr} can
-always begin with $j=0$.
-% TODO: insert the description of guard cells, figure
+number of parallel computation ``nodes'', each corresponds to a CPU core. Each
+core takes one patch of the domain and stores the field values and particles in
+that part of the domain. Therefore, when particles leave and enter the domain
+patches, communication is needed across the computational nodes.
+
+Inter-node communication is buffered using guard cells. Guard cells are
+redundant cells that pad the boundary of a patch, which hold identical
+information as the corresponding cells in the neighboring node (figure
+\ref{fig:guard-cells}). They are needed because in many situations such as
+evaluating finite difference operators (section \ref{sec:fd-maxwell}) at the
+boundary of a patch, the field values in the cells of the neighboring patch are
+required. It is easiest to store them first in the guard cells, and update them
+every timestep after the field update.
+
+There are two main types of guard cell communication for field values. For field
+solver (section \ref{sec:fd-maxwell}), the guard cells need to be filled with
+the value of the corresponding cells in the neighboring node; for the current
+deposition (section \ref{sec:charge-cons-curr}), the charge $\Delta \rho$
+deposited into the guard cells need to be transferred to the neighboring node
+and added to the corresponding cells. For particles, all particles that move
+into guard cells at the end of each time step need to be moved to the
+corresponding cells in the neighbor, so that at the beginning of each time step,
+all guard cells are empty. This also ensures that no current will ever flow
+through the outer boundary of the guard cells, and the current prefix sum
+described in section \ref{sec:charge-cons-curr} can always begin with $j=0$.
 
 \begin{figure}[h]
   \centering
@@ -1674,7 +1685,9 @@ always begin with $j=0$.
 The CPU version of Aperture has been deployed on different platforms and shows
 excellent scaling properties. It has been run on a local workstation with 12
 cores, the Habanero cluster at Columbia on $\sim 250$ cores, and the NASA
-Pleiades cluster on more than $10,000$ cores.
+Pleiades cluster on more than $10,000$ cores. The code can reliably achieve a
+stable performance of $1.25$ million particles per core per second per timestep
+(figure ).
 
 INSERT A PLOT SHOWING SCALING PROPERTIES
 
@@ -1684,22 +1697,55 @@ INSERT A PLOT SHOWING SCALING PROPERTIES
 
 % Parallelization considerations. Performance.
 
+However, one of the challenges for achieving perfect scaling performance is load
+balancing between nodes. Since the performance is basically determined by the
+number of particles on the node, the node with the most particles is going to be
+slowest, and be the lowest common denominator for the whole simulation. In the
+problems that Aperture was designed to tackle, pair creation is an important
+feature, therefore it is very easy for some nodes to generate way more particles
+than others. Another factor is that due to spherical geometry and the way the
+grid is spaced uniformly in $\log r$ and $\theta$, cells further away from the
+star scale up in size as $r^{2}$ ($r^{3}$ in 3D). Therefore the nodes close to
+the outer boundary will be naturally more loaded.
+
 \section{Test Problems}
 \label{sec:test-problems}
+
+In this section we present some well-known test cases to demonstrate the
+correctness of the code.
 
 \subsection{Two-stream instability}
 \label{sec:test-two-stream}
 
+The two-stream instability is setup with two particle species counter streaming
+against each other.
+
+\subsection{Weibel instability}
+\label{sec:test-weibel}
+
 \subsection{Dispersion relations}
 \label{sec:test-dispersion}
 
-\subsection{Numerical heating}
-\label{sec:test-heating}
+Consider plasma trapped in a finite cylinder with length $L$.
 
 \subsection{Monopole magnetosphere}
 \label{sec:test-monopole}
 
+\citet{michel_rotating_1973} found an analytic solution for force-free
+magnetosphere of a rotating magnetic monopole. The solution is such that the
+toroidal field is proportional to the poloidal field:
+\begin{equation}
+  \label{eq:monopole-toroidal}
+  B_{\phi} = -\frac{\Omega r\sin\theta}{c} B_{p}
+\end{equation}
+The corotating electric field defined by $\mathbf{E} =
+-\mathbf{v}_\mathrm{rot}\times \mathbf{B}$ only has a $\theta$ component and it
+is equal to $B_{\phi}$ in magnitude.
 
+We attempt to replicate this solution using PIC simulation. We found that field
+configuration is identical to the analytic solution given above, with a
+deviation near the stellar surface which consists of a parallel electric field
+that accelerates particles to speed close to $c$.
 
 % This section we present some tests that show the validity of the
 % code, in several coordinate systems, and in several physical scenarios
@@ -1712,6 +1758,19 @@ INSERT A PLOT SHOWING SCALING PROPERTIES
 
 \section{Discussions and Remarks}
 \label{sec:code-discussions}
+
+We have explained the fundamentals of the Particle-in-Cell technique and the
+design and structure of the Aperture code. Its novel features are support of
+radiative transfer models and the built-in flexibility of cuvilinear
+coordinates. The GPU version also enables the user to run medium-scale problems
+relatively quickly on a small cost-efficient computer/cluster. In the following
+chapters we will explore what can be done with this tool to further our
+understanding of the magnetosphere of neutron stars.
+
+With the help of Rui Hu, the Aperture code is still quickly evolving. Explicit
+vectorization is being added to increase the performance at certain bottlenecks
+by up to a factor of 4. A hybrid parallelization scheme is being implemented
+which alleviates one of the biggest performance obstacles: load balancing.
 
 % Local Variables:
 % TeX-master: "../thesis"

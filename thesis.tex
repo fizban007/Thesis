@@ -21,16 +21,40 @@ letterpaper,
 % \usepackage{slashed}
 % \usepackage{dsfont}
 % \usepackage{fontspec}
-% \usepackage{mathspec}
 % \setallmainfonts[Scale=1.05]{Minion Pro}
 % \usepackage{lualatex-math}
-% \usepackage{unicode-math}
 % \setmathfont{Latin Modern Math}
 % \setmainfont[SmallCapsFeatures={Renderer=Basic}]{Minion Pro}
 % \setmainfont{Linux Libertine}
-\usepackage{libertine}
+% \usepackage{libertine-type1}
 % \usepackage[onlymath,minionint,lf,scale=1.05]{MinionPro}
+% \def\rmdefault{LinuxLibertineT-LF}
+% \usepackage{mathspec}
+% \usepackage{libertine}
+% \usepackage{unicode-math}
+% \setmainfont{Linux Libertine O}
 \usepackage[libertine]{newtxmath}
+\usepackage{fontspec}
+\setmainfont{Libertinus Serif}
+% \setmathfont{Libertinus Math}
+
+% \DeclareSymbolFont{operators}{\encodingdefault}{\familydefault}{\mddefault}{n}
+% \DeclareMathAlphabet{\mathit}{\encodingdefault}{\familydefault}{\mddefault}{it}
+% \DeclareMathAlphabet{\mathbf}{\encodingdefault}{\familydefault}{\bfdefault}{n}
+\AtBeginDocument{%
+  \DeclareMathSymbol{0}{\mathalpha}{operators}{`0}%
+  \DeclareMathSymbol{1}{\mathalpha}{operators}{`1}%
+  \DeclareMathSymbol{2}{\mathalpha}{operators}{`2}%
+  \DeclareMathSymbol{3}{\mathalpha}{operators}{`3}%
+  \DeclareMathSymbol{4}{\mathalpha}{operators}{`4}%
+  \DeclareMathSymbol{5}{\mathalpha}{operators}{`5}%
+  \DeclareMathSymbol{6}{\mathalpha}{operators}{`6}%
+  \DeclareMathSymbol{7}{\mathalpha}{operators}{`7}%
+  \DeclareMathSymbol{8}{\mathalpha}{operators}{`8}%
+  \DeclareMathSymbol{9}{\mathalpha}{operators}{`9}%
+}
+
+% \DeclareSymbolFont{operators}{\encodingdefault}{\familydefault}{m}{n}
 
 % \usepackage{babel}
 \usepackage{esint}

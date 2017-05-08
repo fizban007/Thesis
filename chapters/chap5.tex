@@ -1,6 +1,6 @@
 \zotelo{../thesis.bib}
 
-\chapter{Further Explorations of the Applications of PIC}
+\chapter{Further Explorations in Extension of PIC}
 \label{chap:explorations}
 
 \section{General Relativity}
@@ -544,9 +544,23 @@ integral formalism, the we only need to separate the change of charge in a given
 cell into different directions, find the current flux easily and then directly
 use them to update the dynamic fields $B^i$ and $D^i$.
 
-\section{PIC on an Unstructured Grid}
-\label{sec:unstructured-pic}
+To find the current fluxes, we can again use the Esirkepov scheme described in
+section \ref{sec:charge-cons-curr}. The reason the algorithm is still applicable
+is that charge movement in one direction will only cause current on the cell
+surface in that direction, even when the cell is not rectangular.
 
+\subsection{Concluding remarks}
+\label{sec:gr-conclusion}
+
+The algorithms outlined above is a possible way to extend the PIC technique to
+general relativistic regime. This could potentially lead to new findings about
+plasma dynamics very close to the black hole, which is very non-trivial and have
+only been studied in either FFE or GRMHD
+\citep[e.g.][]{komissarov_electrodynamics_2004}. It is known that current sheets
+naturally form in the black hole ergosphere, and to study the reconnection and
+possible particle acceleration there, a full GR PIC code is required. This is a
+very promising work in progress that in the long run might open a variety of new
+research opportunities.
 
 
 % Local Variables:
