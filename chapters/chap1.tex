@@ -1,6 +1,6 @@
 \zotelo{../thesis.bib}
 
-\chapter{Particle-in-Cell Simulation}
+\chapter{Particle-in-Cell Method}
 \label{chap:pic}
 
 \section{Introduction}
@@ -24,22 +24,22 @@ microphysics in a relatively large system.
 This chapter introduces the PIC technique in detail, and then introduces
 Aperture, a versatile PIC code designed and developed from scratch as part of my
 PhD thesis. The original and main purpose of the code was to simulate the global
-structure of the Pulsar magnetosphere from first principles. However, we
+structure of the pulsar magnetosphere from first principles. However, we
 designed the code to be general enough to be applied to many different problems
 in Astrophysics, especially in problems where particles are accelerated in
 strong magnetic fields and capable of producing pair cascade.
 
 % TODO: Update this paragraph
-In Section \ref{sec:particle-cell-method} of the paper we will present the
+In Section \ref{sec:particle-cell-method} we will present the
 numerical algorithms and techniques employed in PIC codes, including the
 standard Yee staggered grid, Boris and Vay pusher, charge conserving current
 deposition. We will also explain some of the novel features of the Aperture
 code, including the treatment of general curvilinear coordinate systems,
-boundary conditions, and radiative processes. In Section \ref{sec:code-aperture}
-we will give a general overview of the Aperture code, including its architecture
-and highlighting some implementation details. In Section \ref{sec:test-problems}
-we will present some test cases to demonstrate the validity of the code. Finally
-in Section \ref{sec:code-discussions} we will discuss the strengths and
+boundary conditions, and radiative processes. Section \ref{sec:code-aperture}
+gives a general overview of the Aperture code, including its architecture
+and highlighting some implementation details. Section \ref{sec:test-problems}
+presents some test cases to demonstrate the validity of the code. Finally
+Section \ref{sec:code-discussions} discusses the strengths and
 weaknesses of the code, and remark on the outstanding challenges and potential
 future applications.
 
@@ -154,7 +154,7 @@ single-particle equation of motion:
 
 These are simply equations of motion for ordinary particles in an
 electromagnetic field. Therefore it is justified to treat macro particles as
-their name suggests: simply as physical particles. A PIC code simply trace their
+their name suggests: simply as physical particles. A PIC code simply traces their
 motion in the electromagnetic field as described by the above dynamic equations.
 
 
@@ -254,7 +254,7 @@ second order accuracy. For example take the evolution of the $B_z$ term:
       &- \left.\frac{E_y(x + \Delta x/2) - E_y(x - \Delta x/2)}{\Delta x} \right]
   \end{split}
 \end{equation}
-The electric field values needed show up exactly at where they are defined on
+The electric field values needed show up exactly where they are defined on
 the Yee lattice, and due to the symmetric structure of the finite difference,
 the $\Delta x^{2}$ term in the Taylor expansion naturally cancels:
 \begin{equation}
@@ -265,7 +265,7 @@ This naturally applies to all derivative terms in the Maxwell equation.
 
 Another strength of the Yee grid is that the differential relations
 $\nabla\cdot(\nabla\times \mathbf{F}) = 0$ and $\nabla \times \nabla f = 0$ are
-satisfied by construction, so as long as Maxwell equation is used for the
+satisfied by construction, so long as Maxwell equations are used for the
 evolution of fields, $\nabla\cdot \mathbf{B} = 0$ should be preserved to
 numerical precision without extra work.
 
@@ -281,12 +281,12 @@ more terms to cancel out the $\Delta x^{3}$ term in the Taylor expansion:
 Further discussion of the implementation of higher order finite difference
 schemes can be found in appendix \ref{app:finite-diff}.
 
-Macro-particles stream freely in the mesh grid, and their positions and momenta
-are not discretized. To convert between local ``paticle'' quantities and grid
+Macro-particles stream freely in the grid, and their positions and momenta are
+not discretized. To convert between local ``paticle'' quantities and grid
 variables, an interpolation scheme is required. Fortunately we already have a
-function $\mathcal{S}(\mathbf{x} - \mathbf{x}_p)$ which describes the shape of the macro
-particle smeared in space. Integrating equation \eqref{eqn:pic-rho} using a
-macro particle distribution function over the volume of a cell gives:
+function $\mathcal{S}(\mathbf{x} - \mathbf{x}_p)$ which describes the shape of
+the macro particle smeared in space. Integrating equation \eqref{eqn:pic-rho}
+using a macro particle distribution function over the volume of a cell gives:
 \begin{equation}
   \label{eqn:rho-cell}
   Q_{c} = \rho_{c}\Delta V = \sum_pq_pS(\mathbf{x}_p-\mathbf{x}_{c})
@@ -296,16 +296,16 @@ the position of the center of the cell, and $S$ is defined as
 the integral of $\mathcal{S}$:
 \begin{equation}
   \label{eqn:weight-function}
-  S(\mathbf{x}_p - \mathbf{x}_c) = \int_{\mathbf{x}_c - \mathbf{\Delta}/2}^{\mathbf{x}_c + \mathbf{\Delta}/2} \mathcal{S}(\mathbf{x}_p - \mathbf{x})d\mathbf{x}
+  S(\mathbf{x}_p - \mathbf{x}_c) = \int_{\mathbf{x}_c - \bm{\Delta}/2}^{\mathbf{x}_c + \bm{\Delta}/2} \mathcal{S}(\mathbf{x}_p - \mathbf{x})d\mathbf{x}
 \end{equation}
-and $\Delta$ is the size of the cell. The assumption that $\mathcal{S}$ has
+and $\bm{\Delta}$ is the size of the cell. The assumption that $\mathcal{S}$ has
 finite support implies that $S$ will be nonzero for only a few cells with
 $\mathbf{x}_{c}$ close to $\mathbf{x}_{p}$, and since the integration of
 $\mathcal{S}$ over the whole volume is constrained to be 1, the sum of all
 nonzero $S$ near a certain particle is guaranteed to be 1. This is another way
-of saying total charge is conserved. Since in the PIC code, we will only be
+of saying total charge is conserved. Since in the PIC code we will only be
 using the discrete interpolation functions $S$, not the original $\mathcal{S}$,
-so we will call $S(\mathbf{x}_p - \mathbf{x}_c)$ the ``shape functions''.
+we will call $S(\mathbf{x}_p - \mathbf{x}_c)$ the ``shape function''.
 Typical shape functions used in PIC codes are derived from so-called
 ``B-spline'' functions, which are piecewise polynomial functions with minimal
 support. Following are the shape functions often used in PIC codes, in ascending
@@ -351,7 +351,7 @@ these shape functions, e.g.\ in 3D Cartesian coordinates $S(\mathbf{x}_{p} -
 higher order shape functions will have better noise properties for the result,
 but are computationally more intensive, not only because they involve more
 multiplications (higher order polynomial), but each particle can influence more
-grid points and one need to sum over more terms of nonzero $S$.
+grid points and one needs to sum over more terms of nonzero $S$.
 
 Equation \eqref{eqn:rho-cell} can be taken as the definition of the discretized
 charge density in a given cell. In other words, it is the average charge
@@ -421,7 +421,7 @@ We will discuss various techniques to achieve this in section
 There are various ways to achieve charge conservation numerically. The simplest
 way is to use the naive current deposition \eqref{eq:naive-j}, being aware of
 the fact that it does not conserve charge according to the continuity equation.
-As a result, $\nabla\cdot \mathbf{E}$ will slowly deviate from the charge
+As a result, $\nabla\cdot \mathbf{E}/4\pi$ will slowly deviate from the charge
 density $\rho$. This will turn up in the simulation as artifacts in the electric
 field as if there is spurious charge density dispersed in the plasma
 distribution which are not tracked by the code. Depending on the application,
@@ -431,7 +431,7 @@ problem in favor of faster computation speed.
 A typical way to help alleviate this problem is to employ divergence
 cleaning. There is no unique way of doing this, and many methods exist in
 literature.  % TODO: references
-We only outline a simple method here. The goal is to solves the equation
+We only outline a simple method here. The goal is to solve the equation
 $\nabla\cdot \mathbf{E} = 4\pi\rho$ every few timesteps. Since the deviation
 built up over a short time should be small as long as the time step is small,
 one can solve a diffusion equation of the electric potential $\phi$
@@ -441,26 +441,27 @@ one can solve a diffusion equation of the electric potential $\phi$
 \end{equation}
 Since the diffusion equation has the property that an initial distribution with
 nonzero right hand side will relax towards an equilibrium where the right hand
-side becomes zero, we only need to apply some relaxation time steps to let it
-happen. A typical method is the Gauss-Seidel method \citep[see
+side becomes zero, we only need to apply some relaxation iterations to let it
+converge. A typical method is the Gauss-Seidel method \citep[see
 e.g.][]{press_numerical_2007} which applies a filter to the field consecutively.
 Since the initial deviation should be small, it only takes several relaxation
 iterations to achieve a reasonable result.
 
 One difficulty of divergence cleaning lies in parallelization, since the
 relaxation filter is usually a global operation which involves communication
-between nodes every time. Another problem is that it inevitably introduces tiny
+between nodes every time (see section \ref{sec:code-aperture} for
+parallelization). Another problem is that it inevitably introduces tiny
 fluctuations to the electric field, which will couple to particle dynamics and
 introduce heating to the plasma. A more efficient way is to directly solve the
 continuity equation \eqref{eq:continuity} for $\mathbf{j}$ at every timestep,
 which ensures that it is satisfied to numerical precision. Since charge density
 $\rho$ never really shows up in the evolution equations in the first place, it
 only serves as a constraint for electric field, therefore we can actually avoid
-evaluating the charge density and deposit $\mathbf{j}$ directly.
-As long as the condition $\nabla\cdot \mathbf{E} = 4\pi\rho$ is satisfied for
-the initial condition, then continuity equation will guarantee that it is
-satisfied in subsequent times to numerical precision, thus side-stepping the
-problem of charge-conservation.
+evaluating the charge density and deposit $\mathbf{j}$ directly. As long as the
+condition $\nabla\cdot \mathbf{E} = 4\pi\rho$ is satisfied for the initial
+condition, continuity equation will guarantee that it is satisfied in
+subsequent times to numerical precision, thus side-stepping the problem of
+charge-conservation.
 
 There are two main ways to solve the continuity equation numerically at each
 timestep. The classical way was proposed by \citet{villasenor_rigorous_1992},
@@ -493,8 +494,9 @@ crossed. In 2D, there are 3 different cases where the moving particle can cross
 For the simplest case where only 4 boundaries are crossed, the current involved
 can be easily found to be:
 \begin{align}
-  \label{eq:buneman-4-cross}
+  \label{eq:buneman-4-cross-a}
   J_{x1} &= q\Delta x \left( \frac{1}{2} - y - \frac{1}{2}\Delta y \right) ,\quad J_{x2} = q\Delta x \left( \frac{1}{2} + y + \frac{1}{2}\Delta y \right) \\
+  \label{eq:buneman-4-cross-b}
   J_{y1} &= q\Delta y \left( \frac{1}{2} - x - \frac{1}{2}\Delta x \right) ,\quad J_{y2} = q\Delta y \left( \frac{1}{2} + x + \frac{1}{2}\Delta x \right)
 \end{align}
 
@@ -503,9 +505,9 @@ similarly the 10-boundary case can be decomposed into 3 4-boundary moves. Care
 must be taken when decomposing the moves, since the second move can involve 4
 different set of 4 boundaries, depending on the direction the particle moves.
 After decomposing the particle path into segments, each segment is treated as an
-ordinary move and equations \eqref{eq:buneman-4-cross} are used for each
-segment. The final current due to the complete particle path is the sum of the
-current from each segment.
+ordinary move and equations \eqref{eq:buneman-4-cross-a} and
+\eqref{eq:buneman-4-cross-b} are used for each segment. The final current due to
+the complete particle path is the sum of the current from each segment.
 
 The situation becomes worse in 3D. The simplest case involves current through 12
 faces (4 faces on each coordinate plane), and the more complex cases are treated
@@ -536,20 +538,20 @@ This method was later improved by \citet{umeda_new_2003} to cut down the number
 of different cases and increasing performance by splitting the particle path in
 the case of cell-crossing into a zigzag pattern. They noticed that the branching
 conditions for Buneman pusher depend mostly on whether the particle in question
-crosses a cell boundary. The idea is simply to find a midpoint for all kinds of
-trajectories to reduce the number of necessary segments to the minimum. The
-cases in 2D are shown in figure \ref{fig:zigzag-2d}. This way, the particle path
-in one timestep is split to at most 2 segments, saving a lot of branching cases.
-Each segment is then deposited using the standard equations
-\eqref{eq:buneman-4-cross}. The improvement is even more significant in 3D,
-where again only 4 cases are needed (figure \ref{fig:zigzag-3d}), and in all
-cases only up to two segments in one timestep is needed to complete the
-deposition, greatly simplifying the amount of computations needed compared to
-the original Buneman scheme. Another strength of this method is that higher
-order shape functions \eqref{eq:second-order-deposit} or
-\eqref{eq:third-order-deposit} can be used since after segmenting the particle
-path, the only case one need to consider is one where particle does not cross
-cell boundary, and the current due to this movement can be solved exactly,
+crosses a cell boundary. The idea is simply to find a universal midpoint for all
+kinds of trajectories to reduce the number of necessary segments to the minimum.
+The cases in 2D are shown in figure \ref{fig:zigzag-2d}. This way, the particle
+path in one timestep is split to at most 2 segments, saving a lot of branching
+cases. Each segment is then deposited using the standard equations
+\eqref{eq:buneman-4-cross-a} and \eqref{eq:buneman-4-cross-b}. The improvement
+is even more significant in 3D, where again only 4 cases are needed (figure
+\ref{fig:zigzag-3d}), and in all cases only up to two segments in one timestep
+is needed to complete the deposition, greatly simplifying the amount of
+computations needed compared to the original Buneman scheme. Another strength of
+this method is that higher order shape functions \eqref{eq:second-order-deposit}
+or \eqref{eq:third-order-deposit} can be used since after segmenting the
+particle path, the only case one need to consider is one where particle does not
+cross cell boundary, and the current due to this movement can be solved exactly,
 whereas the original Buneman algorithm will need to consider many more different
 cases due to one particle has influence on many more cell faces.
 
@@ -566,7 +568,7 @@ Another way to solve the continuity equation is proposed by
 \citet{esirkepov_exact_2001}. It decomposes the motion of charged particles into
 motions along individual axes since they are independent. Then the change of
 charge density $\Delta\rho$ is split into components that correspond to
-components of $\nabla\cdot \mathbf{j}$. This is the simplest to write in
+components of $\nabla\cdot \mathbf{j}$. This is simplest to write in
 Cartesian coordinates:
 \begin{equation}
   \label{eq:esirkepov-split}
@@ -590,7 +592,8 @@ to finish the prefix sum and take the final result to start the accumulation of
 this node. However practically since all particle shape functions have finite
 support, one simply needs to pass $\Delta\rho$ in the guard cells to the
 neighboring nodes, then each node can start the prefix sum from $j = 0$
-independently.
+independently. See section \ref{sec:code-aperture} for discussion on domain
+decomposition and guard cells.
 
 Now the task is simply to find $\Delta\rho$ for each direction.
 \citet{esirkepov_exact_2001} found a unique solution for them in terms of
@@ -659,7 +662,7 @@ over the 3 intermediate positions similar to the 3 paths outlined in figure
 \ref{fig:esirkepov-average}.
 
 There are several advantages of the Esirkepov current deposition algorithm.
-First off, no branching condition is necessary at all. All particles are assumed
+First, no branching condition is necessary at all. All particles are assumed
 to undergo 3 segments of displacement in every timestep, and every segment is
 treated uniformly. This has huge implications on SIMD platforms like GPUs where
 branching incurs significant loss of parallelization, often doubling or tripling
@@ -742,7 +745,7 @@ hand side of equation \eqref{eq:leap-frog-ptc-momentum}:
   \label{eq:boris-average-u}
   \mathbf{\bar{u}}^{i} = \frac{\mathbf{p}^{i-1/2} + \mathbf{p}^{i+1/2}}{2\bar{\gamma}^im},\quad \text{where } \bar{\gamma}^i = \sqrt{1 + \left( \mathbf{p}^{i-1/2} + \frac{q\Delta t}{2}\mathbf{E}^i \right)^2/(mc)^2}
 \end{equation}
-One can define intermediate momenta
+One can define intermediate momenta $\mathbf{p}^{-}$ and $\mathbf{p}^+$
 \begin{equation}
   \label{eq:boris-intermediate-momenta}
   \mathbf{p}^{i-1/2} = \mathbf{p}^{-} - \frac{q\Delta t}{2}\mathbf{E}^{i},\quad \mathbf{p}^{i+1/2} = \mathbf{p}^{+} + \frac{q\Delta t}{2}\mathbf{E}^i
@@ -787,11 +790,10 @@ spurious force on the particles. A better average is simply given by
   \label{eq:vay-average-u}
   \mathbf{\bar{u}}^i = \frac{\mathbf{u}^{i-1/2} + \mathbf{u}^{i+1/2}}{2} = \frac{\mathbf{p}^{i-1/2}/\gamma^{i-1/2} + \mathbf{p}^{i+1/2}/\gamma^{i+1/2}}{2m}
 \end{equation}
-However this means that the simple Boris scheme is no longer applicable. Vay
-outlined a new scheme which is slightly more complicated but more accurate when
-the Lorentz force of the particles is almost balanced by the electric force. The
-procedure is as follows. One first define $\mathbf{p}'$ similar to that in Boris
-pusher
+Then the simple Boris scheme is no longer applicable. Vay outlined a new scheme
+which is slightly more complicated but more accurate when the Lorentz force of
+the particles is almost balanced by the electric force. The procedure is as
+follows. One first defines $\mathbf{p}'$ similar to that in Boris pusher
 \begin{equation}
   \label{eq:vay-p-prime}
   \mathbf{p}' = \mathbf{p}^{i-1/2} + q\Delta t\left( \mathbf{E}^i + \frac{\mathbf{u}^{i-1/2}}{2c}\times \mathbf{B}^i \right)
@@ -816,7 +818,7 @@ exclusively.
 \label{sec:fd-maxwell}
 
 In this section we outline how we use the fields $\mathbf{E}^{i}$ and
-$\mathbf{B}^{i}$ to the compute their values at the next time step. The most
+$\mathbf{B}^{i}$ to compute their values at the next time step. The most
 natural way is to use the traditional leapfrog method again
 \begin{align}
   \label{eq:maxwell-leapfrog}
@@ -825,19 +827,19 @@ natural way is to use the traditional leapfrog method again
 \end{align}
 This scheme is stable as long as the time step $\Delta t$ satisfies the Courant
 condition $\Delta t < \Delta x / c$ where $\Delta x$ is the smallest grid
-spacing. However, one difficulty is that, in this scheme $\mathbf{E}$ and
+spacing. However, one difficulty is that in this scheme $\mathbf{E}$ and
 $\mathbf{B}$ fields are not defined at the same time step, whereas in our
 particle pusher \eqref{eq:leap-frog-ptc-pos} and
 \eqref{eq:leap-frog-ptc-momentum} they are implicitly assumed to be sampled at
 the same time step.
 
 An improved method we employ is the semi-implicit field solver used by
-\citep{haugboelle_photon-plasma:_2012}. We start from the following finite
+\citet{haugboelle_photon-plasma:_2012}. We start from the following finite
 difference equations:
 \begin{align}
-  \frac{\mathbf{E}^{i+1} -\mathbf{E}^{i}}{\Delta t} & = \nabla \times (
-  \alpha \mathbf{B}^{i+1} + \beta \mathbf{B}^{i} ) -\mathbf{j}^{i+1/2}\\
-  \frac{\mathbf{B}^{i+1} -\mathbf{B}^{i}}{\Delta t} & = - \nabla \times
+  \frac{\mathbf{E}^{i+1} -\mathbf{E}^{i}}{\Delta t} & = c\nabla \times (
+  \alpha \mathbf{B}^{i+1} + \beta \mathbf{B}^{i} ) - 4\pi\mathbf{j}^{i+1/2}\\
+  \frac{\mathbf{B}^{i+1} -\mathbf{B}^{i}}{\Delta t} & = - c\nabla \times
   ( \alpha \mathbf{E}^{i+1} + \beta \mathbf{E}^{i} )
 \end{align}
 where $\alpha$ and $\beta$ are numerical parameters that determines
@@ -846,7 +848,7 @@ the ``implicitness'' of the scheme, with the constraint $\alpha +
 stable. Bigger $\alpha$ leads to the damping of grid-scale waves,
 which helps smoothing the solution.
 
-To solve these equations, we can plug in the first equation into the second one
+To solve these equations, we can plug the first equation into the second one
 to eliminate $\mathbf{E}^{i+1}$, explicitly assuming $\nabla\cdot \mathbf{B} =
 0$:
 \begin{equation}
@@ -859,14 +861,16 @@ Now this is an equation of $\mathbf{B}^{i+1}$ only. We can solve it by inverting
 the operator $(1 - \alpha^2\Delta t\nabla^2)$ and apply it to the right hand side
 \begin{equation}
   \label{eq:field-relax}
-  (1 - \alpha^2\Delta t^2\nabla^2)^{-1} = (1 + \alpha^2\Delta t^2\nabla^2 + (\alpha^2\Delta t^2\nabla^2)^2 + \dots)
+  (1 - \alpha^2\Delta t^2\nabla^2)^{-1} = 1 + \alpha^2\Delta t^2\nabla^2 + (\alpha^2\Delta t^2\nabla^2)^2 + \dots
 \end{equation}
 Provided $\Delta t$ is small enough, this series converges rapidly. Practically
 we found that it is sufficient to terminate the series at around 4 terms, giving
 a relative numerical error less than $10^{-8}$. Thus, although the Laplace
 operator is a global operation and a global exchange of guard cell values is
 required, the field solver is still significantly faster than the particle
-pusher, rendering the overhead negligible.
+pusher, rendering the overhead negligible. Again, see section
+\ref{sec:code-aperture} for more detail on domain decomposition and the usage of
+guard cells.
 
 One particular note is that if higher order numerical differential operators
 were used in current deposition, then the same order of differential operators
@@ -924,6 +928,7 @@ always a parametrization of $\mathbb{R}^{3}$, so instead of trying to solve for
 the geodesic equation, we always convert the position and velocity of the
 particle to the corresponding Cartesian values before moving it, where we can
 simply use the equation \eqref{eq:eom-position} to update particle position.
+
 
 \begin{figure}[h]
   \centering
@@ -988,7 +993,7 @@ which is akin to a ``symmetric'' boundary condition for both $E_r$ and $B_r$.
 
 For the actual boundary conditions we have to impose on the fields, we need to
 refer to the staggered grid configuration (figure \ref{fig:Yee}). Our simulation
-domain boundary coincide with the spherical axis $\theta = 0$, $\pi$, then 4
+domain boundary coincides with the spherical axis $\theta = 0$, $\pi$; then 4
 components will be defined exactly on the boundary: $B_{\phi}$, $E_{\theta}$,
 $E_r$, and $j_{\theta}$. From the discussion above, we immediately have
 $B_{\phi} = E_{\theta} = 0$. We impose this condition simply as a Dirichlet
@@ -1000,7 +1005,7 @@ modifying the current deposition step: every particle that moves in the cells
 adjacent to the axis boundary is assigned a ghost particle that is its mirror
 image across the axis. The resulting $\Delta \rho$ is taken to be the average
 from the movement of both particles. This symmetric construction automatically
-guarantees that $j_{\theta} = 0$ on the boundary. This also serves a great
+guarantees that $j_{\theta} = 0$ on the boundary. This also serves as a suitable
 starting point for the current prefix sum for $j_{\theta}$ since we know that it
 always starts from 0 at $\theta = 0$.
 
@@ -1034,15 +1039,16 @@ appendix \ref{app:finite-diff}.
 
 In magnetospheric simulations, the inner boundary of the box is always the
 neutron star itself. The stellar boundary is treated as a perfect conductor:
-$\mathbf{E} = -\mathbf{v}_\mathbf{rot}\times \mathbf{B}$ and $\mathbf{B} =
+$\mathbf{E} = -\mathbf{v}_\mathrm{rot}\times \mathbf{B}/c$ and $\mathbf{B} =
 \mathbf{B}_\mathrm{dipole}$ below the surface. $\mathbf{v}_\mathrm{rot} =
-\mathbf{r}\times \bOm$ is the rotation velocity of the star, and is how the
-simulation knows about the rotation of the star. Typically at the beginning of
-the simulation $\mathbf{v}_\mathrm{rot}$ is taken to be identically zero, and
-the star is spun up smoothly over a relatively short time frame. For magnetar
-simulations, it is the differential rotation of the star that we impose, which
-is done through an angle dependent $\mathbf{v}_\mathrm{rot}(\theta)$, and the
-rotation of the star is ignored (see chapter \ref{chap:magnetar}).
+\mathbf{r}\times \bOm$ is the rotation velocity of the star; it determines
+$\mathbf{E}$ at the surface and this is how the simulation knows about the
+rotation of the star. Typically at the beginning of the simulation
+$\mathbf{v}_\mathrm{rot}$ is taken to be identically zero, and the star is spun
+up smoothly over a relatively short time frame. For magnetar simulations, it is
+the differential rotation of the star that we impose, which is done through an
+latitude dependent $\mathbf{v}_\mathrm{rot}(\theta)$, and the rotation of the star
+is ignored (see chapter \ref{chap:magnetar}).
 
 Particles are injected into the simulation domain below the surface in pairs of
 electrons and ions. In order to not introduce artificial charges into the
@@ -1055,13 +1061,61 @@ Gauss's law.
 
 For magnetospheric simulations we also implemented gravity for all particles to
 control the injection layer. Injected particles have a thermal momentum
-distribution with mean momentum $\bar{p}$,
+distribution with mean momentum $\bar{p}_{0}$, and gravity is implemented with a
+force profile of $\mathbf{g} = -\hat{\mathbf{r}}mg_0/r^{2}$. The parameter $g_0$
+controls the strength of gravity, as well as the thickness of the atmospheric
+layer, $h \sim v_0^{2}/2g_0$. In the beginning of the simulation, the star
+starts at rest to allow the formation of a dense atmosphere. The use of this
+atmospheric layer ensures that there is always an abundant supply of particles
+from the surface, and decouples it from the detail of actual particle injection
+at each timestep.
 
 \subsubsection{Free escape boundary condition}
 \label{sec:escape-bc}
 
 The outer boundary uses a free escape condition. To achieve this we place a
-damping layer at the outer boundary
+damping layer at the outer boundary as described by \citet{umeda_improved_2001}.
+The damping layer is placed near $r_\mathrm{max}$ in which the field values at
+every time step is multiplied by a masking function that depends on the radial
+position $r$:
+\begin{align}
+  % \label{eq:damping}
+  \mathbf{E}^{n+1} &= f_M(r) \left[ \mathbf{E}^i + c\Delta t\nabla \times \left( \alpha
+                     \mathbf{B}^{i+1} + \beta \mathbf{B}^i \right) - 4\pi
+                     \Delta t\mathbf{j}^{i+1/2} \right] \\
+  \mathbf{B}^{n+1} &= f_{M}(r) \left[ \mathbf{B}^i - c\Delta t\nabla \times \left(
+                     \alpha \mathbf{E}^{i+1} + \beta \mathbf{E}^i \right) \right]
+\end{align}
+and we adopt the masking function used in \citep{umeda_improved_2001}:
+\begin{equation}
+  \label{eq:masking-function}
+  f_M(r) =
+  \begin{cases}
+    \displaystyle 1, & \mathrm{for\ }r < r_D \\
+    \displaystyle 1 - \eta\left( \frac{r - r_D}{r_\mathrm{max} - r_D} \right)^2, & \mathrm{for\ }r \geq r_{D}
+  \end{cases}
+\end{equation}
+where $r_{D}$ is where the damping layer begins, and $\eta$ is a numerical
+coefficient that controls the effectiveness of the damping. In the simulations,
+the damping layer is usually chosen to be 10 to 15 cells, and $\eta$ is chosen
+to be small such that the characteristic skin depth of waves into the medium is
+similar to the damping layer thickness. In other words, the coefficient is
+chosen that the waves are damped slowly enough to not generate much reflection.
+In practice, the wave damping is very efficient, and wave reflection is very
+weak for all production runs.
+
+It is very common for PIC codes to implement a perfectly-matched layer (PML) as
+an absorbing boundary condition \citep{berenger_perfectly_1994}. We've also
+implemented it and compared it with the effectiveness of the simple damping
+layer. We found that the result is almost identical, but since the damping layer
+is more efficient in terms of computation and memory, we decided to keep this
+implementation.
+
+Particles streaming into the damping layer decouples from the field and are
+allowed to freely escape from the box. When they enter the guard cells located at
+the outer boundary, they are erased.
+
+
 
 % TODO: Finish boundary conditions
 
@@ -1206,15 +1260,16 @@ channel for producing highly energetic photons capable of converting into
 $e^{\pm}$ pairs is from resonant upscattering of background X-ray photons. The
 electron absorbs photons that have the energy to excite it from the lowest
 Landau level to the first excited level, and subsequently drop down to the
-lowest level, re-emitting the photon. The photon energy is boosted by a factor
-of $\gamma^2$ during this process.
+lowest level, re-emitting the photon. The photon energy in the lab frame is
+boosted by a factor of $\gamma^2$ during this process, similar to ordinary
+inverse Compton scattering.
 
 % However in magnetars where the magnetic field is much stronger, the energetic
 % photons mainly come from resonantly up scattered X-ray photons from either the
 % thermal emission from the surface of the star, or from synchrotron emission of
 % the plasma in the magnetic field.
 
-Aperture models both channels of high-energy photon emission with a threshold
+{\it Aperture} models both channels of high-energy photon emission with a threshold
 condition and an emission rate. For curvature radiation, we compute the local
 radius of curvature of the particle trajectory using
 \begin{equation}
@@ -1260,7 +1315,7 @@ electron/positron vanishes. $E_{B}$ is the energy of the first Landau level:
   E_{B} = \left( \frac{2B}{B_Q} + 1 \right)^{1/2}m_{e}c^2
 \end{equation}
 In the actual code, we use the angle-averaged version of equation
-\eqref{eq:resonant-emit-Eph}: \citep{beloborodov_mechanism_2013}
+\eqref{eq:resonant-emit-Eph} \citep{beloborodov_mechanism_2013}
 \begin{equation}
   \label{eq:average-Eph}
   E_\mathrm{ph} = \gamma m_{e}c^{2}\left( 1 - \frac{1}{1 + 2B/B_{Q}} \right)
@@ -1283,7 +1338,7 @@ and in the very narrow parameter range when this energy is greater than $(\gamma
 %   E_\mathrm{ph} > \frac{m_{e}c^2}{\sin\theta}
 % \end{equation}
 
-It is impossible for a photon to convert into an $e^{\pm}$ spontaneously due to
+It is impossible for a photon to convert into $e^{\pm}$ spontaneously due to
 inability to conserve both energy and momentum. There are two main channels for
 energetic photons to convert into an $e^{\pm}$ pair: through interaction with
 local $B$ field, or through collision of two energetic photons.
@@ -1307,40 +1362,43 @@ and magnetic conversion is prohibited. The only channel becomes
 $\gamma$-$\gamma$ collision. It is extremely difficult to compute the background
 target field for the high energy photons to collide with, since it is produced
 by both thermal emission from the star and synchrotron radiation from the
-particles in the magnetosphere. Instead of modeling the target field, we assume
-a completely random photon free-path:
+particles in the magnetosphere. Instead of calculating the target field, we
+assume a random photon free-path:
 \begin{equation}
   \label{eq:photon-free-path}
   \ell_\mathrm{ph} \sim \mathcal{N}(aR_{*}, (bR_{*})^2)
 \end{equation}
 where $\mathcal{N}(\mu, \sigma^2)$ denotes a normal distribution with mean $\mu$
-and variance $\sigma^2$, and $a$ and $b$ are parameters we choose to fit the
-particular simulation (see chapter \ref{chap:pulsar}). The normal distribution
-is truncated at $\ell_\mathrm{ph} = 0$ and any negative value is discarded.
-Every photon is produced with a free-path drawn from distribution
-\ref{eq:photon-free-path}, and if it is not converted magnetically or escapes
-the domain, then it is converted to a pair of $e^{\pm}$ at the end of its free
-path. The energy of the photon is evenly split to the resulting electron and
-positron, while the momenta of these particles are along the same direction as
-the original photon.
+and variance $\sigma^2$, and $a$ and $b$ are parameters we choose (see chapter
+\ref{chap:pulsar}). The normal distribution is truncated at $\ell_\mathrm{ph} =
+0$ and any negative value is discarded. Every photon is produced with a
+free-path drawn from distribution \ref{eq:photon-free-path}, and if it is not
+converted magnetically or escapes the domain, then it is converted to a pair of
+$e^{\pm}$ at the end of its free path. The energy of the photon is evenly shared
+by the resulting electron and positron, while the momenta of these particles are
+along the same direction as the original photon.
 
 \subsubsection{Synchrotron and general radiative loss}
 \label{sec:synchrotron-loss}
 
-When energetic particles gyrate in magnetic field they emit synchrotron
-radiation in the X-ray to soft gamma-ray band. Since the energy of these
-synchrotron photons is in general much less than $m_{e}c^{2}$, we do not track
-them explicitly. However, charged particles do lose energy to synchrotron
-radiation and it may affect the global dynamics. In Aperture we implemented a
-general radiative damping force to account for the synchrotron loss that is not
-explicitly tracked by photon production. The radiation power by a moving
-particle in an electromagnetic field is \citep[e.g.][]{cerutti_extreme_2012}:
+When energetic particles gyrate in a magnetic field they emit synchrotron
+radiation. Even when the synchrotron (or curvature) photons are not energetic
+enough to produce pairs, their emission can result in significant energy loss of
+particles, which may affect the global dynamics of plasma and fields.
+% in the X-ray to soft gamma-ray band. Since the energy of these
+% synchrotron photons is in general much less than $m_{e}c^{2}$, we do not track
+% them explicitly. However, charged particles do lose energy to synchrotron
+% radiation and it may affect the global dynamics.
+In Aperture we implemented a general radiative damping force to account for the
+synchrotron and curvature radiation loss that is not explicitly tracked by
+photon production. The radiation power by a moving particle in an
+electromagnetic field is \citep[see e.g.][]{longair_high_2011}:
 \begin{equation}
   \label{eq:rad-power}
   \mathcal{P}_\mathrm{rad} = \frac{2e^2}{3c^3}\gamma_{e}^{4}(a_{\perp}^2+\gamma_{e}^2a_{\parallel}^2)
 \end{equation}
 where $\perp$ and $\parallel$ are with respect to the direction of motion of the
-particle. The radiative damp force acting on the particles are taken to be
+particle. The radiative damping force acting on relativistic particles is given by:
 \begin{equation}
   \label{eq:rad-force}
   \mathbf{F}_\mathrm{rad} = -\frac{\mathcal{P}_\mathrm{rad}}{c^2}\mathbf{p}
@@ -1351,12 +1409,11 @@ particle. The radiative damp force acting on the particles are taken to be
 \subsubsection{Radiative drag due to resonant scattering}
 \label{sec:resonant-scattering}
 
-In the magnetosphere of magntars, resonant scattering plays a crucial role in
-the particle dynamics. The
-relativistic outflow of $e^{\pm}$ pairs is bathed in a background of X-ray
-photons that come from both the thermal emission from the star, and from the
-synchrotron emission of the flow itself. As the particles flow along the field
-lines, they sample different part of the photon spectrum.
+In the magnetospheres of magntars, resonant scattering plays a crucial role in
+the particle dynamics. The relativistic outflow of $e^{\pm}$ pairs is bathed in
+a background of X-ray photons that come from the thermal emission from the star;
+as the particles flow along the field lines, they sample different part of the
+photon spectrum.
 
 We simplify the problem by ignoring the contribution to the X-ray spectrum from
 the flow itself, and only consider thermal photons from the star. This way one
@@ -1367,14 +1424,15 @@ The central blackbody radiation on average applies a force on the particles
   \label{eq:resonant-drag}
   \mathcal{F}(\beta) = \frac{\alpha^2R_{*}^2}{4r^2}\frac{m_{e}c^2}{r_{e}}\Theta^3\gamma g(y)(\beta_{*}-\beta)
 \end{equation}
-where $\beta_{*} = \mu = B_r/B$, $\Theta = kT/m_{e}c^2$ and
+where $\beta_{*} = \mu = B_r/B$, $\Theta = kT/m_{e}c^2$ is the surface
+temperature in units of electron rest mass, and
 \begin{equation}
   \label{eq:y-and-gy}
   g(y) = \frac{y^3}{e^y - 1},\quad y = \frac{\hbar\omega_\mathrm{res}}{kT} = \frac{B/B_Q}{\gamma(1 - \beta\mu)\Theta}
 \end{equation}
 
 The effect of the force \eqref{eq:resonant-drag} is pushing the flow velocity
-towards the ``radiation locked flow'' velocity $\beta_{*}$. Numerically we
+towards the ``radiatively locked flow'' velocity $\beta_{*}$. Numerically we
 implement the force with two parameters:
 \begin{equation}
   \label{eq:resonant-drag-numerical}
@@ -1383,15 +1441,15 @@ implement the force with two parameters:
 and the direction of this force is along the $B$ field. The two numerical
 parameters are $\mathcal{D}$ and $\Theta$. The former determines the overall
 strength of the drag, and the second determines which part of the thermal
-spectrum gets interacting with the particles. Depending on these two parameters,
-a certain part of the field line bundle will have particles stopping at the
+spectrum interacts with the particles. Depending on these two parameters, a
+certain part of the field line bundle will have particles stopping at the
 equator since $\beta_{*} = \mu = 0$ at the equator. In the inner magnetosphere
 where $B$ field is too strong ($B \gtrsim B_{Q}$) only very high energy
 particles resonantly scatter thermal photons, and the drag is not enough to stop
 particles near the equator. The scenario described in chapter
-\ref{chap:magnetar} can be thought of to be effectively describing this region.
-For very extended field lines the drag is too weak since it scales with
-$r^{-2}$, and particles are not stopped at the equator either.
+\ref{chap:magnetar} applies to this region. For very extended field lines the
+drag is too weak since it scales with $r^{-2}$, and particles are not stopped at
+the equator either.
 
 % TODO: expand a bit this section
 
@@ -1401,15 +1459,17 @@ $r^{-2}$, and particles are not stopped at the equator either.
 \subsection{Units}
 \label{sec:pic-units}
 
-A computer simulation is ignorant of the physical units of the dynamic
-variables, therefore one should choose a unit for all physical quantities, such
-that in the code all quantities are pure numbers. It is to our benefit to choose
-a unit system that is most natural to the problem and in which the dynamic
-equations take the simplest dimensionless form. We try to establish that in this
-section.
+% A computer simulation is ignorant of the physical units of the dynamic
+% variables, therefore one should choose a unit for all physical quantities, such
+% that in the code all quantities are pure numbers.
+In a computer simulation it is convenient to deal with dimensionless quantities,
+expressed in some units of choice. It is to our benefit to choose a unit system
+that is most natural to the problem and in which the dynamic equations take the
+simplest dimensionless form. Our choice of units is described in this section.
+This process also highlights the relevant scales of the problem.
 
 The primary goal of the code is to simulate an isolated neutron star, therefore
-the natural length scale is the stellar radius, and there is no other length
+the natural length scale is the stellar radius $R_{*}$, and there is no other length
 scale {\it a priori}. Naturally, the time scale of the problem would be the
 light-crossing time of the star. Therefore we define the dimensionless length
 and time using the following equations (in all the following equations, a tilde
@@ -1417,20 +1477,24 @@ on the symbol means the dimensionless version):
 \begin{equation}
   r = \tilde{r}R_{*},\quad t = \tilde{t}\frac{R_{*}}{c},\quad \omega = \tilde{\omega}\frac{c}{R_{*}}
 \end{equation}
-The radius $r = 1$ shows up mainly as the lower boundary of most of our
+The radius $\tilde{r} = 1$ shows up mainly as the lower boundary of most of our
 simulations.
 
-Once we add rotation of the star and magnetic field, two important frequencies
+Once we add rotation of the star and a magnetic field, two important frequencies
 show up in this problem that can then be written in dimensionless units:
 \begin{equation}
   \tilde{\Omega} = \frac{\Omega R_{*}}{c},\qquad \tilde{\omega}_B = \frac{\omega_BR_{*}}{c} = \frac{e B_0R_{*}}{mc^2}
 \end{equation}
-where $\Omega$ is the rotation angular frequency, equal to $2\pi / P$ where $P$ is the period of rotation, and $B_0$ is the surface magnetic field at the pole. Given a pulsar with certain radius, these two are the dimensionless parameters that will govern the simulation, and hence the physical behavior of the system.
+where $m$ is the electron rest mass, $\Omega$ is the rotation angular frequency,
+equal to $2\pi / P$ where $P$ is the period of rotation, and $B_0$ is the
+surface magnetic field at the pole. Given a pulsar with certain radius, these
+two are the dimensionless parameters that will govern the simulation, and hence
+the physical behavior of the system.
 
-We want to define a unit for charge density. This can be done by relating the
-plasma frequency, a third frequency in the problem, with the local corotation
-charge density $\rho_\mathrm{GJ}$. We define the reference plasma frequency at every
-point as
+Next, we need to define a unit for charge density. This can be done by relating
+the plasma frequency, a third frequency in the problem, with the local
+corotation charge density $\rho_\mathrm{GJ} = -\bOm\cdot \mathbf{B}/2\pi c$. We
+define the reference plasma frequency at every point as
 \begin{equation}
   \omega_p^2 = \frac{4\pi \rho_\mathrm{GJ}e}{m}
 \end{equation}
@@ -1438,13 +1502,13 @@ then we can define a version of dimensionless Goldreich-Julian density, or any c
 \begin{equation}
   \rho_\mathrm{GJ} = \frac{m \tilde{\omega}_p^2 c^2}{4\pi e R_{*}^2} = \tilde{\rho}_\mathrm{GJ} \frac{mc^2}{4\pi eR_{*}^2}
 \end{equation}
-Note the real plasma frequency will depend on the actual plasma number density
-at the point of interest and will in general be different from what we call
-$\omega_p$ above. However, it is still useful to determine such a characteristic
-plasma frequency for reference. What the above equation says is that, by
-choosing these units we make $\tilde{\rho} = \tilde{\omega}_p^2$. Especially,
-there is a simple relationship between the three characteristic frequencies in
-the problem, if we define $\rho_{GJ} = \Omega B_0 / 2\pi c$:
+Note that the real plasma frequency will depend on the actual plasma number
+density at the point of interest and will in general be different from what we
+call $\omega_p$ above. However, it is still useful to determine such a
+characteristic plasma frequency for reference. What the above equation says is
+that, by choosing these units we make $\tilde{\rho} = \tilde{\omega}_p^2$.
+Especially, there is a simple relationship between the three characteristic
+frequencies in the problem, if we define $\rho_{GJ} = \Omega B_0 / 2\pi c$:
 \begin{equation}
   \frac{m \omega_p^2}{4\pi e} = \frac{\Omega B_0}{2\pi c} \quad \Longrightarrow \quad \tilde{\omega}_p^2 = 2\tilde{\Omega} \tilde{\omega}_B
 \end{equation}
@@ -1461,41 +1525,44 @@ and similarly
 \begin{equation}
     B = \tilde{B}\frac{m c^2}{e R_{*}}
 \end{equation}
-Note that this means $B$ and $\omega_B$ has the same dimensionless form,
+Note that this means that $B$ and $\omega_B$ have the same dimensionless form,
 therefore $\tilde{B}_0 = \tilde{\omega}_B$.
 
-Under these units, Maxwell equations look like
+In these units, Maxwell equations look as follows:
 \begin{equation}
   \partial_t \tilde{\mathbf{E}} = \tilde{\nabla}\times \tilde{\mathbf{B}} - \tilde{\mathbf{j}},\quad \partial_t \tilde{\mathbf{B}} = - \tilde{\nabla}\times \tilde{\mathbf{E}}
 \end{equation}
-and the particle equations of motion look like
+and the particle equations of motion become
 \begin{equation}
   \frac{d \tilde{\mathbf{p}}}{d \tilde{t}} = \tilde{\mathbf{E}},\quad \frac{d \tilde{\mathbf{r}}}{d \tilde{t}} = \tilde{\mathbf{u}} = \frac{\tilde{p}}{\sqrt{1 + \tilde{p}^2}} \tilde{\mathbf{p}}
 \end{equation}
+Note that all numerical coefficients disappear.
 
-Up to now, all the numerical parameters we have introduced are $\tilde{\Omega}$
-and $\tilde{\omega}_B$, and they specify all the physics of the system. For
-simulation purposes, one needs to rescale both of these parameters to bring the
-size of the system into computable regime. However, one more numerical parameter
-is required for interpolating between the particle charge and the charge density
-on the grid, namely the charge of an individual macro particle. Since in PIC
-there is no way to simulate realistic plasma of order $10^{20+}$ particles, one
-needs to use one single macro particle to represent a collection of physical
-particles. A macro particle has the same charge-to-mass ratio as a physical
-particle, but has more charge (therefore mass). The way we choose the charge per
-particle is to normalized it such that our characteristic charge density
-$\rho_\mathrm{GJ}$ would correspond to a certain manageable number of particles $N_p$
-per cell.
+Up to now, the only numerical parameters we have introduced are $\tilde{\Omega}$
+and $\tilde{\omega}_B$, and they completely specify the problem. For simulation
+purposes, one needs to rescale both of these parameters to bring the size of the
+system into computable regime. However, one more numerical parameter is required
+for interpolating between the particle charge and the charge density on the
+grid, namely the charge of an individual macro particle. Since in PIC there is
+no way to simulate realistic plasma of order $10^{20+}$ particles, one needs to
+use one single macro particle to represent a collection of physical particles. A
+macro particle has the same charge-to-mass ratio as a physical particle. The way
+we choose the charge per particle is to normalize it so that our characteristic
+charge density $\rho_\mathrm{GJ}$ would correspond to a certain manageable
+number of particles $N_p$ per grid cell.
 
 The way we compute charge density is to iterate over all particles and deposit
 onto a single cell:
 \begin{equation}
-    \rho_c = \frac{\sum e_p W(\mathbf{r}_p, \mathbf{r}_c)}{\Delta V}
+    \rho_c = \frac{\sum e S(\mathbf{r}_p, \mathbf{r}_c)}{\Delta V}
 \end{equation}
-where $e_p$ is the charge per macro particle, $S$ is a shape factor depending on
+where $e$ is the charge per macro particle, $S$ is a shape factor depending on
 particle position $\mathbf{r}_p$ and grid point position $\mathbf{r}_c$, and
-$\Delta V$ is the size of the cell. Assuming every particle has the same charge
-$e$, and there are $N_p$ particles in the cell, up to a form factor, we have
+$\Delta V$ is the cell volume. In 2.5D simulations, $\Delta V$ involves the
+arbitrary size of the third dimension which is the symmetric direction, so we
+usually take the size in that direction to be unity. Assuming every particle has
+the same charge $e$, and there are $N_p$ particles in the cell, up to a form
+factor, we have
 \begin{equation}
     \rho = \frac{e N_p}{\Delta V} = \frac{e N_p}{\Delta \tilde{V} R_{*}^{3}} = \tilde{\rho}\frac{mc^2}{4\pi eR_{*}^2}, \quad \tilde{\rho} = \frac{\tilde{e}N_p}{\Delta \tilde{V}}
 \end{equation}
@@ -1505,8 +1572,8 @@ so we can identify the dimensionless charge per particle
 \end{equation}
 Note that $e$ appears twice on the right hand side. This is because we treat
 $e/m$ as a physical constant, therefore $4\pi e / mc^2R_{*}$ is a physical
-constant which is fixed as soon as we choose the physical size of the star. We'd
-like to choose $\tilde{e}$ such that $N_p$ particles per cell corresponds to the
+constant which is fixed as soon as we choose the physical size of the star. We would
+like to choose $\tilde{e}$ so that $N_p$ particles per cell corresponds to the
 characteristic charge density $\rho_\mathrm{GJ}$:
 \begin{equation}
     \tilde{\rho} \sim \frac{\tilde{e} N_p}{\Delta \tilde{V}} \sim \tilde{\rho}_\mathrm{GJ} \quad \Longrightarrow \quad \tilde{e} = \frac{2\tilde{\Omega} \tilde{B}\Delta \tilde{V}}{N_p}
@@ -1516,9 +1583,9 @@ One technical aspect about the numerical value $\tilde{e}$ in the code is that,
 every time we use $\tilde{e}$, we actually use the combination $\tilde{e}/\Delta
 \tilde{V}$, which shows up in charge/current deposition. Therefore it is not
 necessary to carry $\Delta \tilde{V}$ around. We simply remove it from the
-definition of $\tilde{e}$, and don't divide by $\Delta \tilde{V}$. Also a factor
-of 2 is not that important, so in the code the actual value of $\tilde{e}$ is
-taken to be
+definition of $\tilde{e}$, and do not divide by $\Delta \tilde{V}$. Also a
+factor of 2 is not that important, so in the code the actual value of
+$\tilde{e}$ is taken to be
 \begin{equation}
     \tilde{e} = \frac{\tilde{\Omega} \tilde{B}_0}{N_{p}}
 \end{equation}
@@ -1526,8 +1593,8 @@ taken to be
 To summarize, the numerical parameters in our simulation are $\tilde{\Omega}$,
 $\tilde{\omega}_B$ (or equivalently $\tilde{B}_{0}$), and $\tilde{e}$ (or
 equivalently $N_p$ after specifying cell size). This completely specifies the
-computational problem. In order to translate this numerical simulation to
-reality, we need to specify $R_{*}$ in physical units (e.g.\ $10^6\,
+computational problem. In order to translate the numerical simulation to a real
+magnetosphere, we need to specify $R_{*}$ in physical units (e.g.\ $10^6\,
 \mathrm{cm}$), and multiply the dimensionless units by their physical units to
 get the realistic values. The dimensionful units are summarized below (subscript
 $*$ means that these are the dimensionful units for the physical quantity in
@@ -1686,10 +1753,10 @@ The CPU version of Aperture has been deployed on different platforms and shows
 excellent scaling properties. It has been run on a local workstation with 12
 cores, the Habanero cluster at Columbia on $\sim 250$ cores, and the NASA
 Pleiades cluster on more than $10,000$ cores. The code can reliably achieve a
-stable performance of $1.25$ million particles per core per second per timestep
-(figure ).
+stable performance of $1.25$ million particles per core per second per timestep.
+% (figure ).
 
-INSERT A PLOT SHOWING SCALING PROPERTIES
+% INSERT A PLOT SHOWING SCALING PROPERTIES
 
 % Architecture of the code, each component is an independent class. Modularity.
 % Special choices for GPU. Esirkepov deposit. High order shape functions and
@@ -1697,36 +1764,169 @@ INSERT A PLOT SHOWING SCALING PROPERTIES
 
 % Parallelization considerations. Performance.
 
-However, one of the challenges for achieving perfect scaling performance is load
-balancing between nodes. Since the performance is basically determined by the
-number of particles on the node, the node with the most particles is going to be
-slowest, and be the lowest common denominator for the whole simulation. In the
-problems that Aperture was designed to tackle, pair creation is an important
-feature, therefore it is very easy for some nodes to generate way more particles
-than others. Another factor is that due to spherical geometry and the way the
-grid is spaced uniformly in $\log r$ and $\theta$, cells further away from the
-star scale up in size as $r^{2}$ ($r^{3}$ in 3D). Therefore the nodes close to
-the outer boundary will be naturally more loaded.
+% However, one of the challenges for achieving perfect scaling performance is load
+% balancing between nodes. Since the performance is basically determined by the
+% number of particles on the node, the node with the most particles is going to be
+% slowest, and become the lowest common denominator for the whole simulation. In
+% the problems that Aperture was designed to tackle, pair creation is an important
+% feature, therefore it is very easy for some nodes to generate way more particles
+% than others. Another factor is that due to spherical geometry and the way the
+% grid is spaced uniformly in $\log r$ and $\theta$, cells further away from the
+% star scale up in size as $r^{2}$ ($r^{3}$ in 3D). Therefore the nodes close to
+% the outer boundary will be naturally more loaded.
 
 \section{Test Problems}
 \label{sec:test-problems}
 
 In this section we present some well-known test cases to demonstrate the
-correctness of the code.
+correctness of the code. Due to the coordinate flexibility of Aperture, we would
+like to test its correctness in multiple different coordinate systems. The
+following three test cases are in Cartesian, cylindrical, and spherical
+coordinates respectively, in the hope to represent the three main coordinate
+systems that we support in the code.
 
-\subsection{Two-stream instability}
+\subsection{Relativistic Two-stream instability}
 \label{sec:test-two-stream}
 
-The two-stream instability is setup with two particle species counter streaming
-against each other.
+The first test is relativistic two-stream instability in 2D. We consider a
+plasma beam with Lorentz factor of $\gamma_{b}$ and density $n_{b}$ passing
+through a background with density $n_{p}$. The maximum growth rate of the
+unstable mode is given by \citep[see e.g.][]{bret_collective_2004}:
+\begin{equation}
+  \label{eq:bret-2-stream}
+  \delta_\mathrm{TSI} = \frac{\sqrt{3}}{2^{4/3}}\alpha^{1/3}/\gamma_{b}
+\end{equation}
+where $\alpha$ is the ratio of the number densities of the beam and background
+$\alpha = n_{b}/n_{p}$.
 
-\subsection{Weibel instability}
-\label{sec:test-weibel}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{pics/chap1/2stream.eps}
+  \caption[Growth of two stream instability vs. theoretical value.]{Growth of
+    two stream instability vs. theoretical value. Theoretical growth rate is
+    $\delta_\mathrm{TSI}\approx 0.1375$ from equation \eqref{eq:bret-2-stream}.
+    The growth saturates at around $t\omega_{p}\sim 130$.}
+  \label{fig:test-2stream}
+\end{figure}
 
-\subsection{Dispersion relations}
+We set up a neutral electron positron beam passing through a neutral electron
+positron plasma background, with density ratio $\alpha = 1$ and initial beam
+Lorentz factor $\gamma_{b} = 5.0$. We use a $512\times 256$ box with 512 cells
+in the beam direction ($z$ direction in the $x$-$z$ plane), with roughly 5 cells
+per plasma scale. We assume periodic boundary conditions on all boundaries.
+Figure \ref{fig:test-2stream} shows the agreement of numerical growth of the
+electric field energy with the prediction, up till saturation.
+
+\subsection{Cylindrical Waveguide}
 \label{sec:test-dispersion}
 
-Consider plasma trapped in a finite cylinder with length $L$.
+Consider a cylindrical waveguide with radius $r_{c}$ and periodic boundary
+conditions at both ends, the system can be approximated as a long cylinder in
+the limit of $\mathbf{B}_0\to \infty$, except with discretized $k_{z}$. The side
+boundary of the cylinder is grounded, so $\Phi_{e} = 0$ at the boundary, which
+also implies that $E_{\parallel} = 0$ on the boundary. With
+these assumptions, the set of Maxwell equations can be solved analytically
+\citep[see e.g.][]{swanson_plasma_2003}.
+%(see e.g. Swanson 2003)
+This calculation was also done in the context of pulsar flux tubes by
+\citet{arons_wave_1986}, where they also discussed the $B \to \infty$ limit. We
+repeat the calculation below and compare it with the numerical result obtained
+in the simulation.
+
+The radial solutions are lowest Bessel functions $J_0$ and
+$J_1$, while the longitudinal solutions are simply plane waves:
+\begin{subequations}
+    \label{eqn:cyl-waveguide}
+    \begin{align}
+        E_z &= \sum_{n = 0}^\infty C_nJ_0(k_\perp r)e^{ik_zz - i\omega t} \\
+        E_r &= \frac{ik_z}{\epsilon - k_z^2}\partial_r E_z = \sum_{n=0}^\infty \frac{ik_z k_\perp c^2}{\omega^2 - c^2k_z^2}C_nJ_1(k_\perp r)e^{ik_zz - i\omega t} \\
+        B_\phi &= \frac{ic}{\omega}(\partial_r E_z - \partial_z E_r) = \sum_{n=0}^\infty \frac{i\omega c k_\perp}{\omega^2 - c^2k_z^2}C_n J_1(k_\perp r)e^{ik_zz - i\omega t} \\
+        j_z &= \frac{i\omega_p^2}{4\pi \omega}E_z %= \sum_{n=0}^{\infty} \frac{i\omega_p^2}{4\pi \omega}C_n J_0(k_\perp r)e^{ik_zz - i\omega t}
+    \end{align}
+\end{subequations}
+where $k_\perp$ is determined by the radial boundary condition that
+$J_0(k_\perp r_\mathrm{c}) = 0$, and $n$ sums over the zeros of the
+Bessel function. The fact that $E_z$ and $j_z$ are proportional to
+$J_0$ while $B_\phi$ and $E_r$ are proportional to $J_1$ is determined
+by our boundary condition that parallel electric field is zero at the
+side of the cylinder. We have well-defined waves propagating along the
+$z$ direction and the dispersion relation between $\omega$ and $k_z$
+is:
+\begin{equation}
+    \left( \frac{\omega}{\omega_p} \right)^2 = \frac{1}{2}\left[ \left( 1 + k_\perp^2\lambda_p^2 + k_z^2\lambda_p^2 \right) \pm \sqrt{\left( 1 + k_\perp^2\lambda_p^2 + k_z^2\lambda_p^2 \right)^2 - 4k_z^2\lambda_p^2} \right]
+    \label{eqn:disp_relation}
+\end{equation}
+This solution has two branches, as shown in figure~\ref{fig:disp_relation}.
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}[domain=0:3.5,smooth,scale=1.8]
+        \draw[->,thick] (0,0) -- (4,0) node[below] {$k_z$};
+        \draw[->,thick] (0,0) -- (0,4) node[left] {$\omega$};
+        \draw plot[id=dispplot1] function{sqrt(0.5*(2 + x*x + sqrt((2 + x*x)*(2 + x*x) - 4*(x*x))))};
+        \node [label=below:$E_z\gg B_{\phi}\,E_r$] at (3,1) {};
+        \draw plot[id=dispplot2] function{sqrt(0.5*(2 + x*x - sqrt((2 + x*x)*(2 + x*x) - 4*(x*x))))};
+        \node [label=above:$E_z\ll B_{\phi}\,E_r$] at (2.8,3.4) {};
+        \node [label=left:$\sqrt{\omega_p^2 + c^2k_\perp^2}$] at (0,1.414) {};
+        \draw[dashed] (0,0) -- (3.7,3.7) node[right] {$\omega/k_z = c$};
+        \draw[dashed] (0,1) node[left] {$\omega_p$} -- (3.7,1);
+        \draw[dashed] (0,0) -- (3.7,2.616) node[right] {$\displaystyle\omega/k_z = \frac{\omega_pc}{\sqrt{\omega_p^2 + c^2k_\perp^2}}$};
+    \end{tikzpicture}
+    \caption{Dispersion relation in the $B_z \to \infty$ limit}
+    \label{fig:disp_relation}
+\end{figure}
+% The lower branch describes the Alfv\'en waves while the upper branch
+% are electromagnetic waves.
+For small $k$, the lower branch describes Alfv\'en waves, which correspond to
+low-frequency oscillations of the magnetic field. The polarization vector is
+dominated by $B_\phi$ and $E_r$. The upper branch represents Langmuir
+oscillations whose polarization vector is dominated by $E_z$. For larger $k$,
+the two branches change roles. The upper branch at higher $k$ corresponds to
+ordinary EM waves with polarization vector along $E_r$ and phase speed close to
+$c$, while the lower branch corresponds to plasma oscillations with frequency
+approaching $\omega\sim \omega_p$.
+
+Since $k_\perp$ determines the shape and positions of the two branches of the
+dispersion relation, we need to select a particular $k_\perp$ in order to see a
+well-defined dispersion curve. In order to accomplish this, we start with a
+linear combination of normal modes with a wide range of $k_z$ that lie on both
+branches and let them evolve in time. The initial state is composed from normal
+mode exact solutions, so they should remain as normal modes after time
+evolution. Periodic boundary condition is assumed at both lower and upper
+boundaries. We used the 20th zero of the Bessel function $J_0$ to better
+separate the two branches. The numerical dispersion relation is obtained by
+taking the above initial condition and let it evolve for a light-crossing time
+of the box. Then we take the real part of the 2D Fourier transform of the
+electric field and magnetic field amplitude along a fixed $r$ as a function of
+$z$ and $t$. The resolution is 1024 by 1024 with 10 cells in a single
+$\lambda_p$ in the $z$ direction, and the time step is taken to be
+$0.02\omega_p^{-1}$. Result is as shown in Figure~\ref{fig:disp_numerical}.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{pics/chap1/disp.png}
+    \caption[Numerical dispersion relation for cylindrical waveguide.]{Numerical
+      dispersion relation for a cylindrical waveguide. 2D plot shows the real
+      part of the discrete Fourier transform of $E_z(z,t)$ at $r =
+      1/4r_\mathrm{c}$. White dotted curve shows the theoretical dispersion
+      relation calculated from Equation~ \eqref{eqn:disp_relation}.}
+    \label{fig:disp_numerical}
+\end{figure}
+
+The lower branch of the numerical dispersion relation curves down with
+respect to the theoretical line at high $k$. This is due to discretization on the
+grid which creates an effective dispersion relation that deviates from
+the theoretical one at small wavelengths. This can be seen simply from taking numerical derivatives of the simple solution $e^{ikx}$. The derivative, instead of $ike^{ikx}$, will look like
+\begin{equation}
+    \frac{e^{ik(x+\Delta x)} - e^{ik(x-\Delta x)}}{2\Delta x} = i\frac{\sin(k\Delta x)}{\Delta x} e^{ikx}
+\end{equation}
+This modifies the behavior of the dispersion relation when $k\Delta x \sim 1$,
+and reduces the phase velocity of the waves at small wavelengths. It leads to
+numerical Cherenkov radiation which is produced when particles travel faster
+than the speed of the waves inside the medium. The wavelengths of this kind of
+numerical radiation is always comparable to the grid scale, therefore can be
+damped from the semi-implicit scheme we employed as described in
+section~\ref{sec:fd-maxwell}. In practice, we don't observe strong sub-plasma
+scale oscillations which are characteristic of numerical Cherenkov radiation.
+
 
 \subsection{Monopole magnetosphere}
 \label{sec:test-monopole}
@@ -1739,13 +1939,55 @@ toroidal field is proportional to the poloidal field:
   B_{\phi} = -\frac{\Omega r\sin\theta}{c} B_{p}
 \end{equation}
 The corotating electric field defined by $\mathbf{E} =
--\mathbf{v}_\mathrm{rot}\times \mathbf{B}$ only has a $\theta$ component and it
+-\mathbf{v}_\mathrm{rot}\times \mathbf{B}/c$ only has a $\theta$ component and it
 is equal to $B_{\phi}$ in magnitude.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{pics/chap1/monopole-Bphi.png}
+  \caption[Michel monopole solution.]{Michel monopole solution. Color shows the
+    ratio of toroidal vs poloidal magnetic field $B_{\phi}/B_{p}$, which should
+    be equal to $-\Omega r\sin\theta /c$. The ratio becomes -1 at the light
+    cylinder, which is $r\sin\theta = 6R_{*}$ in this simulation, marked with
+    a white dashed line. Purple lines are the poloidal field lines, which remain
+    monopolar.}
+  \label{fig:monopole-Bphi}
+\end{figure}
 
 We attempt to replicate this solution using PIC simulation. We found that field
 configuration is identical to the analytic solution given above, with a
 deviation near the stellar surface which consists of a parallel electric field
-that accelerates particles to speed close to $c$.
+that accelerates particles to speed close to $c$. The simulation is run in
+log-spherical coordinates with resolution $512\times 512$ in $\log r$ and
+$\theta$. Figure \ref{fig:monopole-Bphi} shows the solution for $B_{\phi}$.
+
+However, the magnetosphere cannot be force-free everywhere, as plasma is
+injected at the stellar surface with velocity much smaller than $c$, and
+particles have finite inertia. An acceleration process is needed to accelerate
+the injected particles to speeds close to $c$. In a later paper by
+\citet{michel_rotating_1974}, he derived the acceleration profile for the
+space-charge limited flow, with terminal Lorentz factor $\gamma_{0}\to
+\sigma^{1/2}$, where $\sigma$ is the magnetization defined as
+$\omega_{B}R_{*}^2/\Omega R_\mathrm{LC}^2$. The particle acceleration is given
+by the equation
+\begin{equation}
+  \label{eq:michel-accel}
+  \frac{d}{dr}\left( r^2\frac{d\gamma}{dr} \right) - 2(\gamma - \gamma_0) = 2\sigma(\beta_0 - \beta)/\beta_0
+\end{equation}
+with an overall latitude dependence in the form of $\cos\theta$. Our simulation
+shows also that $\gamma_0\sim \sigma^{1/2}$. In addition, the acceleration
+profile follows the Michel solution as well (figure
+\ref{fig:monopole-accel}). %TODO: add plot.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{pics/chap1/monopole-accel.png}
+  \caption[Acceleration of charge-separated flow for a rotating magnetic
+  monopole.]{Acceleration of charge-separated flow for a rotating magnetic
+    monopole. The numerical curve matches the Michel solution fairly well,
+    especially at $\theta = 45^{\circ}$.}
+  \label{fig:monopole-accel}
+\end{figure}
 
 % This section we present some tests that show the validity of the
 % code, in several coordinate systems, and in several physical scenarios
@@ -1767,10 +2009,38 @@ relatively quickly on a small cost-efficient computer/cluster. In the following
 chapters we will explore what can be done with this tool to further our
 understanding of the magnetosphere of neutron stars.
 
-With the help of Rui Hu, the Aperture code is still quickly evolving. Explicit
-vectorization is being added to increase the performance at certain bottlenecks
-by up to a factor of 4. A hybrid parallelization scheme is being implemented
-which alleviates one of the biggest performance obstacles: load balancing.
+Aperture is not the top performing code in the market at the moment of writing.
+The VPIC code for example, can push 10 million particles per second per core.
+Load balancing issue further exacerbates the performance problem, since pair
+creation naturally leads to some domain patches having many more particles than
+others, thus becoming the lowest denominator for speed. An extreme scenario
+which arose in one of our simulations was that a handful of patches had more
+than 80\% of the particles in the whole simulation box, in which case the
+simulation slows down to a crawl while most of the nodes are almost idling
+except for the few most loaded cores.
+
+There is no universal way around this load balancing issue, since it is inherent
+to all PIC codes. Some like TRISTAN-MP implements dynamic rescaling of domain
+patches to shrink the loaded patches and grow the idling patches in hope of
+balancing out, but it does not work well with extreme particle density contrast.
+A way that we implemented in Aperture is to annihilate $e^{\pm}$ pairs, getting
+rid of excess electrons and positrons in pairs when the total number of
+particles in a cell exceeds some limit. It helps dramatically with pulsar
+simulations where the current sheet contains way more particles than the
+surrounding.
+
+With the help of Rui Hu, another hybrid parallelization scheme is being
+implemented which reduce the total number of domain patches, but the particles
+residing in those patches can by dynamically offloaded to other cores to process
+the particle push and current deposition. Since particle number is the main
+bottleneck, this scheme in theory can achieve near perfect parallel scaling, and
+accelerate simulations like pulsar magnetosphere by a factor of 10 or more. A
+complete vectorization of the code is also being developed, potentially can
+increase the raw performance by a factor of 2 to 4.
+
+With the treatment of radiative transfer, the Aperture code can be used not only
+for magnetospheric problems but also for reconnection problems where plasma
+interaction with radiation field is important, e.g.\ in black hole corona.
 
 % Local Variables:
 % TeX-master: "../thesis"

@@ -10,20 +10,20 @@
 \section{The GPU Architecture}
 \label{sec:gpu-arch}
 
-In the recent decade we saw the rise of GPUs or Graphics Processing Units as an
-alternative way to carry out computations. GPUs are originally designed
-specifically for intensive floating point calculations that are very common in
-video games and 3D rendering. For these applications, typically the goal is to
-compute the color of a pixel on the screen, where each pixel is relatively
-independent from others. In order to compute millions of pixels every frame and
-keep up with more than 60 frames per second, GPUs are designed to be massive
-parallel machines. A modern GPU typically has hundreds to thousands of cores,
-compared to up to less than 20 cores in a top-of-the line CPU. In terms of raw
-floating point operations per second, a single modern GPU can break 5 TetraFLOPs
-per second which not that many years ago was only achievable by supercomputers.
-In addition, GPU comes with on-board memory which has up to 5-6 times the
-bandwidth of ordinary DRAM, which further improves the computation output
-especially for memory bound computation.
+In the recent decade we saw the rise of Graphics Processing Units (GPUs) as an
+alternative way to carry out general purpose computations. GPUs are originally
+designed specifically for intensive floating point calculations that are very
+common in video games and 3D rendering. For these applications, typically the
+goal is to compute the color of a pixel on the screen, where each pixel is
+relatively independent from others. In order to compute millions of pixels every
+frame and keep up with more than 60 frames per second, GPUs are designed to be
+massive parallel machines. A modern GPU typically has hundreds to thousands of
+cores, compared to up to less than 20 cores in a top-of-the line CPU. In terms
+of raw floating point operations per second, a single modern GPU can break 5
+TetraFLOPs per second which not that many years ago was only achievable by
+supercomputers. In addition, the GPU on-board memory has usually 5-6 times more
+bandwidth than the ordinary DRAM, which further improves the computation throughput
+especially for memory bound codes.
 
 However, the many cores of the modern GPU come at a price, as each is less
 competent than a core of an equivalent CPU. The GPU cores are organized into
@@ -106,20 +106,46 @@ different levels of memory accessible to a program forms a hierarchy in terms of
 speed and latency. The system RAM is the slowest, since every access from the
 GPU need to go through the PCIe bus, which has a latency of $\sim 1000$ cycles
 and a bandwidth of only a fraction of the system RAM bandwidth. The on board GPU
-memory\footnote{The on board GPU memory is called ``global memory'' in CUDA.}
-does not suffer from this issue, and due to design its bandwidth is much higher
-than the system RAM, however it still suffers from very high latency: an access
-to the GPU main memory requires $\sim 200$ clock cycles. A faster but very
-limited memory space is the L1 cache/shared memory as mentioned above. An access
-to the shared memory only has latency of a few clock cycles, and multiple
-threads reading the same address can be done in a single operation.
-Figure % TODO: figure
+memory (known as {\it global memory} in CUDA) does not suffer from this issue,
+and due to design its bandwidth is much higher than the system RAM, however it
+still suffers from very high latency: an access to the GPU main memory requires
+$\sim 200$ clock cycles. A faster but very limited memory space is the L1
+cache/shared memory as mentioned above. An access to the shared memory only has
+latency of a few clock cycles, and multiple threads reading the same address can
+be done in a single operation. Figure \ref{fig:gpu-memory}% TODO: figure
 shows the GPU memory hierarchy and the perspective memory bandwidth/latency.
 
 \begin{figure}[h]
   \centering
-
-  \caption[Memory hierarchy of Nvidia GPUs.]{Memory hierarchy of Nvidia GPUs.}
+  \begin{tikzpicture}
+    \draw[fill=blue!10] (0,0) rectangle (10, 6);
+    \draw[fill=blue!20] (0,-3) rectangle (10, -1.5);
+    \node at (5.0,-2.25) {System RAM};
+    \draw[fill=blue!30] (0.5,0.5) rectangle (9.5, 1.5);
+    \node at (5,1.0) {Global Memory};
+    \draw[->,thick] (2,-1.5) -- (2,0.5);
+    \draw[->,thick] (2.5,0.5) -- node[below right] {PCIe Bus, $\sim 10$GB/s} (2.5,-1.5);
+    \draw[fill=blue!20] (0.5,2.75) rectangle (4.75, 5.0);
+    \draw[fill=blue!30] (0.75,3) rectangle (4.5,4.0);
+    \node at (2.75,3.5) {Shared Memory};
+    \node at (2.0,4.5) {Thread block};
+    \node at (1.0,5.5) {GPU};
+    \draw[->,thick] (1.0,1.5) -- (1.0,3.0);
+    \draw[->,thick] (1.5,3.0) -- node[right] {$\sim 100$GB/s} (1.5,1.5);
+    \begin{scope}[xshift=4.75cm]
+      \draw[fill=blue!20] (0.5,2.75) rectangle (4.75, 5.0);
+      \draw[fill=blue!30] (0.75,3) rectangle (4.5,4.0);
+      \node at (2.75,3.5) {Shared Memory};
+      \node at (2.0,4.5) {Thread block};
+      \draw[->,thick] (1.0,1.5) -- (1.0,3.0);
+      \draw[->,thick] (1.5,3.0) -- (1.5,1.5);
+    \end{scope}
+  \end{tikzpicture}
+  \caption[Memory hierarchy of Nvidia GPUs.]{Memory hierarchy of Nvidia GPUs.
+    Shared memory only have a latency of $\sim 1$ clock cycle. Global memory
+    (GPU on-board memory) has a latency of $\sim 100$ cycles, and the system RAM
+    has an access latency of more than 1000 cycles and relatively low total
+    bandwidth.}
   \label{fig:gpu-memory}
 \end{figure}
 
@@ -181,7 +207,64 @@ a sorted particle array (see \ref{sec:gpu-deposit}).
 Current deposition poses a main problem for a massively parallelized
 architecture like the GPU, since by definition many threads (particles) need to
 write the same memory location (current values on the grid), which can not be
-done in parallel.
+done in parallel. The only thing we can do is to use duplicates and minimize
+clashing memory access as much as possible.
+
+The current deposition in Aperture is handled as follows. Similar to particle
+pusher, current deposition delegates the work for each tile to a thread block.
+Every thread block maintains a temporary array in the shared memory to store the
+deposited current values. Every thread in the block processes one particle at a
+time, and uses atomic add to add the deposited result from each particle to the
+array. To minimize clashing, each thread $i$ in the block will go through the
+$M$ cells in the tile from $i$ mod $M$ to $(i + M)$ mod $M$. On top of this,
+since there is some headroom in shared memory, each thread block actually holds
+4 different temporary arrays, and particles are evenly split to deposit to the 4
+different arrays, only adding up the results in the end.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \fill[yellow!10] (-1,-1) rectangle (0,0);
+    \fill[yellow!10] (2,-1) rectangle (4,0);
+    \fill[yellow!10] (-1,2) rectangle (0,4);
+    \fill[red!10] (4,4) rectangle (5,5);
+    \fill[red!10] (0,4) rectangle (2,5);
+    \fill[red!10] (4,0) rectangle (5,2);
+    \fill[blue!10] (-1,0) rectangle (0,2);
+    \fill[blue!10] (-1,4) rectangle (0,5);
+    \fill[blue!10] (2,4) rectangle (4,5);
+    \fill[green!10] (4,-1) rectangle (5,0);
+    \fill[green!10] (0,-1) rectangle (2,0);
+    \fill[green!10] (4,2) rectangle (5,4);
+
+    \draw[fill=red!70] (0,0) rectangle (2,2);
+    \draw[fill=blue!70] (2,0) rectangle (4,2);
+    \draw[fill=green!70] (0,2) rectangle (2,4);
+    \draw[fill=yellow!70] (2,2) rectangle (4,4);
+    \draw[dashed] (-1.0,0) -- (5.0,0);
+    \draw[dashed] (-1.0,2) -- (5.0,2);
+    \draw[dashed] (-1.0,4) -- (5.0,4);
+    \draw[dashed] (0,-1.0) -- (0,5.0);
+    \draw[dashed] (2,-1.0) -- (2,5.0);
+    \draw[dashed] (4,-1.0) -- (4,5.0);
+  \end{tikzpicture}
+  \caption[4-color scheme for current deposition to avoid overlapping of guard
+    cells.]{4-color scheme for current deposition to avoid overlapping of guard
+    cells. Each square represents a tile, and tiles of the same color are
+    processed at the same time. Since no two neighboring tiles are of the same
+    color, there is no issue of guard cell overlapping.}
+  \label{fig:4-color-scheme}
+\end{figure}
+
+Since during one time step, particles might move across tile boundaries,
+therefore current deposition needs to be done with a layer of guard cells around
+each tile. However this creates a problem where multiple thread blocks may want
+to update overlapping regions of the global memory at the same time. The way
+around this issue is to color all tiles in the domain in 4 different colors
+(figure ): 4 different kernels are invoked in sequence, each only updating the
+tiles with one single color. This avoids any memory access issue between thread
+blocks and has minimal impact on performance as long as the domain is large
+enough, so that each kernel call saturates the compute pipeline.
 
 \subsubsection{Pair creation}
 \label{sec:gpu-pair}
@@ -191,6 +274,96 @@ are appended to the end of the main particle array, every photon that is to
 convert to a pair will need to access the end of the array and race condition
 may occur unless the process is serialized.
 
+To avoid race condition, we need to pre-calculate the final position of the
+created photon/pair in the particle array. This is done using a two pass scan of
+the particle array. During the first pass, the compute kernel examines every
+particle in parallel, maintaining a temporary array that marks whether a
+particle will emit a photon or a photon will convert to a pair during this
+timestep. For every photon emitting particle, the thread will atomically add 1
+to a temporary variable marking the total number of photons emitted in this
+tile, then store this number in the corresponding position in the marker array,
+which will act as the position of the resulting photon in the main photon array.
+Then during the second pass, actual photons will be added to the main array in
+parallel, using the values in the marker array as offsets.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \begin{scope}[yshift=4cm]
+      \draw (0,0) -- (12,0);
+      \draw (0,0.5) -- (12,0.5);
+      \foreach \i in {0,...,24}
+      {
+        \draw (0.5*\i, 0) -- (0.5*\i, 0.5);
+      }
+      \draw[thick] (0,-0.5) -- (0,1.0);
+      \draw[thick] (4,-0.5) -- (4,1.0);
+      \draw[thick] (8,-0.5) -- (8,1.0);
+      \draw[thick] (12,-0.5) -- (12,1.0);
+      \foreach \x in {0,3,4,9,11,12,17,19,21,22,23} {
+        \node at (0.25 + 0.5 * \x,0.25) {$\checkmark$};
+      }
+    \end{scope}
+    \begin{scope}[yshift=2cm]
+      \draw (0,0) -- (12,0);
+      \draw (0,0.5) -- (12,0.5);
+      \foreach \i in {0,...,24}
+      {
+        \draw (0.5*\i, 0) -- (0.5*\i, 0.5);
+      }
+      \draw[thick] (0,-0.5) -- (0,1.0);
+      \draw[thick] (4,-0.5) -- (4,1.0);
+      \draw[thick] (8,-0.5) -- (8,1.0);
+      \draw[thick] (12,-0.5) -- (12,1.0);
+      \node at (0.25,0.25) {0};
+      \node at (0.25 + 1.5,0.25) {1};
+      \node at (0.25 + 2.0,0.25) {2};
+      \node at (0.25 + 4.5,0.25) {0};
+      \node at (0.25 + 5.5,0.25) {1};
+      \node at (0.25 + 6.0,0.25) {2};
+      \node at (0.25 + 8.5,0.25) {0};
+      \node at (0.25 + 9.5,0.25) {1};
+      \node at (0.25 + 10.5,0.25) {2};
+      \node at (0.25 + 11.0,0.25) {3};
+      \node at (0.25 + 11.5,0.25) {4};
+    \end{scope}
+    \node at (6, 1.25) {$+3$};
+    \node at (10, 1.25) {$+6$};
+    \begin{scope}
+      \draw (0,0) -- (12,0);
+      \draw (0,0.5) -- (12,0.5);
+      \foreach \i in {0,...,24}
+      {
+        \draw (0.5*\i, 0) -- (0.5*\i, 0.5);
+      }
+      \draw[thick] (0,-0.5) -- (0,1.0);
+      \draw[thick] (4,-0.5) -- (4,1.0);
+      \draw[thick] (8,-0.5) -- (8,1.0);
+      \draw[thick] (12,-0.5) -- (12,1.0);
+      \node at (0.25,0.25) {0};
+      \node at (0.25 + 1.5,0.25) {1};
+      \node at (0.25 + 2.0,0.25) {2};
+      \node at (0.25 + 4.5,0.25) {3};
+      \node at (0.25 + 5.5,0.25) {4};
+      \node at (0.25 + 6.0,0.25) {5};
+      \node at (0.25 + 8.5,0.25) {6};
+      \node at (0.25 + 9.5,0.25) {7};
+      \node at (0.25 + 10.5,0.25) {8};
+      \node at (0.25 + 11.0,0.25) {9};
+      \node at (0.25 + 11.5,0.25) {10};
+    \end{scope}
+  \end{tikzpicture}
+  \caption[Thematic illustration for parallel pair creation.]{Thematic
+    illustration for parallel pair creation. Each square represents a particle
+    and the partition represents a tile. During the first pass the compute
+    kernel checks for photon-emitting particles, and mark them with the number
+    within the tile (first two rows). Then a prefix sum is carried out on the
+    number of emitting particles in each tile. During the second pass, the index
+    of each emitting particle is added by the number of emitting particles in
+    the proceeding tiles, which now represents the absolute position of the
+    photon in the final array.}
+  \label{fig:2-pass-pair-creation}
+\end{figure}
 
 
 % Local Variables:
