@@ -83,7 +83,8 @@ derivative in place of ordinary partial derivative:
   \label{eq:7}
   \nabla_{\nu}\tensor[^{*}]{F}{^{\mu\nu}} = 0, \quad \nabla_{\nu}F^{\mu\nu} = I^{\mu}
 \end{equation}
-where $I^{\mu}$ is the 4-current. Again, to associate physical meaning to this
+where $I^{\mu}$ is the 4-current and $\tensor[^{*}]{F}{^{\mu\nu}}$ is defined by
+equation \eqref{eq:17}. Again, to associate physical meaning to this
 current we need to relate it with particle motion, which we will do
 subsequently.
 
@@ -319,8 +320,8 @@ evaluated at the particle position) in the particle storage as well.
 
 % Vay (2008)
 \citet{vay_simulation_2008}
-showed a stable algorithm for pushing particles in electromagnetic
-field. It was designed to solve discretized equation
+showed a stable algorithm for pushing particles in an electromagnetic
+field. It was designed to solve the discretized equation
 \begin{equation}
   \label{eq:40}
   \frac{\gamma^{n+1}\mathbf{v}^{n+1} - \gamma^n\mathbf{v}^n}{\Delta t} = \frac{q}{m}\left( \mathbf{E}^{n+1/2} + \frac{\mathbf{v}^n + \mathbf{v}^{n+1}}{2}\times \mathbf{B}^{n+1/2} \right)
@@ -337,14 +338,14 @@ where $\bar{p}^i = \alpha\gamma_p\bar{v}^i$ is similar to how usual relativistic
 momentum is related to velocity. The crucial difference from \eqref{eq:40} is
 the appearance of the metric matrix $\gamma_{ij}$ on the left hand side.
 
-The usual Vay algorithm solves equation \eqref{eq:40} using two steps. First
+The usual Vay algorithm solves equation \eqref{eq:40} using two steps. The first
 step is to split the equation into two parts and define (where $\mathbf{u} =
 \gamma \mathbf{v}$)
 \begin{equation}
   \label{eq:42}
   \mathbf{u}' = \mathbf{u}^n + \frac{q\Delta t}{m}\left( \mathbf{E}^{n+1/2} + \frac{\mathbf{v}^n}{2}\times \mathbf{B}^{n+1/2} \right)
 \end{equation}
-then one solve the resulting implicit equation
+then one solves the resulting implicit equation
 \begin{equation}
   \label{eq:43}
   \mathbf{u}^{n+1} = \mathbf{u}' + \frac{q\Delta t}{m}\left( \frac{\mathbf{u}^{n+1}}{2\gamma^{n+1}}\times \mathbf{B}^{n+1/2} \right)
@@ -369,8 +370,8 @@ $\gamma$. Finally one can plug this back into equation \eqref{eq:44} to find the
 updated momentum $\mathbf{u}^{n+1}$.
 
 In our GR case things becomes more complicated. Due to the appearance of
-$\gamma_{ij}$ matrix in equation \eqref{eq:41}, the direction solution to the
-equation \eqref{eq:44} doesn't work anymore. We still define the intermediate
+the $\gamma_{ij}$ matrix in equation \eqref{eq:41}, the direction solution to the
+equation \eqref{eq:44} does not work anymore. We still define the intermediate
 $u'$ as
 \begin{equation}
   \label{eq:47}
@@ -392,7 +393,7 @@ with $\bar{p}^i$ which is
   \label{eq:48}
   \alpha^2\gamma_p^2 = 1 + \gamma_{ij}\bar{p}^i\bar{p}^j = 1 + \bar{p}^iu'_i = 1 + \left( \gamma_{ij} - \frac{\epsilon_{ijk}b^k}{\alpha\gamma_p} \right)^{-1}u'_iu'_j
 \end{equation}
-At this point it's obvious we should call the combination $\alpha\gamma_p$ as
+At this point it is obvious we should call the combination $\alpha\gamma_p$
 the convenient Lorentz factor $\bar{\gamma}_p$. Again this turns out to be a
 quadratic equation for $\bar{\gamma}_p$, albeit more complicated. I plugged the
 matrix into Mathematica to find the full inverted result (which is surprisingly
@@ -423,7 +424,7 @@ Since we have written our particle push equation in complete form:
   \label{eq:51}
   m\frac{Du_i}{Dt} = e\alpha (\gamma_{ij}D^j + e_{ijk}\bar{v}^jB^k)
 \end{equation}
-it would be nice to solve it completely accounting for GR effect as well! I
+it would be nice to solve it completely accounting for GR effects as well! I
 think it can be done. The covariant derivative on the left hand side can be
 expanded as
 \begin{equation}
@@ -454,7 +455,7 @@ drifts along the geodesic, and we have only
   \label{eq:55}
   \frac{u_i^{n+1/2} - u_i^n}{\Delta t/2} = \frac{1}{2}g_{\mu\alpha,i}v^{\alpha}g^{\mu\nu}u_{\nu}
 \end{equation}
-Since the right hand side is quadratic in $u$, we either use fully explicit
+Since the right hand side is quadratic in $u$, we either use a fully explicit
 scheme, evaluating the right hand side at time step $n$, or we use a
 ``semi-implicit'' scheme and solve the following matrix equation
 \begin{equation}
@@ -463,9 +464,10 @@ scheme, evaluating the right hand side at time step $n$, or we use a
 \end{equation}
 Note that to do this we should save $u_0$ as part of the dynamic variables now.
 
-After we ``drifted'' the particles for a half-step, we evaluate the ``kick'' on
-the particle due to electromagnetic force. This is computed using the modified
-Vay algorithm detailed in the above subsection. We solve the following equation
+After we have ``drifted'' the particles for a half-step, we evaluate the
+``kick'' on the particle due to electromagnetic force. This is computed using
+the modified Vay algorithm detailed in the above subsection. We solve the
+following equation
 \begin{equation}
   \label{eq:57}
   \frac{u_i' - u_i}{\Delta t} = \frac{\alpha q}{m}\left( \gamma_{ij}D^j + e_{ijk}\frac{\bar{v}'^j + \bar{v}^j}{2}B^k \right)
@@ -484,9 +486,9 @@ Then we use these quantities to drift the particles for another half-step
   \frac{u_{\mu}^{n+1} - u'^{n+1/2}_{\mu}}{\Delta t/2} = \frac{1}{2}g_{\alpha\beta,\mu}(v'^{\alpha})^{n+1/2}g^{\beta\nu}(u_{\nu})^{n+1}
 \end{equation}
 
-One question that may be asked is that is the energy of the particle conserved
-during the update. This is on the TODO list and we might go back to this problem
-a bit later.
+One question that may be asked is whether the energy of the particle is conserved
+during the update. This is on the list of tasks that we might go back to a bit
+later.
 
 \subsection{Current Deposition}
 \label{sec:current}
@@ -540,7 +542,7 @@ We can use Gauss's theorem to replace the second integral. Because $\int_{\Sigma
 \end{equation}
 Notice that the second integral is exactly the integral that occurs in the
 integral form of the Maxwell equations \eqref{eq:22}. Therefore if using
-integral formalism, the we only need to separate the change of charge in a given
+integral formalism, we only need to separate the change of charge in a given
 cell into different directions, find the current flux easily and then directly
 use them to update the dynamic fields $B^i$ and $D^i$.
 
@@ -552,7 +554,7 @@ surface in that direction, even when the cell is not rectangular.
 \subsection{Concluding remarks}
 \label{sec:gr-conclusion}
 
-The algorithms outlined above is a possible way to extend the PIC technique to
+The algorithms outlined above is a possible way to extend the PIC technique to a
 general relativistic regime. This could potentially lead to new findings about
 plasma dynamics very close to the black hole, which is very non-trivial and have
 only been studied in either FFE or GRMHD

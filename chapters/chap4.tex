@@ -67,23 +67,22 @@ generates magnetospheric twist $\nabla\times \mathbf{B} \neq 0$
   hereafter PBH13}.
 Plasma is required to supply the current $\mathbf{j} = (c/4\pi)\nabla\times \mathbf{B}$.
 % Beloborodov \& Thompson (2007)
-\citet[hereafter BT07]{beloborodov_corona_2007}
-found that plasma must be mainly supplied through $e^\pm$ discharge in the
-magnetosphere rather than through extraction of charges from the star.
-They performed simplified one-dimensional (1D) simulations of the discharge.
-In the simulations, the magnetosphere was replaced by
-a fixed, uniform field $\bB(x)$ connecting anode and cathode ---
-metallic plates at $x_A$ and $x_C$. The fixed $\nabla\times\bB$ in this
-setup turns out equivalent to imposing an electric current through the plates into
-the computational box.
-When pair creation was not allowed, the system quickly relaxed to a global
-``double layer'' configuration, with surface charges of the opposite sign induced on the plates.
-The electric field between them gave a huge voltage $\Phi_e$ accelerating
-particles to ultra-high energies. When pair creation process was included in the simulation,
-the voltage dropped to a much lower value, just sufficient to sustain pair creation,
-and the current was supported through continual $e^\pm$ discharge.
-BT07 concluded that pair creation must be responsible for screening
-electric fields and regulating the magnetospheric activity of magnetars.
+\citet[hereafter BT07]{beloborodov_corona_2007} found that plasma must be mainly
+supplied through $e^\pm$ discharge in the magnetosphere rather than through
+extraction of charges from the star. They performed simplified one-dimensional
+(1D) simulations of the discharge. In the simulations, the magnetosphere was
+replaced by a fixed, uniform field $\bB(x)$ connecting anode and cathode ---
+metallic plates at $x_A$ and $x_C$. The fixed $\nabla\times\bB$ in this setup
+turns out to be equivalent to imposing an electric current through the plates
+into the computational box. When the pair creation was not allowed, the system
+quickly relaxed to a global ``double layer'' configuration, with surface charges
+of the opposite sign induced on the plates. The electric field between them gave
+a huge voltage $\Phi_e$ accelerating particles to ultra-high energies. When pair
+creation process was included in the simulation, the voltage dropped to a much
+lower value, just sufficient to sustain pair creation, and the current was
+supported through continual $e^\pm$ discharge. BT07 concluded that pair creation
+must be responsible for screening electric fields and regulating the
+magnetospheric activity of magnetars.
 
 The simplified 1D model cannot, however, give a compete picture of the
 magnetospheric activity, for a few reasons. It does not show how
@@ -126,7 +125,7 @@ which depends on how the $e^\pm$ discharge is self-organized and
 may be different on different magnetospheric field lines.
 
 The goal of the present chapter is to overcome the limitations of the 1D discharge
-model and perform a first self-consistent calculation of the $e^\pm$ discharge
+model and perform the first self-consistent calculation of the $e^\pm$ discharge
 in an axisymmetric twisted magnetosphere. The process can be simulated from
 first-principles using a full kinetic description of the magnetospheric plasma
 as a large number of charged particles moving in the self-consistent collective
@@ -320,7 +319,7 @@ One should also note that $E_\parallel=\bE\cdot\bB/B$, and hence the voltage,
 \label{eq:phi_e}
   \Phi_{e} = \int_p^{q} E_\parallel\,d\ell,
 \end{equation}
-have a pure inductive origin. One should think of
+has a pure inductive origin. One should think of
 $E_\parallel$ as $c^{-1}\partial A_\parallel/\partial t$, the result of the slow decay
 of the ultrastrong twisted magnetic field (BT07).
 $e\Phi_e$ measures the energy gain of charge $e$ completing the electric circuit,
@@ -943,12 +942,12 @@ the opposite boundary of the gap, where they create new pairs, etc.
   \centering
   \includegraphics[width=0.7\textwidth]{pics/chap4/multiplicity.png}
   \caption[Magnetar magnetospheric pair multiplicity]{Pair multiplicity
-    $\mathcal{M} = (\rho_+ - \rho_{-})/j$.}
+    $\mathcal{M} = (\rho_+ - \rho_{-})c/j$.}
   \label{fig:multiplicity}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The multiplicity of the pair plasma is defined by $\mathcal{M} = (\rho_+-\rho_{-})/j$,
+The multiplicity of the pair plasma is defined by $\mathcal{M} = (\rho_+-\rho_{-})c/j$,
 where $\rho_+$ and $\rho_-$ are the charge densities of the positrons and electrons,
 respectively. One can see in Figure~\ref{fig:multiplicity} that $\mathcal{M}$
 in the gap is close to 1, i.e. the gap contains the minimum amount of plasma needed to

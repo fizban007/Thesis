@@ -141,10 +141,10 @@ in \Sect~\ref{sec:pc-discussion}.
 \subsection{Basic equations}
 
 
-It is natural first to attempt to construct a simplest model
+It is natural first to attempt to construct a simple model,
 assuming that the polar-cap flow is steady in the (rotating) frame of the neutron star.
 Given the steady magnetic field in this frame,
-and the steady boundary conditions at the stellar surface --- excellent
+and the steady boundary conditions at the stellar surface --- an excellent
 static conductor that can supply charges with a given temperature, --- one
 could expect a steady state to be established unless the flow is prone to an instability.
 
@@ -185,7 +185,7 @@ Here $v(\gamma_0,z)$ is the velocity of particles that started at $z=0$
 with initial Lorentz factor $\gamma_0$; note that $v^2/c^2=1-\gamma^{-2}$ where
 $\gamma(z)$ is given by equation~(\ref{eq:a}).
 Function $w(\gamma_0)$ describes the probability distribution of $\gamma_0$.
-The width of this distribution is controlled by the temperature of polar cap $T$.
+The width of this distribution is controlled by the temperature of the polar cap $T$.
 For example, $w=\delta(\gamma_0-1)$ describes a cold polar cap ($T=0$) where
 all particles have $\gamma_0=1$.
 
@@ -252,7 +252,7 @@ the neutron star.
   % \epsscale{1.0}
 \begin{center}
   % \plotone{f1.eps}
-  \includegraphics[width=0.7\textwidth]{pics/chap2/f1.eps}
+  \includegraphics[width=0.7\textwidth]{pics/chap2/f1.png}
   \caption[Steady-state solution for $\alpha < 0$]{Steady-state solution for the
     charge-separated polar-cap flow with $\alpha=0.8$. Two cases are shown: cold
     polar cap $T=0$ (solid curve) and warm polar cap $kT/mc^2=0.03$ (dashed
@@ -327,36 +327,35 @@ a small perturbation cannot force any particles to reverse their direction of mo
 and hence the perturbation will be advected along the flow.
 This flow may be expected to be stable.
 
-In contrast, the warm flow (dashed curve in Figure~\ref{fig:steady}) has a broad distribution
-of $p_0$ that extends from $p_0=0$. At each peak of the electric potential
-$z_k$ there is a population of particles with nearly zero velocities. Consider a
-perturbation at $z\approx z_k$. For example, suppose
-a small bunch $\A$ of particles with momenta in a range $(p_1,p_1+\Delta p)$
-are slightly pushed forward while the rest of particles are unperturbed.
-This perturbation implies a local increase in electric current $j>j_B$ and hence
-$\partial E_\parallel/\partial t<0$ (equation~\ref{eq:Maxw}), generating negative
-electric field $\delta E_\parallel$ at $z\approx z_k$ that tends to restore the
-condition $j=j_B$. In contrast to the initial perturbation,
-the induced $\delta E_\parallel$ affects {\it all} local particles, regardless their
-momentum, not just bunch $\A$. This has two implications:
-(1) The induced $E_\parallel<0$ will easily and quickly reduce $j$ back to $j_B$ but
-will be unable to decelerate bunch $\A$ to the momentum it would have in the
-steady state flow --- bunch $\A$ will continue to move to $z>z_k$ with a larger
-momentum.
-(2) $\delta E_\parallel<0$ will give very slow particles $p\approx 0$ negative velocities,
-creating a new bunch $\B$ that slides backward down the potential hill. Bunch $\B$
-creates $j<j_B$ at $z<z_k$, and the system reacts there by inducing a small
-$\delta E_\parallel > 0$, which accelerates all local particles, regardless their momenta,
-not just bunch $\B$. As a result, $j$ quickly recovers to $j_B$, however, bunch $\B$
-is not stopped from moving backward and away from $z=z_k$.
+In contrast, the warm flow (dashed curve in Figure~\ref{fig:steady}) has a broad
+distribution of $p_0$ that extends from $p_0=0$. At each peak of the electric
+potential $z_k$ there is a population of particles with nearly zero velocities.
+Consider a perturbation at $z\approx z_k$. For example, suppose a small bunch
+$\A$ of particles with momenta in a range $(p_1,p_1+\Delta p)$ are slightly
+pushed forward while the rest of particles are unperturbed. This perturbation
+implies a local increase in electric current $j>j_B$ and hence $\partial
+E_\parallel/\partial t<0$ (equation~\ref{eq:Maxw}), generating negative electric
+field $\delta E_\parallel$ at $z\approx z_k$ that tends to restore the condition
+$j=j_B$. In contrast to the initial perturbation, the induced $\delta
+E_\parallel$ affects {\it all} local particles, regardless of their momentum,
+not just bunch $\A$. This has two implications: (1) The induced $E_\parallel<0$
+will easily and quickly reduce $j$ back to $j_B$ but will be unable to
+decelerate bunch $\A$ to the momentum it would have in the steady state flow ---
+bunch $\A$ will continue to move to $z>z_k$ with a larger momentum. (2) $\delta
+E_\parallel<0$ will give very slow particles $p\approx 0$ negative velocities,
+creating a new bunch $\B$ that slides backward down the potential hill. Bunch
+$\B$ creates $j<j_B$ at $z<z_k$, and the system reacts there by inducing a small
+$\delta E_\parallel > 0$, which accelerates all local particles, regardless
+their momenta, not just bunch $\B$. As a result, $j$ quickly recovers to $j_B$,
+however, bunch $\B$ is not stopped from moving backward and away from $z=z_k$.
 
-Thus one can see that the perturbation creates a permanent damage
-to the steady state that broadens the momentum distribution by creating backflowing
-particles.
-This perturbation is {\it not} advected away along the flow, and can develop further.
-The backflowing particles turn out to be trapped between two peaks of the
-electrostatic potential. Further development can be studied with kinetic time-dependent
-simulations; it eventually completely destroys the steady state solution.
+Thus one can see that the perturbation creates permanent damage to the steady
+state that broadens the momentum distribution by creating backflowing particles.
+This perturbation is {\it not} advected away along the flow, and can develop
+further. The backflowing particles turn out to be trapped between two peaks of
+the electrostatic potential. Further development can be studied with kinetic
+time-dependent simulations; it eventually completely destroys the steady state
+solution.
 
 
 %#################################################################
@@ -622,7 +621,7 @@ Generation of backflowing particles at the potential peaks $z_k$ plays the key r
 disrupting the steady state. In a flow with a finite minimum velocity
 $\beta_0>0$, the external perturbation would need to rob particles
 energy $\gamma_0-1\approx \beta_0^2/2$ before they could be reflected by the
-potential hill. Thus, the gap $\gamma_0-1$ stabilizes the flow against infinitesimal
+potential hill. Thus the gap $\gamma_0-1$ stabilizes the flow against infinitesimal
 perturbations, and only a sufficiently strong kick may disrupt the flow.
 
 The trapped or backflowing particles have a deteriorating effect on the steady state
@@ -795,11 +794,11 @@ larger than $\bar{\beta}(1-\bar{\beta}^2)^{-1/2}$.
 
 It should also be noted that the pronounced narrow stream and the broad low-energy stream together
 form a two-stream system. Conventionally one would expect the configuration to suffer
-from standard micro-instabilities. However, we do not observe such kind of instabilities here.
+from standard micro-instabilities. However, we do not observe such instabilities here.
 One important reason is that the
 flow remains turbulent even after establishing this quasi-steady state. The momentum
 of particles in the colder stream oscillates both in time and space, thus any particle
-would not be able to interact with a single wave for extended period of time. In this
+would not be able to interact with a single wave for an extended period of time. In this
 case, exponential growth of particular waves cannot occur, which kills the instability.
 
 As seen in Figure~\ref{fig:phasetraj}a, the flow momentum $p_{\rm peak}$ decreases
@@ -852,7 +851,7 @@ around $\sim 10^4$ did not change the measured parameters of the flow.
 
 
 If $j_B>0$ (which is equivalent to $\rho_\mathrm{GJ}>0$ for $\alpha>0$), the
-charge-separated flow puled out from the polar cap is made of ions.
+charge-separated flow pulled out from the polar cap is made of ions.
 Different species of ions may end up in such a flow, and they will be
 accelerated to different velocities.
 
@@ -868,7 +867,7 @@ There is, however, an important new feature: the ion streams with
 different hydrodynamical momenta are prone to two-stream instability.
 
 % We modified our numerical setup to investigate the later possibility.
-To study the behavior of the mixed ion flow we use a simplest modification of
+To study the behavior of the mixed ion flow we use a simple modification of
 our numerical simulation. Consider a mixture of protons and helium nuclei
 (alpha-particles).
 The particle injection at $z=0$ now consists of two ions species; they have
@@ -1029,7 +1028,7 @@ no signs of particle acceleration to energies higher than that of the cold strea
 
 The value of parameter $\alpha$ depends
 on the location and geometry of the polar cap.
-A simplest magnetospheric configuration is that of a centered dipole. Then
+The simplest magnetospheric configuration is that of a centered dipole. Then
 the parameter $\alpha$ depends on the angle between the magnetic and spin axes,
 $\xi$; besides, it varies across the polar cap. For nearly
 aligned rotators ($\xi\approx 0$),
@@ -1089,10 +1088,10 @@ reminiscent of pair creation
 \citep[e.g.][]{jones_post-glitch_2002}
 Secondly, the ion flow may be a
 mixture of different nuclei which will be accelerated to different Lorentz factors.
-The mixed ion flow is prone to two-stream instability, possibly leading to formation
-plasma clumps and generation of coherent radio emission.
+The mixed ion flow is prone to two-stream instability, possibly leading to the formation
+of plasma clumps and generation of coherent radio emission.
 In our simulations, we observe the expected two-stream instability,
-however do not observe significant structure (clumps) in the turbulent flow.
+however we do not observe significant structure (clumps) in the turbulent flow.
 This may change in three-dimensional simulations.
 The frequency of excited waves $\omega\approx 2\gamma_1^{1/2}\omega_1$
 is in the radio band, and coherent emission from clumps could create bright

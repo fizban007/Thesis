@@ -28,7 +28,7 @@ respect to where the function value is evaluated (figure
 \end{figure}
 
 Now if we would like to find the 4th order accurate symmetric numerical
-derivative, then we would like to solve the following set of equations for
+derivative, then we need to solve the following set of equations for
 $f'(x)$:
 \begin{align}
   \label{eq:4th-order-set}
@@ -45,14 +45,14 @@ the expression is accurate to 4th order in $\Delta x$):
   f'(x) = \frac{9}{8}\frac{f(x + \Delta x/2) - f(x - \Delta x / 2)}{\Delta x} - \frac{1}{24}\frac{f(x + 3\Delta x / 2) - f(x - 3\Delta x / 2)}{\Delta x} + O(\Delta x^5)
 \end{equation}
 
-One can repeat this procedure for any order finite difference operator. Table
-\ref{tab:finite-diff} summarizes the coefficients for the results up too 6th
+One can repeat this procedure for $f'(x)$ up to any order in $\Delta x$. Table
+\ref{tab:finite-diff} summarizes the coefficients for the results up to 6th
 order accuracy.
 
 \begin{table}[h]
   \centering
   \begin{tabular}{ccccccc}
-    Order & $f(x - 5\Delta x/2)$ & $f(x - 3\Delta x / 2)$ & $f(x - \Delta x/2)$ & $f(x + \Delta x/2)$ & $f(x + 3\Delta x/2)$ & $f(x + 5\Delta x/2)$  \\ \hline
+    Order & $f\left(x - \frac{5\Delta x}{2}\right)$ & $f\left(x - \frac{3\Delta x}{2}\right)$ & $f\left(x - \frac{\Delta x}{2}\right)$ & $f\left(x + \frac{\Delta x}{2}\right)$ & $f\left(x + 3\frac{\Delta x}{2}\right)$ & $f\left(x - \frac{5\Delta x}{2}\right)$  \\ \hline
     2nd & 0 & 0 & -1 & 1 & 0 & 0 \\ \hline
     4th & 0 & 1/24 & -9/8 & 9/8 & -1/24 & 0 \\ \hline
     6th & -3/640 & 25/384 & -75/64 & 75/64 & -25/384 & 3/640 \\ \hline
@@ -84,17 +84,17 @@ we now have:
 \end{equation}
 Now it is not possible to solve these equations using a simple prefix sum, since
 the current at different grid positions are coupled. This becomes a set of $N$
-linear equations where $N$ equals the number of grid points. It involves a
-band-diagonal matrix with alternating coefficients, which is known to have
-unstable properties when solving numerically. However, instead of solving for
-$j$ directly we can define $\Delta j_i = j_i - j_{i-1}$ where $i$ labels the
-grid points. Now the system of equations becomes
+linear equations where $N$ equals the number of grid points in that direction.
+It involves a band-diagonal matrix with alternating coefficients, which is known
+to have unstable properties when solving numerically. However, instead of
+solving for $j$ directly we can define $\Delta j_i = j_i - j_{i-1}$ where $i$
+labels the grid points. Now the system of equations becomes
 \begin{equation}
   \label{eq:4th-order-system}
   - \frac{1}{24}\Delta j_{i-1} + \frac{13}{12}\Delta j_i - \frac{1}{24}\Delta j_{i+1} = -\frac{\Delta x}{\Delta t}\Delta \rho_{i}
 \end{equation}
 which is a symmetric tri-diagonal system that is diagonally dominant. This kind
-of systems has standard solvers and is generally numerical stable. After one
+of systems has standard solvers and is generally numerically stable. After one
 solves $\Delta j$ for every grid point, a prefix sum can be done similar to the
 2nd order case to obtain $j$ for each cell. For 6th order finite difference, the
 matrix becomes a band-diagonal system with 5 non-zero diagonals:
@@ -104,9 +104,9 @@ matrix becomes a band-diagonal system with 5 non-zero diagonals:
 \end{equation}
 which is also relatively simple to solve numerically.
 
-Boundary conditions is another problem. The main difficulty is lack of
+Boundary condition is another problem. The main difficulty is the lack of
 information across the boundary of the simulation domain, which means that the
-typical symmetric finite difference can't be used. A one-sided finite difference
+typical symmetric finite difference cannot be used. A one-sided finite difference
 scheme is required. Figure \ref{fig:1-sided-derivatives} shows two scenarios for
 evaluating the one sided derivatives. One can find the correct coefficients by
 writing down similar equations as \eqref{eq:4th-order-set} and the solutions are
@@ -142,6 +142,7 @@ given in tables \ref{tab:1-sided-a} and
 
 \begin{table}[h]
   \centering
+  \footnotesize
   \begin{tabular}{cccccccc}
     Order & $f(x)$ & $f(x + \Delta x)$ & $f(x + 2\Delta x)$ & $f(x + 3\Delta x)$ & $f(x + 4\Delta x)$ & $f(x + 5\Delta x)$ & $f(x + 6\Delta x)$ \\ \hline
     2 & -3/2 & 2 & -1/2 & 0 & 0 & 0 & 0 \\ \hline
@@ -155,6 +156,7 @@ given in tables \ref{tab:1-sided-a} and
 
 \begin{table}[h]
   \centering
+  \footnotesize
   \begin{tabular}{cccccccc}
     Order & $f\left(x - \frac{\Delta x}{2}\right)$ & $f\left(x + \frac{\Delta x}{2}\right)$ & $f\left(x + \frac{3\Delta x}{2}\right)$ & $f\left(x + \frac{5\Delta x}{2}\right)$ & $f\left(x + \frac{7\Delta x}{2}\right)$ & $f\left(x + \frac{9\Delta x}{2}\right)$ & $f\left(x + \frac{11\Delta x}{2}\right)$ \\ \hline
     2 & -1 & 1 & 0 & 0 & 0 & 0 & 0 \\ \hline
